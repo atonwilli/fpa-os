@@ -4,8 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>FPA OS — Growth Operating System</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -13,7 +13,7 @@
   --s0:#09090C;--s1:#111115;--s2:#18181C;--s3:#1E1E23;--s4:#26262C;--s5:#2E2E35;
   --b1:#202026;--b2:#2A2A32;--b3:#36363F;
   --t1:#F0F0F4;--t2:#8A8A98;--t3:#48485A;
-  --teal:#00C9A7;--blue:#4F8EF7;--amber:#F59E0B;--red:#EF4444;--green:#22C55E;--purple:#8B5CF6;
+  --teal:#00C9A7;--blue:#4F8EF7;--amber:#F59E0B;--red:#EF4444;--green:#22C55E;
   --gold:#FFD700;--silver:#A0A0B8;--bronze:#CD7F32;
   --sh-y:0 4px 20px rgba(255,224,51,.18);
   --r1:6px;--r2:10px;--r3:14px;
@@ -24,12 +24,42 @@ body.light{
   --t1:#0A0A10;--t2:#6A6A7A;--t3:#9A9AAA;
 }
 html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:var(--t1);-webkit-font-smoothing:antialiased;}
-::-webkit-scrollbar{width:3px;height:3px;}
-::-webkit-scrollbar-thumb{background:var(--b3);border-radius:2px;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--b3);border-radius:2px;}
 
-.app{display:grid;grid-template-rows:52px 1fr;grid-template-columns:216px 1fr;height:100vh;overflow:hidden;}
+/* ── AUTH SCREEN ── */
+.auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;background:var(--s0);}
+.auth-card{background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:40px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(0,0,0,.5);}
+.auth-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;color:var(--y);letter-spacing:.5px;display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.auth-logo span{color:var(--t1);}
+.auth-logo-pip{width:8px;height:8px;border-radius:50%;background:var(--y);box-shadow:var(--sh-y);}
+.auth-tagline{font-size:12px;color:var(--t3);margin-bottom:32px;}
+.auth-title{font-size:20px;font-weight:600;margin-bottom:4px;}
+.auth-sub{font-size:12px;color:var(--t2);margin-bottom:24px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:5px;}
+.field input{width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:10px 12px;font-family:'Inter',sans-serif;font-size:14px;color:var(--t1);outline:none;transition:border-color .15s;}
+.field input:focus{border-color:var(--y);}
+.btn-auth{width:100%;background:var(--y);color:var(--k);border:none;border-radius:var(--r1);padding:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;box-shadow:var(--sh-y);margin-top:4px;}
+.btn-auth:hover{opacity:.9;transform:translateY(-1px);}
+.btn-auth:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.auth-toggle{text-align:center;margin-top:20px;font-size:12px;color:var(--t2);}
+.auth-toggle a{color:var(--y);cursor:pointer;font-weight:500;}
+.auth-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:var(--r1);padding:10px 12px;font-size:12px;color:#FCA5A5;margin-bottom:14px;display:none;}
+.auth-error.show{display:block;}
+.auth-success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:var(--r1);padding:10px 12px;font-size:12px;color:#86EFAC;margin-bottom:14px;display:none;}
+.auth-success.show{display:block;}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:20px 0;}
+.auth-divider hr{flex:1;border:none;border-top:1px solid var(--b2);}
+.auth-divider span{font-size:11px;color:var(--t3);}
+.role-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;}
+.rb-owner{background:rgba(255,224,51,.1);color:var(--y);border:1px solid rgba(255,224,51,.2);}
+.rb-ae{background:rgba(79,142,247,.1);color:#93BBFF;border:1px solid rgba(79,142,247,.2);}
+.rb-lt{background:rgba(0,201,167,.1);color:#5EEAD4;border:1px solid rgba(0,201,167,.2);}
+.rb-jpm{background:rgba(245,158,11,.1);color:#FCD34D;border:1px solid rgba(245,158,11,.2);}
+.rb-pm{background:rgba(239,68,68,.1);color:#FCA5A5;border:1px solid rgba(239,68,68,.2);}
 
-/* TOPBAR */
+/* ── APP SHELL ── */
+.app{display:grid;grid-template-rows:52px 1fr;grid-template-columns:216px 1fr;height:100vh;overflow:hidden;display:none;}
 .topbar{grid-column:1/-1;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 18px;gap:12px;z-index:50;}
 .logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:var(--y);display:flex;align-items:center;gap:6px;letter-spacing:.4px;}
 .logo span{color:var(--t1);}
@@ -44,17 +74,17 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .thm-tog.on{background:var(--y);}
 .thm-t{position:absolute;top:1.5px;left:1.5px;width:13px;height:13px;border-radius:50%;background:var(--t3);transition:all .18s;}
 .thm-tog.on .thm-t{transform:translateX(14px);background:var(--k);}
-.ibtn{width:30px;height:30px;border-radius:var(--r1);background:var(--s3);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;}
+.ibtn{width:30px;height:30px;border-radius:var(--r1);background:var(--s3);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;cursor:pointer;}
 .ibtn:hover{background:var(--s4);}
 .ibtn svg{width:13px;height:13px;stroke:var(--t2);}
-.npip{position:absolute;top:5px;right:5px;width:5px;height:5px;border-radius:50%;background:var(--red);border:1px solid var(--s1);}
-.uchip{display:flex;align-items:center;gap:7px;padding:3px 9px 3px 3px;border-radius:20px;background:var(--s3);border:1px solid var(--b1);cursor:pointer;}
+.uchip{display:flex;align-items:center;gap:7px;padding:3px 10px 3px 4px;border-radius:20px;background:var(--s3);border:1px solid var(--b1);cursor:pointer;}
 .uchip:hover{background:var(--s4);}
-.uav{width:24px;height:24px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff;}
+.uav{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;}
 .uname{font-size:11px;font-weight:500;}
-.rpip{font-size:9px;font-weight:600;padding:1px 6px;border-radius:8px;background:rgba(79,142,247,.1);color:var(--blue);border:1px solid rgba(79,142,247,.18);}
+.logout-btn{background:none;border:none;font-size:11px;color:var(--t3);cursor:pointer;padding:4px 8px;border-radius:var(--r1);}
+.logout-btn:hover{background:var(--s3);color:var(--red);}
 
-/* SIDEBAR */
+/* ── SIDEBAR ── */
 .sidebar{background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow-y:auto;padding:10px 0 16px;}
 .sbg{margin-bottom:4px;}
 .sbg-lbl{font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);padding:6px 15px 3px;}
@@ -71,72 +101,47 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .sbfoot{margin-top:auto;padding:10px 12px 0;border-top:1px solid var(--b1);}
 .sbfoot-chip{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3);padding:6px 8px;background:var(--s3);border-radius:var(--r1);}
 
-/* MAIN */
+/* ── MAIN CONTENT ── */
 .main{overflow-y:auto;background:var(--s0);}
 .pg{display:none;padding:22px;}
 .pg.active{display:block;}
-
-/* TYPOGRAPHY */
-.pgt{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:25px;letter-spacing:.2px;line-height:1.1;margin-bottom:3px;}
+.pgt{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:25px;letter-spacing:.2px;margin-bottom:3px;}
 .pgs{font-size:11px;color:var(--t2);margin-bottom:20px;}
 .slbl{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:10px;}
-
-/* CARDS */
-.card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r3);padding:15px 17px;box-shadow:0 1px 3px rgba(0,0,0,.35);}
-.inset{background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:11px 13px;}
-
-/* GRIDS */
+.card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r3);padding:15px 17px;box-shadow:0 1px 3px rgba(0,0,0,.3);}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px;}
-
-/* STATS */
-.stat{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 15px;position:relative;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.3);}
+.stat{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 15px;position:relative;overflow:hidden;}
 .sacc{position:absolute;top:0;left:0;width:100%;height:2px;}
 .sv{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;line-height:1.1;margin:5px 0 2px;}
 .sl{font-size:11px;color:var(--t2);}
 .sd{font-size:10px;margin-top:4px;font-weight:500;}
 .up{color:var(--green);}.dn{color:var(--red);}.wn{color:var(--amber);}
-
-/* PHASE */
 .phbar{height:3px;border-radius:2px;background:var(--s4);overflow:hidden;margin-bottom:16px;}
 .phfill{height:100%;border-radius:2px;background:var(--blue);}
-
-/* ANNOUNCEMENT */
 .ann{background:linear-gradient(135deg,rgba(255,224,51,.07),rgba(255,224,51,.02));border:1px solid rgba(255,224,51,.14);border-radius:var(--r2);padding:12px 14px;display:flex;align-items:flex-start;gap:11px;margin-bottom:14px;}
 .ann-dot{width:7px;height:7px;border-radius:50%;background:var(--y);box-shadow:var(--sh-y);flex-shrink:0;margin-top:4px;}
 .ann-ttl{font-size:12px;font-weight:600;color:var(--y);margin-bottom:2px;}
 .ann-body{font-size:11px;color:var(--t2);line-height:1.5;}
-
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:5px;border:none;border-radius:var(--r1);padding:7px 14px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .14s;white-space:nowrap;}
-.btn svg{width:12px;height:12px;}
+.btn{display:inline-flex;align-items:center;gap:5px;border:none;border-radius:var(--r1);padding:7px 14px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .14s;}
 .btn-p{background:var(--y);color:var(--k);box-shadow:var(--sh-y);}
 .btn-p:hover{opacity:.9;transform:translateY(-1px);}
 .btn-g{background:var(--s3);color:var(--t2);border:1px solid var(--b2);}
 .btn-g:hover{background:var(--s4);color:var(--t1);}
-.btn-t{background:rgba(0,201,167,.1);color:var(--teal);border:1px solid rgba(0,201,167,.18);}
 .brow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;}
-
-/* BADGES */
-.bd{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:600;}
-.bd-b{background:rgba(79,142,247,.1);color:#93BBFF;border:1px solid rgba(79,142,247,.18);}
-.bd-t{background:rgba(0,201,167,.1);color:#5EEAD4;border:1px solid rgba(0,201,167,.18);}
-.bd-a{background:rgba(245,158,11,.1);color:#FCD34D;border:1px solid rgba(245,158,11,.18);}
-.bd-g{background:rgba(34,197,94,.1);color:#86EFAC;border:1px solid rgba(34,197,94,.18);}
-.bd-r{background:rgba(239,68,68,.1);color:#FCA5A5;border:1px solid rgba(239,68,68,.18);}
-.bd-y{background:rgba(255,224,51,.1);color:var(--y);border:1px solid rgba(255,224,51,.18);}
-
-/* PROGRESS */
 .prog{margin-bottom:8px;}
 .prog-hd{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-bottom:3px;}
 .prog-tr{height:4px;background:var(--s4);border-radius:2px;overflow:hidden;}
-.prog-f{height:100%;border-radius:2px;transition:width .5s;}
-
-/* PROMO */
+.prog-f{height:100%;border-radius:2px;}
 .pmb{background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:11px 13px;margin-bottom:7px;}
 .pmb-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
-
-/* QUICK ACTIONS */
+.bd{display:inline-flex;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:600;}
+.bd-g{background:rgba(34,197,94,.1);color:#86EFAC;border:1px solid rgba(34,197,94,.18);}
+.bd-a{background:rgba(245,158,11,.1);color:#FCD34D;border:1px solid rgba(245,158,11,.18);}
+.bd-b{background:rgba(79,142,247,.1);color:#93BBFF;border:1px solid rgba(79,142,247,.18);}
+.bd-t{background:rgba(0,201,167,.1);color:#5EEAD4;border:1px solid rgba(0,201,167,.18);}
+.bd-r{background:rgba(239,68,68,.1);color:#FCA5A5;border:1px solid rgba(239,68,68,.18);}
+.bd-y{background:rgba(255,224,51,.1);color:var(--y);border:1px solid rgba(255,224,51,.18);}
 .qa{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px;}
 .qa-i{background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 10px;text-align:center;cursor:pointer;transition:all .14s;}
 .qa-i:hover{border-color:rgba(255,224,51,.18);background:rgba(255,224,51,.04);transform:translateY(-1px);}
@@ -144,16 +149,12 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .qa-i:hover svg{stroke:var(--y);}
 .qa-lbl{font-size:11px;font-weight:500;color:var(--t2);}
 .qa-i:hover .qa-lbl{color:var(--t1);}
-
-/* DAY DOTS */
 .ddots{display:flex;gap:3px;flex-wrap:wrap;}
 .dd{width:19px;height:19px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;}
 .dd-on{background:rgba(79,142,247,.16);color:var(--blue);}
 .dd-today{background:var(--y);color:var(--k);}
 .dd-off{background:var(--s4);color:var(--t3);}
 .dd-fut{background:transparent;color:var(--b2);}
-
-/* TALLY */
 .tg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px;}
 .tb{background:var(--s3);border:1px solid var(--b2);border-radius:var(--r3);padding:16px 10px 13px;text-align:center;cursor:pointer;transition:all .14s;user-select:none;position:relative;}
 .tb:active{transform:scale(.97);}
@@ -166,29 +167,15 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .tundo:hover{color:var(--t1);}
 .pulse{animation:tp .14s ease-out;}
 @keyframes tp{0%{transform:scale(1.07);}100%{transform:scale(1);}}
-
-/* FUNNEL */
 .fr{display:grid;grid-template-columns:96px 1fr 48px 48px;gap:7px;align-items:center;margin-bottom:6px;}
 .flbl{font-size:11px;color:var(--t2);}
 .ftr{height:15px;background:var(--s4);border-radius:3px;overflow:hidden;}
 .ffl{height:100%;border-radius:3px;}
 .fv{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;text-align:right;}
 .fb{font-size:10px;color:var(--t3);text-align:right;}
-
-/* TRAINING */
 .tri{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);}
 .tri:last-child{border-bottom:none;}
 .tico{width:32px;height:32px;border-radius:var(--r1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
-
-/* GOALS */
-.gpc{background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:13px;margin-bottom:11px;}
-.gpg{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
-.gpc-c{background:var(--s4);border-radius:var(--r1);padding:9px 11px;}
-.gpcv{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;line-height:1;}
-.gpcl{font-size:10px;color:var(--t3);margin-top:2px;}
-.gpcd{font-size:10px;margin-top:2px;}
-
-/* LEADERBOARD */
 .lbhd{display:grid;grid-template-columns:28px 1fr 70px 56px 46px;gap:7px;padding:0 10px 8px;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1);margin-bottom:3px;}
 .lbrow{display:grid;grid-template-columns:28px 1fr 70px 56px 46px;gap:7px;align-items:center;padding:8px 10px;border-radius:var(--r1);transition:background .1s;}
 .lbrow:hover{background:var(--s3);}
@@ -199,8 +186,6 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .lbn{font-size:12px;font-weight:500;}
 .lbr{font-size:9px;color:var(--t3);}
 .lbv{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;text-align:right;}
-
-/* PODIUM */
 .pod{display:flex;align-items:flex-end;justify-content:center;gap:9px;padding:14px 0 0;margin-bottom:18px;}
 .ps{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;max-width:140px;}
 .pav{border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;color:#fff;}
@@ -208,8 +193,6 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .pname{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-align:center;}
 .prole{font-size:9px;color:var(--t3);text-align:center;}
 .pwire{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;text-align:center;}
-
-/* SCORECARD */
 .scm{background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:12px;margin-bottom:7px;}
 .scmhd{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
 .scico{width:30px;height:30px;border-radius:var(--r1);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
@@ -217,289 +200,657 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .scrow:last-child{border-bottom:none;}
 .sclbl{color:var(--t2);}
 .scv{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;}
+
+/* ── ADMIN PANEL ── */
+.admin-table{width:100%;border-collapse:collapse;}
+.admin-table th{font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);padding:8px 12px;text-align:left;border-bottom:1px solid var(--b1);}
+.admin-table td{padding:10px 12px;font-size:12px;border-bottom:1px solid var(--b1);color:var(--t2);}
+.admin-table tr:last-child td{border-bottom:none;}
+.admin-table td strong{color:var(--t1);font-weight:500;}
+.status-active{color:var(--green);}
+.status-pending{color:var(--amber);}
+.invite-form{background:var(--s3);border:1px solid var(--b2);border-radius:var(--r2);padding:16px;margin-bottom:14px;}
+.invite-grid{display:grid;grid-template-columns:1fr 1fr 120px 100px;gap:10px;align-items:end;}
+.invite-field label{display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;}
+.invite-field input,.invite-field select{width:100%;background:var(--s4);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-family:'Inter',sans-serif;font-size:12px;color:var(--t1);outline:none;}
+.invite-field input:focus,.invite-field select:focus{border-color:var(--y);}
 </style>
 </head>
 <body>
-<div class="app">
-<header class="topbar">
-  <div class="logo"><div class="logo-pip"></div>FPA <span>OS</span></div>
-  <div class="tsep"></div>
-  <div class="tctx">Good morning, <strong>Jordan</strong></div>
-  <div class="tright">
-    <div class="thm">
-      <span class="thm-lbl">Dark</span>
-      <div class="thm-tog" id="tt" onclick="toggleTheme()"><div class="thm-t"></div></div>
-      <span class="thm-lbl">Light</span>
+
+<!-- ── AUTH SCREEN ── -->
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo"><div class="auth-logo-pip"></div>FPA <span>OS</span></div>
+    <div class="auth-tagline">Growth Operating System · Front Page Agency</div>
+
+    <!-- LOGIN FORM -->
+    <div id="login-form">
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Sign in to your account</div>
+      <div class="auth-error" id="login-error"></div>
+      <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com"/></div>
+      <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <button class="btn-auth" onclick="doLogin()" id="login-btn">Sign in</button>
+      <div class="auth-toggle">New rep? <a onclick="showSignup()">Create account</a> · <a onclick="showReset()">Forgot password?</a></div>
     </div>
-    <div class="ibtn"><svg viewBox="0 0 14 14" fill="none" stroke-width="1.4"><path d="M7 1.5a4 4 0 0 1 4 4c0 3 1 4 1.5 5h-11C2 9.5 3 8.5 3 5.5a4 4 0 0 1 4-4z"/><path d="M5.5 11.5a1.5 1.5 0 0 0 3 0"/></svg><div class="npip"></div></div>
-    <div class="uchip"><div class="uav">JM</div><span class="uname">Jordan M.</span><div class="rpip">AE</div></div>
-  </div>
-</header>
 
-<aside class="sidebar">
-  <div class="sbg">
-    <div class="sbg-lbl">Dashboard</div>
-    <div class="sbi active" onclick="nav('home',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="1.5" width="4.5" height="4.5" rx="1"/><rect x="8" y="1.5" width="4.5" height="4.5" rx="1"/><rect x="1.5" y="8" width="4.5" height="4.5" rx="1"/><rect x="8" y="8" width="4.5" height="4.5" rx="1"/></svg>Home</div>
-    <div class="sbi" onclick="nav('field',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="5.5"/><path d="M7 4v3l2 2"/></svg>Field day<span class="sbt" style="color:var(--green);background:rgba(34,197,94,.1);">Live</span></div>
-    <div class="sbi" onclick="nav('progress',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 10.5l3-3.5 2.5 2.5 4.5-5.5"/></svg>My progress</div>
-    <div class="sbi" onclick="nav('training',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4.5h10M4 7.5h6M5.5 10.5h3"/></svg>Training vault</div>
-    <div class="sbi" onclick="nav('goals',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="5.5"/><circle cx="7" cy="7" r="2.5"/></svg>Weekly goals</div>
-  </div>
-  <div class="sbg">
-    <div class="sbg-lbl">Recognition</div>
-    <div class="sbi" onclick="nav('highroller',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7 2l1.4 3.4H12l-2.8 2.4 1 3.6L7 9.5l-3.2 1.9 1-3.6L2 5.4h3.6z"/></svg>High roller board</div>
-  </div>
-  <div class="sbg">
-    <div class="sbg-lbl">Owner</div>
-    <div class="sbi" onclick="nav('scorecard',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M5 9V7M7 9V5M9 9V7"/></svg>Scorecard</div>
-    <div class="sbi" onclick="nav('bulletin',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M4.5 5.5h5M4.5 7.5h5M4.5 9.5h3"/></svg>Weekly bulletin</div>
-    <div class="sbi lk"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5.5" cy="5" r="2"/><path d="M1 12c0-2.5 2-4.5 4.5-4.5"/><circle cx="10.5" cy="7" r="1.8"/><path d="M8.5 12c0-2 1.6-3.5 3.5-3.5"/></svg>Recruitment<span class="sbt">LT+</span></div>
-  </div>
-  <div class="sbfoot"><div class="sbfoot-chip"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="5" r="4"/><path d="M5 3v2l1.5 1"/></svg>Day 23 · FPA DFW</div></div>
-</aside>
+    <!-- SIGNUP FORM -->
+    <div id="signup-form" style="display:none;">
+      <div class="auth-title">Create account</div>
+      <div class="auth-sub">Enter the invite code your owner provided</div>
+      <div class="auth-error" id="signup-error"></div>
+      <div class="auth-success" id="signup-success"></div>
+      <div class="field"><label>Full name</label><input type="text" id="signup-name" placeholder="First and last name"/></div>
+      <div class="field"><label>Email</label><input type="email" id="signup-email" placeholder="you@example.com"/></div>
+      <div class="field"><label>Password</label><input type="password" id="signup-pass" placeholder="Min 8 characters"/></div>
+      <div class="field"><label>Invite code</label><input type="text" id="signup-code" placeholder="Given to you by your owner"/></div>
+      <button class="btn-auth" onclick="doSignup()" id="signup-btn">Create account</button>
+      <div class="auth-toggle">Already have an account? <a onclick="showLogin()">Sign in</a></div>
+    </div>
 
-<main class="main">
+    <!-- RESET FORM -->
+    <div id="reset-form" style="display:none;">
+      <div class="auth-title">Reset password</div>
+      <div class="auth-sub">We'll send a reset link to your email</div>
+      <div class="auth-error" id="reset-error"></div>
+      <div class="auth-success" id="reset-success"></div>
+      <div class="field"><label>Email</label><input type="email" id="reset-email" placeholder="you@example.com"/></div>
+      <button class="btn-auth" onclick="doReset()" id="reset-btn">Send reset link</button>
+      <div class="auth-toggle"><a onclick="showLogin()">Back to sign in</a></div>
+    </div>
+  </div>
+</div>
 
-<!-- HOME -->
-<div id="page-home" class="pg active">
-  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px;flex-wrap:wrap;gap:9px;">
-    <div><div class="pgt">Good morning, Jordan 👋</div><div class="pgs">Saturday Apr 26 · Day 23 of 90 · Spectrum · FPA DFW</div></div>
-    <button class="btn btn-p" onclick="nav('field',null)"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v2.5l2 1.5"/></svg>Start field day</button>
-  </div>
-  <div style="margin-bottom:14px;">
-    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-bottom:3px;"><span style="color:var(--blue);font-weight:500;">Phase 1 — Learn the floor</span><span>Day 23 · 77%</span></div>
-    <div class="phbar"><div class="phfill" style="width:77%;"></div></div>
-  </div>
-  <div class="ann"><div class="ann-dot"></div><div><div class="ann-ttl">Friday High Roller Call — top 3 speak at 6pm 🏆</div><div class="ann-body">This week's top performers share their strategies live. Bring your numbers and your energy.</div></div></div>
-  <div class="g4">
-    <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);">18</div><div class="sl">Closes this week</div><div class="sd up">▲ +3 vs last</div></div>
-    <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);">$3,150</div><div class="sl">Wire this week</div><div class="sd up">▲ LT cleared</div></div>
-    <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);">3</div><div class="sl">Bells this week</div><div class="sd up">▲ Target met</div></div>
-    <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);">76%</div><div class="sl">Log streak</div><div class="sd up">▲ 17 of 23</div></div>
-  </div>
-  <div class="g2">
-    <div>
-      <div class="card" style="margin-bottom:11px;">
-        <div class="slbl">Path to Lead Trainer</div>
-        <div class="pmb"><div class="pmb-hd"><span style="font-size:12px;font-weight:500;">Path A — Wire</span><span class="bd bd-g">Cleared ✓</span></div><div class="prog"><div class="prog-hd"><span>$3,150 / $2,100</span><span style="color:var(--green);">150%</span></div><div class="prog-tr"><div class="prog-f" style="width:100%;background:var(--green);"></div></div></div></div>
-        <div class="pmb"><div class="pmb-hd"><span style="font-size:12px;font-weight:500;">Path B — PIA</span><span class="bd bd-a">4/6</span></div><div class="prog"><div class="prog-hd"><span>4 of 6</span><span style="color:var(--amber);">67%</span></div><div class="prog-tr"><div class="prog-f" style="width:67%;background:var(--amber);"></div></div></div></div>
-        <div class="pmb" style="margin-bottom:0;"><div class="pmb-hd"><span style="font-size:12px;font-weight:500;">Path C — Customers</span><span class="bd bd-a">7/8</span></div><div class="prog" style="margin-bottom:0;"><div class="prog-hd"><span>7 of 8</span><span style="color:var(--amber);">88%</span></div><div class="prog-tr"><div class="prog-f" style="width:88%;background:var(--amber);"></div></div></div></div>
-        <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.14);border-radius:var(--r1);padding:8px 11px;font-size:11px;color:#86EFAC;margin-top:9px;">Path A cleared — speak to your leader about your promotion review.</div>
+<!-- ── APP SHELL ── -->
+<div class="app" id="app-shell">
+  <header class="topbar">
+    <div class="logo"><div class="logo-pip"></div>FPA <span>OS</span></div>
+    <div class="tsep"></div>
+    <div class="tctx" id="tbar-ctx">Loading...</div>
+    <div class="tright">
+      <div class="thm">
+        <span class="thm-lbl">Dark</span>
+        <div class="thm-tog" id="tt" onclick="toggleTheme()"><div class="thm-t"></div></div>
+        <span class="thm-lbl">Light</span>
       </div>
+      <div class="uchip" id="user-chip">
+        <div class="uav" id="user-av" style="background:var(--blue);">?</div>
+        <span class="uname" id="user-name">Loading</span>
+        <span class="bd bd-b" id="user-role-badge">...</span>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">Sign out</button>
     </div>
-    <div>
-      <div class="card" style="margin-bottom:11px;">
-        <div class="slbl">Quick actions</div>
-        <div class="qa">
-          <div class="qa-i" onclick="nav('field',null)"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="9" r="7"/><path d="M9 5.5v3.5l2.5 2"/></svg><div class="qa-lbl">Field tally</div></div>
-          <div class="qa-i" onclick="nav('goals',null)"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="9" r="7"/><circle cx="9" cy="9" r="3"/></svg><div class="qa-lbl">Set goals</div></div>
-          <div class="qa-i" onclick="nav('training',null)"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 5.5h12M5 9h8M6.5 12.5h5"/></svg><div class="qa-lbl">Training</div></div>
-          <div class="qa-i" onclick="nav('progress',null)"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 13l4-5 3 3.5 5-7"/></svg><div class="qa-lbl">Progress</div></div>
-          <div class="qa-i" onclick="nav('highroller',null)"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 2.5l1.7 4H15l-3.5 3 1.2 4.3L9 11.5l-3.7 2.3 1.2-4.3L3 6.5h4.3z"/></svg><div class="qa-lbl">High rollers</div></div>
-          <div class="qa-i" onclick="nav('scorecard',null)"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="12" height="12" rx="1.5"/><path d="M6 12V9M9 12V6M12 12V9"/></svg><div class="qa-lbl">Scorecard</div></div>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <!-- populated by JS based on role -->
+  </aside>
+
+  <main class="main" id="main-content">
+    <!-- HOME -->
+    <div id="page-home" class="pg active">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px;flex-wrap:wrap;gap:9px;">
+        <div><div class="pgt" id="home-greeting">Good morning 👋</div><div class="pgs" id="home-sub">Loading your dashboard...</div></div>
+        <button class="btn btn-p" onclick="nav('field',null)"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v2.5l2 1.5"/></svg>Start field day</button>
+      </div>
+      <div style="margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-bottom:3px;"><span style="color:var(--blue);font-weight:500;">Phase 1 — Learn the floor</span><span>Day 23 · 77%</span></div>
+        <div class="phbar"><div class="phfill" style="width:77%;"></div></div>
+      </div>
+      <div class="ann"><div class="ann-dot"></div><div><div class="ann-ttl">Friday High Roller Call — top 3 speak at 6pm 🏆</div><div class="ann-body">This week's top performers share their strategies live. Bring your numbers and your energy.</div></div></div>
+      <div class="g4">
+        <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);">18</div><div class="sl">Closes this week</div><div class="sd up">▲ +3 vs last</div></div>
+        <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);">$3,150</div><div class="sl">Wire this week</div><div class="sd up">▲ LT cleared</div></div>
+        <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);">3</div><div class="sl">Bells this week</div><div class="sd up">▲ Target met</div></div>
+        <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);">76%</div><div class="sl">Log streak</div><div class="sd up">▲ 17 of 23</div></div>
+      </div>
+      <div class="g2">
+        <div>
+          <div class="card" style="margin-bottom:11px;">
+            <div class="slbl">Path to Lead Trainer</div>
+            <div class="pmb"><div class="pmb-hd"><span style="font-size:12px;font-weight:500;">Path A — Wire</span><span class="bd bd-g">Cleared ✓</span></div><div class="prog"><div class="prog-hd"><span>$3,150 / $2,100</span><span style="color:var(--green);">150%</span></div><div class="prog-tr"><div class="prog-f" style="width:100%;background:var(--green);"></div></div></div></div>
+            <div class="pmb"><div class="pmb-hd"><span style="font-size:12px;font-weight:500;">Path B — PIA</span><span class="bd bd-a">4/6</span></div><div class="prog"><div class="prog-hd"><span>4 of 6</span><span style="color:var(--amber);">67%</span></div><div class="prog-tr"><div class="prog-f" style="width:67%;background:var(--amber);"></div></div></div></div>
+            <div class="pmb" style="margin-bottom:0;"><div class="pmb-hd"><span style="font-size:12px;font-weight:500;">Path C — Customers</span><span class="bd bd-a">7/8</span></div><div class="prog" style="margin-bottom:0;"><div class="prog-hd"><span>7 of 8</span><span style="color:var(--amber);">88%</span></div><div class="prog-tr"><div class="prog-f" style="width:88%;background:var(--amber);"></div></div></div></div>
+            <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.14);border-radius:var(--r1);padding:8px 11px;font-size:11px;color:#86EFAC;margin-top:9px;">Path A cleared — speak to your leader about promotion review.</div>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:11px;">
+            <div class="slbl">Quick actions</div>
+            <div class="qa">
+              <div class="qa-i" onclick="nav('field',null)"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="9" r="7"/><path d="M9 5.5v3.5l2.5 2"/></svg><div class="qa-lbl">Field tally</div></div>
+              <div class="qa-i" onclick="nav('goals',null)"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="9" r="7"/><circle cx="9" cy="9" r="3"/></svg><div class="qa-lbl">Set goals</div></div>
+              <div class="qa-i" onclick="nav('training',null)"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 5.5h12M5 9h8M6.5 12.5h5"/></svg><div class="qa-lbl">Training</div></div>
+              <div class="qa-i" onclick="nav('progress',null)"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 13l4-5 3 3.5 5-7"/></svg><div class="qa-lbl">Progress</div></div>
+              <div class="qa-i" onclick="nav('highroller',null)"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 2.5l1.7 4H15l-3.5 3 1.2 4.3L9 11.5l-3.7 2.3 1.2-4.3L3 6.5h4.3z"/></svg><div class="qa-lbl">High rollers</div></div>
+              <div class="qa-i" onclick="nav('scorecard',null)"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="12" height="12" rx="1.5"/><path d="M6 12V9M9 12V6M12 12V9"/></svg><div class="qa-lbl">Scorecard</div></div>
+            </div>
+          </div>
+          <div class="card"><div class="slbl">30-day log activity</div><div class="ddots" id="dd"></div></div>
         </div>
       </div>
-      <div class="card"><div class="slbl">30-day log activity</div><div class="ddots" id="dd"></div></div>
     </div>
-  </div>
-</div>
 
-<!-- FIELD -->
-<div id="page-field" class="pg">
-  <div class="pgt">Field day</div>
-  <div class="pgs">Walmart Supercenter — Arlington, TX · Spectrum · Apr 26</div>
-  <div style="background:rgba(255,224,51,.05);border:1px solid rgba(255,224,51,.13);border-radius:var(--r2);padding:10px 13px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:7px;">
-    <span style="font-size:11px;color:var(--y);">Targets locked · closes auto-count from sales log</span>
-    <div style="display:flex;gap:10px;font-size:11px;"><span>Stops: <strong style="color:var(--t1);">60</strong></span><span>Tabs: <strong style="color:var(--t1);">18</strong></span><span>Closes: <strong style="color:var(--t1);">2</strong></span></div>
-  </div>
-  <div class="tg">
-    <div class="tb" style="border-color:rgba(79,142,247,.25);" onclick="tap('s')"><button class="tundo" onclick="event.stopPropagation();undo('s')">undo</button><div class="tlbl" style="color:var(--blue);">Stops</div><div class="tcnt" id="tc-s" style="color:var(--blue);">0</div><div class="tsub">of 60</div><div class="tpbar"><div class="tpfill" id="tf-s" style="width:0%;background:var(--blue);"></div></div></div>
-    <div class="tb" style="border-color:rgba(0,201,167,.25);" onclick="tap('t')"><button class="tundo" onclick="event.stopPropagation();undo('t')">undo</button><div class="tlbl" style="color:var(--teal);">Tabs</div><div class="tcnt" id="tc-t" style="color:var(--teal);">0</div><div class="tsub">of 18</div><div class="tpbar"><div class="tpfill" id="tf-t" style="width:0%;background:var(--teal);"></div></div></div>
-    <div class="tb" style="border-color:rgba(245,158,11,.25);" onclick="tap('p')"><button class="tundo" onclick="event.stopPropagation();undo('p')">undo</button><div class="tlbl" style="color:var(--amber);">Presentations</div><div class="tcnt" id="tc-p" style="color:var(--amber);">0</div><div class="tsub">of 5</div><div class="tpbar"><div class="tpfill" id="tf-p" style="width:0%;background:var(--amber);"></div></div></div>
-    <div class="tb" style="border-color:rgba(72,72,90,.4);" onclick="tap('c')"><button class="tundo" onclick="event.stopPropagation();undo('c')">undo</button><div class="tlbl" style="color:var(--t2);">Credit checks</div><div class="tcnt" id="tc-c" style="color:var(--t2);">0</div><div class="tsub">of 3</div><div class="tpbar"><div class="tpfill" id="tf-c" style="width:0%;background:var(--t3);"></div></div></div>
-  </div>
-  <div class="card" style="margin-bottom:10px;">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;">
-      <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--green);" id="f-cl">0</div><div style="font-size:10px;color:var(--t3);">Sales</div></div>
-      <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--y);" id="f-w">$0</div><div style="font-size:10px;color:var(--t3);">Wire</div></div>
-      <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--teal);" id="f-tr">—</div><div style="font-size:10px;color:var(--t3);">Tab rate</div></div>
-      <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;color:var(--amber);" id="f-bl">No bell</div><div style="font-size:10px;color:var(--t3);">Bell</div></div>
-    </div>
-  </div>
-  <button class="btn btn-p" style="width:100%;justify-content:center;padding:11px;"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6.5" cy="6.5" r="5"/><path d="M4.5 6.5h4M6.5 4.5v4"/></svg>Log a sale</button>
-</div>
-
-<!-- PROGRESS -->
-<div id="page-progress" class="pg">
-  <div class="pgt">My progress</div><div class="pgs">Week of Apr 21–26 · your pipeline vs benchmarks</div>
-  <div class="g4">
-    <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);">475</div><div class="sl">Stops</div><div class="sd up">▲ Near 500</div></div>
-    <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);">142</div><div class="sl">Tabs</div><div class="sd up">▲ 29.9%</div></div>
-    <div class="stat"><div class="sacc" style="background:var(--amber);"></div><div class="sv" style="color:var(--amber);">38</div><div class="sl">Presentations</div><div class="sd wn">▼ Short of 50</div></div>
-    <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);">18</div><div class="sl">Closes</div><div class="sd up">▲ Top 20%</div></div>
-  </div>
-  <div class="card">
-    <div class="slbl">Weekly funnel</div>
-    <div style="display:grid;grid-template-columns:96px 1fr 48px 48px;gap:7px;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;padding-bottom:6px;border-bottom:1px solid var(--b1);"><span>Stage</span><span>vs target</span><span style="text-align:right;">Act.</span><span style="text-align:right;">Tgt.</span></div>
-    <div class="fr"><div class="flbl">Stops</div><div class="ftr"><div class="ffl" style="width:95%;background:var(--blue);"></div></div><div class="fv" style="color:var(--blue);">475</div><div class="fb">500</div></div>
-    <div class="fr"><div class="flbl">Tabs</div><div class="ftr"><div class="ffl" style="width:95%;background:var(--teal);"></div></div><div class="fv" style="color:var(--teal);">142</div><div class="fb">150</div></div>
-    <div class="fr"><div class="flbl">Presentations</div><div class="ftr"><div class="ffl" style="width:76%;background:var(--amber);"></div></div><div class="fv" style="color:var(--amber);">38</div><div class="fb">50</div></div>
-    <div class="fr"><div class="flbl">Credit checks</div><div class="ftr"><div class="ffl" style="width:73%;background:var(--amber);"></div></div><div class="fv" style="color:var(--amber);">22</div><div class="fb">30</div></div>
-    <div class="fr"><div class="flbl">Closes</div><div class="ftr"><div class="ffl" style="width:90%;background:var(--green);"></div></div><div class="fv" style="color:var(--green);">18</div><div class="fb">20</div></div>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;padding-top:8px;margin-top:4px;border-top:1px solid var(--b1);font-size:11px;color:var(--t2);"><span>Tab rate: <strong style="color:var(--teal);">29.9%</strong></span><span>Close ratio: <strong style="color:var(--green);">1 in 2.1</strong></span><span>Wire: <strong style="color:var(--y);">$3,150</strong></span></div>
-  </div>
-</div>
-
-<!-- TRAINING -->
-<div id="page-training" class="pg">
-  <div class="pgt">Training vault</div><div class="pgs">AE modules active · content unlocks as you advance</div>
-  <div class="card" style="margin-bottom:10px;">
-    <div class="slbl">Account Executive — unlocked</div>
-    <div class="tri"><div class="tico" style="background:rgba(79,142,247,.1);">📋</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Sales fundamentals & pitch mastery</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Scripts, objection handling, store etiquette</div></div><span class="bd bd-g">Open</span></div>
-    <div class="tri"><div class="tico" style="background:rgba(79,142,247,.1);">🎯</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Daily drill sheets & practice routines</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Warm-up drills, roleplay guides</div></div><span class="bd bd-g">Open</span></div>
-    <div class="tri"><div class="tico" style="background:rgba(79,142,247,.1);">🗺️</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">First 30 days success roadmap</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Day-by-day expectations, milestones</div></div><span class="bd bd-g">Open</span></div>
-    <div class="tri"><div class="tico" style="background:rgba(79,142,247,.1);">📱</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Product knowledge — Spectrum</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Internet, TV, Mobile · wire values</div></div><span class="bd bd-g">Open</span></div>
-  </div>
-  <div class="card" style="opacity:.3;">
-    <div class="slbl">Lead Trainer — locked</div>
-    <div class="tri"><div class="tico" style="background:var(--s4);">🔒</div><div><div style="font-size:12px;font-weight:500;color:var(--t3);">Team management & leadership systems</div><div style="font-size:11px;color:var(--t3);margin-top:1px;">Unlocks at LT promotion</div></div></div>
-    <div class="tri"><div class="tico" style="background:var(--s4);">🔒</div><div><div style="font-size:12px;font-weight:500;color:var(--t3);">Recruiting fundamentals</div><div style="font-size:11px;color:var(--t3);margin-top:1px;">Unlocks at LT promotion</div></div></div>
-  </div>
-</div>
-
-<!-- GOALS -->
-<div id="page-goals" class="pg">
-  <div class="pgt">Weekly goals</div><div class="pgs">Last week auto-loaded · 4 questions · goal writes itself</div>
-  <div class="gpc">
-    <div class="slbl" style="margin-bottom:7px;">Last week — auto-populated</div>
-    <div class="gpg">
-      <div class="gpc-c"><div class="gpcv" style="color:var(--blue);">475</div><div class="gpcl">Stops</div><div class="gpcd up">Near target</div></div>
-      <div class="gpc-c"><div class="gpcv" style="color:var(--teal);">142</div><div class="gpcl">Tabs</div><div class="gpcd up">29.9%</div></div>
-      <div class="gpc-c"><div class="gpcv" style="color:var(--amber);">38</div><div class="gpcl">Pres</div><div class="gpcd wn">Short of 50</div></div>
-      <div class="gpc-c"><div class="gpcv" style="color:var(--green);">18</div><div class="gpcl">Closes</div><div class="gpcd up">Above target</div></div>
-      <div class="gpc-c"><div class="gpcv" style="color:var(--y);">$3,150</div><div class="gpcl">Wire</div><div class="gpcd up">LT cleared ✓</div></div>
-      <div class="gpc-c"><div class="gpcv" style="color:var(--t2);">0</div><div class="gpcl">Recruits</div><div class="gpcd wn">None</div></div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="slbl">This week's commitment</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
-      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Closes target</div><input type="number" placeholder="e.g. 22" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
-      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Wire target ($)</div><input type="number" placeholder="e.g. 3800" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
-    </div>
-    <div style="margin-bottom:9px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">One thing I'll do differently</div><select style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"><option value="">Select focus area</option><option>Push through to more presentations</option><option>Focus on bundles — going for bells</option><option>Control my energy after early no's</option></select></div>
-    <button class="btn btn-p" style="width:100%;justify-content:center;">Generate & submit my goal</button>
-  </div>
-</div>
-
-<!-- HIGH ROLLER -->
-<div id="page-highroller" class="pg">
-  <div class="pgt">High Roller Board 🏆</div><div class="pgs">FPA DFW · Week of Apr 21–26 · Live rankings</div>
-  <div class="card" style="padding:0;overflow:hidden;margin-bottom:12px;">
-    <div class="pod">
-      <div class="ps" style="margin-bottom:14px;"><div class="pav" style="width:56px;height:56px;background:var(--silver);font-size:18px;">AR</div><div class="pname">Aaliyah R.</div><div class="prole">LT · Day 41</div><div class="pwire" style="color:var(--silver);">$4,200</div><div class="pbase" style="height:56px;background:rgba(160,160,184,.1);">2</div></div>
-      <div class="ps"><div style="font-size:18px;text-align:center;margin-bottom:2px;">👑</div><div class="pav" style="width:72px;height:72px;background:var(--k);font-size:24px;border:2px solid var(--gold);box-shadow:0 0 18px rgba(255,215,0,.22);">DK</div><div class="pname" style="font-size:16px;">Destiny K.</div><div class="prole">JPM · Day 67</div><div class="pwire" style="color:var(--gold);font-size:22px;">$5,850</div><span class="bd bd-y" style="margin-top:2px;">Champion</span><div class="pbase" style="height:76px;background:rgba(255,215,0,.06);border-top:1px solid rgba(255,215,0,.12);">1</div></div>
-      <div class="ps" style="margin-bottom:26px;"><div class="pav" style="width:48px;height:48px;background:var(--bronze);font-size:16px;">JM</div><div class="pname" style="font-size:13px;">Jordan M. <span style="font-size:8px;color:var(--y);">YOU</span></div><div class="prole">AE · Day 23</div><div class="pwire" style="color:var(--bronze);font-size:16px;">$3,150</div><div class="pbase" style="height:46px;background:rgba(205,127,50,.1);">3</div></div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="lbhd"><span>#</span><span style="text-align:left;">Rep</span><span>Wire</span><span>Closes</span><span>Bells</span></div>
-    <div id="lb"></div>
-  </div>
-</div>
-
-<!-- SCORECARD -->
-<div id="page-scorecard" class="pg">
-  <div class="pgt">Scorecard</div><div class="pgs">All modules feeding one source of truth · FPA DFW · week of Apr 21</div>
-  <div class="g4">
-    <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);">$48.2K</div><div class="sl">Org wire</div><div class="sd up">▲ +12%</div></div>
-    <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);">155</div><div class="sl">Total closes</div><div class="sd up">▲ +18</div></div>
-    <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);">47</div><div class="sl">Bells rung</div><div class="sd up">▲ +8</div></div>
-    <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);">83%</div><div class="sl">Log completion</div><div class="sd dn">▼ 2 flagged</div></div>
-  </div>
-  <div class="g2">
-    <div>
-      <div class="scm"><div class="scmhd"><div class="scico" style="background:rgba(79,142,247,.1);">📊</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Field OS</div><div style="font-size:9px;color:var(--t3);">Live tally feed</div></div><span class="bd bd-g">Live</span></div><div class="scrow"><span class="sclbl">Stops today</span><span class="scv" style="color:var(--blue);">847</span></div><div class="scrow"><span class="sclbl">Tab rate</span><span class="scv" style="color:var(--teal);">31.2%</span></div><div class="scrow"><span class="sclbl">Presentations</span><span class="scv" style="color:var(--amber);">62</span></div></div>
-      <div class="scm"><div class="scmhd"><div class="scico" style="background:rgba(255,224,51,.08);">💰</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Sales log</div><div style="font-size:9px;color:var(--t3);">Auto wire calc</div></div><span class="bd bd-g">Live</span></div><div class="scrow"><span class="sclbl">Wire today</span><span class="scv" style="color:var(--y);">$8,750</span></div><div class="scrow"><span class="sclbl">Closes today</span><span class="scv" style="color:var(--green);">28</span></div><div class="scrow"><span class="sclbl">Bells today</span><span class="scv" style="color:var(--amber);">🔔 9</span></div></div>
-      <div class="scm"><div class="scmhd"><div class="scico" style="background:rgba(139,92,246,.1);">👥</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Recruitment</div><div style="font-size:9px;color:var(--t3);">Pipeline status</div></div><span class="bd bd-b">Active</span></div><div class="scrow"><span class="sclbl">Interviews this week</span><span class="scv" style="color:var(--purple);">14</span></div><div class="scrow"><span class="sclbl">New starts</span><span class="scv" style="color:var(--green);">5</span></div><div class="scrow"><span class="sclbl">Promo eligible</span><span class="scv" style="color:var(--y);">2</span></div></div>
-    </div>
-    <div>
+    <!-- FIELD -->
+    <div id="page-field" class="pg">
+      <div class="pgt">Field day</div><div class="pgs">Walmart Supercenter — Arlington, TX · Spectrum · Tap to count</div>
+      <div style="background:rgba(255,224,51,.05);border:1px solid rgba(255,224,51,.13);border-radius:var(--r2);padding:10px 13px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:7px;">
+        <span style="font-size:11px;color:var(--y);">Targets locked · closes auto-count from sales log</span>
+        <div style="display:flex;gap:10px;font-size:11px;"><span>Stops: <strong style="color:var(--t1);">60</strong></span><span>Tabs: <strong style="color:var(--t1);">18</strong></span></div>
+      </div>
+      <div class="tg">
+        <div class="tb" style="border-color:rgba(79,142,247,.25);" onclick="tap('s')"><button class="tundo" onclick="event.stopPropagation();undo('s')">undo</button><div class="tlbl" style="color:var(--blue);">Stops</div><div class="tcnt" id="tc-s" style="color:var(--blue);">0</div><div class="tsub">of 60</div><div class="tpbar"><div class="tpfill" id="tf-s" style="width:0%;background:var(--blue);"></div></div></div>
+        <div class="tb" style="border-color:rgba(0,201,167,.25);" onclick="tap('t')"><button class="tundo" onclick="event.stopPropagation();undo('t')">undo</button><div class="tlbl" style="color:var(--teal);">Tabs</div><div class="tcnt" id="tc-t" style="color:var(--teal);">0</div><div class="tsub">of 18</div><div class="tpbar"><div class="tpfill" id="tf-t" style="width:0%;background:var(--teal);"></div></div></div>
+        <div class="tb" style="border-color:rgba(245,158,11,.25);" onclick="tap('p')"><button class="tundo" onclick="event.stopPropagation();undo('p')">undo</button><div class="tlbl" style="color:var(--amber);">Presentations</div><div class="tcnt" id="tc-p" style="color:var(--amber);">0</div><div class="tsub">of 5</div><div class="tpbar"><div class="tpfill" id="tf-p" style="width:0%;background:var(--amber);"></div></div></div>
+        <div class="tb" style="border-color:rgba(72,72,90,.4);" onclick="tap('c')"><button class="tundo" onclick="event.stopPropagation();undo('c')">undo</button><div class="tlbl" style="color:var(--t2);">Credit checks</div><div class="tcnt" id="tc-c" style="color:var(--t2);">0</div><div class="tsub">of 3</div><div class="tpbar"><div class="tpfill" id="tf-c" style="width:0%;background:var(--t3);"></div></div></div>
+      </div>
       <div class="card" style="margin-bottom:10px;">
-        <div class="slbl">Office vs org wire</div>
-        <div class="prog"><div class="prog-hd"><span style="color:var(--y);">FPA DFW</span><span style="color:var(--y);">$18,400</span></div><div class="prog-tr"><div class="prog-f" style="width:38%;background:var(--y);"></div></div></div>
-        <div class="prog"><div class="prog-hd"><span style="color:var(--teal);">Elevation Global</span><span style="color:var(--teal);">$16,800</span></div><div class="prog-tr"><div class="prog-f" style="width:35%;background:var(--teal);"></div></div></div>
-        <div class="prog" style="margin-bottom:0;"><div class="prog-hd"><span style="color:var(--blue);">MP Enterprises</span><span style="color:var(--blue);">$13,000</span></div><div class="prog-tr"><div class="prog-f" style="width:27%;background:var(--blue);"></div></div></div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;">
+          <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--green);" id="f-cl">0</div><div style="font-size:10px;color:var(--t3);">Sales</div></div>
+          <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--y);" id="f-w">$0</div><div style="font-size:10px;color:var(--t3);">Wire</div></div>
+          <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--teal);" id="f-tr">—</div><div style="font-size:10px;color:var(--t3);">Tab rate</div></div>
+          <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;color:var(--amber);" id="f-bl">No bell</div><div style="font-size:10px;color:var(--t3);">Bell</div></div>
+        </div>
+      </div>
+      <button class="btn btn-p" style="width:100%;justify-content:center;padding:11px;">Log a sale</button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div id="page-progress" class="pg">
+      <div class="pgt">My progress</div><div class="pgs">Week of Apr 21–26 · your pipeline vs benchmarks</div>
+      <div class="g4">
+        <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);">475</div><div class="sl">Stops</div><div class="sd up">▲ Near 500</div></div>
+        <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);">142</div><div class="sl">Tabs</div><div class="sd up">▲ 29.9%</div></div>
+        <div class="stat"><div class="sacc" style="background:var(--amber);"></div><div class="sv" style="color:var(--amber);">38</div><div class="sl">Presentations</div><div class="sd wn">▼ Short of 50</div></div>
+        <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);">18</div><div class="sl">Closes</div><div class="sd up">▲ Top 20%</div></div>
       </div>
       <div class="card">
-        <div class="slbl">Promo pipeline</div>
-        <div class="scrow"><span class="sclbl">Eligible now</span><span class="scv" style="color:var(--green);">2</span></div>
-        <div class="scrow"><span class="sclbl">Within 1 week</span><span class="scv" style="color:var(--amber);">3</span></div>
-        <div class="scrow"><span class="sclbl">Promotions this month</span><span class="scv" style="color:var(--teal);">1</span></div>
-        <div class="scrow" style="border:none;"><span class="sclbl">Active reps</span><span class="scv">24</span></div>
+        <div class="slbl">Weekly funnel</div>
+        <div style="display:grid;grid-template-columns:96px 1fr 48px 48px;gap:7px;font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;padding-bottom:6px;border-bottom:1px solid var(--b1);"><span>Stage</span><span>vs target</span><span style="text-align:right;">Act.</span><span style="text-align:right;">Tgt.</span></div>
+        <div class="fr"><div class="flbl">Stops</div><div class="ftr"><div class="ffl" style="width:95%;background:var(--blue);"></div></div><div class="fv" style="color:var(--blue);">475</div><div class="fb">500</div></div>
+        <div class="fr"><div class="flbl">Tabs</div><div class="ftr"><div class="ffl" style="width:95%;background:var(--teal);"></div></div><div class="fv" style="color:var(--teal);">142</div><div class="fb">150</div></div>
+        <div class="fr"><div class="flbl">Presentations</div><div class="ftr"><div class="ffl" style="width:76%;background:var(--amber);"></div></div><div class="fv" style="color:var(--amber);">38</div><div class="fb">50</div></div>
+        <div class="fr"><div class="flbl">Credit checks</div><div class="ftr"><div class="ffl" style="width:73%;background:var(--amber);"></div></div><div class="fv" style="color:var(--amber);">22</div><div class="fb">30</div></div>
+        <div class="fr"><div class="flbl">Closes</div><div class="ftr"><div class="ffl" style="width:90%;background:var(--green);"></div></div><div class="fv" style="color:var(--green);">18</div><div class="fb">20</div></div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- BULLETIN -->
-<div id="page-bulletin" class="pg">
-  <div class="pgt">Weekly bulletin</div><div class="pgs">Recognition only · auto Monday 7am · post in the Atmosphere</div>
-  <div style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.13);border-radius:var(--r2);padding:10px 13px;font-size:11px;color:#86EFAC;margin-bottom:16px;display:flex;gap:7px;align-items:flex-start;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" style="flex-shrink:0;margin-top:1px;"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v2.5M6 8v.5"/></svg>Celebrates wins only. Top performers named publicly. Underperformers coached privately — never on the wall.</div>
-  <div class="brow">
-    <button class="btn btn-p" onclick="window.print()"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="9" height="7" rx="1"/><path d="M4 5V2.5h5V5M4 9h5"/></svg>Print PDF</button>
-    <button class="btn btn-t"><svg viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1.5" y="3" width="10" height="7" rx="1"/><path d="M1.5 5l5 3.5 5-3.5"/></svg>Send to recipients</button>
-    <button class="btn btn-g">Configure</button>
-  </div>
-  <div class="card" style="text-align:center;padding:26px;">
-    <div style="font-size:32px;margin-bottom:8px;">📄</div>
-    <div style="font-size:14px;font-weight:600;margin-bottom:3px;">Bulletin preview ready</div>
-    <div style="font-size:11px;color:var(--t2);margin-bottom:12px;">Office + org versions · full distribution · fully built</div>
-    <div style="display:flex;gap:7px;justify-content:center;flex-wrap:wrap;">
-      <span class="bd bd-g">Auto-generated ✓</span><span class="bd bd-b">Email delivery ✓</span><span class="bd bd-t">Multi-recipient ✓</span><span class="bd bd-a">Print ready ✓</span>
+    <!-- TRAINING -->
+    <div id="page-training" class="pg">
+      <div class="pgt">Training vault</div><div class="pgs">AE modules active · unlocks as you advance</div>
+      <div class="card" style="margin-bottom:10px;">
+        <div class="slbl">Account Executive — unlocked</div>
+        <div class="tri"><div class="tico" style="background:rgba(79,142,247,.1);">📋</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Sales fundamentals & pitch mastery</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Scripts, objection handling, store etiquette</div></div><span class="bd bd-g">Open</span></div>
+        <div class="tri"><div class="tico" style="background:rgba(79,142,247,.1);">🎯</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Daily drill sheets & practice routines</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Warm-up drills, roleplay guides</div></div><span class="bd bd-g">Open</span></div>
+        <div class="tri"><div class="tico" style="background:rgba(79,142,247,.1);">🗺️</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">First 30 days success roadmap</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Day-by-day expectations, milestones</div></div><span class="bd bd-g">Open</span></div>
+        <div class="tri"><div class="tico" style="background:rgba(79,142,247,.1);">📱</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Product knowledge — Spectrum</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Internet, TV, Mobile · wire values</div></div><span class="bd bd-g">Open</span></div>
+      </div>
+      <div class="card" style="opacity:.3;">
+        <div class="slbl">Lead Trainer — locked</div>
+        <div class="tri"><div class="tico" style="background:var(--s4);">🔒</div><div><div style="font-size:12px;font-weight:500;color:var(--t3);">Team management & leadership systems</div></div></div>
+      </div>
     </div>
-  </div>
-</div>
 
-</main>
+    <!-- GOALS -->
+    <div id="page-goals" class="pg">
+      <div class="pgt">Weekly goals</div><div class="pgs">Last week auto-loaded · goal writes itself</div>
+      <div class="card">
+        <div class="slbl">This week's commitment</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
+          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Closes target</div><input type="number" placeholder="e.g. 22" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Wire target ($)</div><input type="number" placeholder="e.g. 3800" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+        </div>
+        <button class="btn btn-p" style="width:100%;justify-content:center;">Generate & submit my goal</button>
+      </div>
+    </div>
+
+    <!-- HIGH ROLLER -->
+    <div id="page-highroller" class="pg">
+      <div class="pgt">High Roller Board 🏆</div><div class="pgs">FPA DFW · Week of Apr 21–26</div>
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:12px;">
+        <div class="pod">
+          <div class="ps" style="margin-bottom:14px;"><div class="pav" style="width:56px;height:56px;background:var(--silver);font-size:18px;">AR</div><div class="pname">Aaliyah R.</div><div class="prole">LT · Day 41</div><div class="pwire" style="color:var(--silver);">$4,200</div><div class="pbase" style="height:56px;background:rgba(160,160,184,.1);">2</div></div>
+          <div class="ps"><div style="font-size:18px;text-align:center;margin-bottom:2px;">👑</div><div class="pav" style="width:72px;height:72px;background:var(--k);font-size:24px;border:2px solid var(--gold);box-shadow:0 0 18px rgba(255,215,0,.22);">DK</div><div class="pname" style="font-size:16px;">Destiny K.</div><div class="prole">JPM · Day 67</div><div class="pwire" style="color:var(--gold);font-size:22px;">$5,850</div><span class="bd bd-y" style="margin-top:2px;">Champion</span><div class="pbase" style="height:76px;background:rgba(255,215,0,.06);border-top:1px solid rgba(255,215,0,.12);">1</div></div>
+          <div class="ps" style="margin-bottom:26px;"><div class="pav" style="width:48px;height:48px;background:var(--bronze);font-size:16px;">JM</div><div class="pname" style="font-size:13px;">Jordan M.</div><div class="prole">AE · Day 23</div><div class="pwire" style="color:var(--bronze);font-size:16px;">$3,150</div><div class="pbase" style="height:46px;background:rgba(205,127,50,.1);">3</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="lbhd"><span>#</span><span style="text-align:left;">Rep</span><span>Wire</span><span>Closes</span><span>Bells</span></div>
+        <div id="lb"></div>
+      </div>
+    </div>
+
+    <!-- SCORECARD -->
+    <div id="page-scorecard" class="pg">
+      <div class="pgt">Scorecard</div><div class="pgs">All modules · one source of truth · FPA DFW</div>
+      <div class="g4">
+        <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);">$48.2K</div><div class="sl">Org wire</div><div class="sd up">▲ +12%</div></div>
+        <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);">155</div><div class="sl">Total closes</div><div class="sd up">▲ +18</div></div>
+        <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);">47</div><div class="sl">Bells rung</div><div class="sd up">▲ +8</div></div>
+        <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);">83%</div><div class="sl">Log completion</div><div class="sd dn">▼ 2 flagged</div></div>
+      </div>
+      <div class="g2">
+        <div>
+          <div class="scm"><div class="scmhd"><div class="scico" style="background:rgba(79,142,247,.1);">📊</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Field OS</div><div style="font-size:9px;color:var(--t3);">Live tally</div></div><span class="bd bd-g">Live</span></div><div class="scrow"><span class="sclbl">Stops today</span><span class="scv" style="color:var(--blue);">847</span></div><div class="scrow"><span class="sclbl">Tab rate</span><span class="scv" style="color:var(--teal);">31.2%</span></div><div class="scrow"><span class="sclbl">Presentations</span><span class="scv" style="color:var(--amber);">62</span></div></div>
+          <div class="scm"><div class="scmhd"><div class="scico" style="background:rgba(255,224,51,.08);">💰</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Sales log</div><div style="font-size:9px;color:var(--t3);">Auto wire calc</div></div><span class="bd bd-g">Live</span></div><div class="scrow"><span class="sclbl">Wire today</span><span class="scv" style="color:var(--y);">$8,750</span></div><div class="scrow"><span class="sclbl">Closes today</span><span class="scv" style="color:var(--green);">28</span></div><div class="scrow"><span class="sclbl">Bells today</span><span class="scv" style="color:var(--amber);">🔔 9</span></div></div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:10px;">
+            <div class="slbl">Office vs org wire</div>
+            <div class="prog"><div class="prog-hd"><span style="color:var(--y);">FPA DFW</span><span style="color:var(--y);">$18,400</span></div><div class="prog-tr"><div class="prog-f" style="width:38%;background:var(--y);"></div></div></div>
+            <div class="prog"><div class="prog-hd"><span style="color:var(--teal);">Elevation Global</span><span style="color:var(--teal);">$16,800</span></div><div class="prog-tr"><div class="prog-f" style="width:35%;background:var(--teal);"></div></div></div>
+            <div class="prog" style="margin-bottom:0;"><div class="prog-hd"><span style="color:var(--blue);">MP Enterprises</span><span style="color:var(--blue);">$13,000</span></div><div class="prog-tr"><div class="prog-f" style="width:27%;background:var(--blue);"></div></div></div>
+          </div>
+          <div class="card">
+            <div class="slbl">Promo pipeline</div>
+            <div class="scrow"><span class="sclbl">Eligible now</span><span class="scv" style="color:var(--green);">2</span></div>
+            <div class="scrow"><span class="sclbl">Within 1 week</span><span class="scv" style="color:var(--amber);">3</span></div>
+            <div class="scrow" style="border:none;"><span class="sclbl">Active reps</span><span class="scv">24</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN — REP MANAGEMENT -->
+    <div id="page-admin" class="pg">
+      <div class="pgt">Rep management</div>
+      <div class="pgs">Add reps, manage roles, control access — Owner only</div>
+
+      <div class="invite-form">
+        <div class="slbl" style="margin-bottom:12px;">Invite a new rep</div>
+        <div class="invite-grid">
+          <div class="invite-field"><label>Full name</label><input type="text" id="inv-name" placeholder="First and last name"/></div>
+          <div class="invite-field"><label>Email</label><input type="email" id="inv-email" placeholder="rep@email.com"/></div>
+          <div class="invite-field"><label>Role</label>
+            <select id="inv-role">
+              <option value="ae">AE</option>
+              <option value="lt">Lead Trainer</option>
+              <option value="jpm">JPM</option>
+              <option value="pm">PM</option>
+            </select>
+          </div>
+          <div class="invite-field"><label>&nbsp;</label><button class="btn btn-p" style="width:100%;justify-content:center;" onclick="inviteRep()">Send invite</button></div>
+        </div>
+        <div id="invite-msg" style="font-size:11px;margin-top:8px;display:none;"></div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--b2);">
+          <div style="font-size:11px;color:var(--t3);">📋 Invite code for self-signup: <strong style="color:var(--y);font-size:13px;letter-spacing:1px;">FPA2025</strong> — share this with reps so they can create their own account</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="slbl">All reps</div>
+        <table class="admin-table">
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Joined</th></tr></thead>
+          <tbody id="reps-table-body">
+            <tr><td colspan="5" style="text-align:center;color:var(--t3);padding:20px;">Loading reps...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BULLETIN -->
+    <div id="page-bulletin" class="pg">
+      <div class="pgt">Weekly bulletin</div><div class="pgs">Recognition only · auto Monday 7am · post in the Atmosphere</div>
+      <div style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.13);border-radius:var(--r2);padding:10px 13px;font-size:11px;color:#86EFAC;margin-bottom:16px;">Celebrates wins only. Top performers named publicly. Underperformers coached privately — never on the wall.</div>
+      <div class="brow">
+        <button class="btn btn-p">Print PDF</button>
+        <button class="btn" style="background:rgba(0,201,167,.1);color:var(--teal);border:1px solid rgba(0,201,167,.18);">Send to recipients</button>
+        <button class="btn btn-g">Configure</button>
+      </div>
+      <div class="card" style="text-align:center;padding:26px;">
+        <div style="font-size:32px;margin-bottom:8px;">📄</div>
+        <div style="font-size:14px;font-weight:600;margin-bottom:3px;">Bulletin auto-generates Sunday 11pm</div>
+        <div style="font-size:11px;color:var(--t2);">Office + org versions · full distribution · print ready</div>
+      </div>
+    </div>
+
+  </main>
 </div>
 
 <script>
-var isLight=false;
-var tc={s:0,t:0,p:0,c:0};
-var tgt={s:60,t:18,p:5,c:3};
-var colors={s:'var(--blue)',t:'var(--teal)',p:'var(--amber)',c:'var(--t3)'};
-var lb=[
-  {i:'DK',n:'Destiny King',   c:'#F59E0B',r:'JPM',d:67,w:5850,cl:33,b:5,rank:1},
-  {i:'AR',n:'Aaliyah Roberts',c:'#00C9A7',r:'LT', d:41,w:4200,cl:24,b:4,rank:2},
-  {i:'JM',n:'Jordan Mitchell',c:'#4F8EF7',r:'AE', d:23,w:3150,cl:18,b:3,rank:3,me:true},
-  {i:'DC',n:'Devon Carter',   c:'#4F8EF7',r:'AE', d:12,w:1400,cl:8, b:1,rank:4},
-  {i:'MT',n:'Marcus Thomas',  c:'#22C55E',r:'AE', d:17,w:875, cl:5, b:1,rank:5},
-  {i:'JR',n:'Jasmine Rivera', c:'#00C9A7',r:'AE', d:5, w:350, cl:2, b:0,rank:6},
-  {i:'TW',n:'Trevon Williams',c:'#F59E0B',r:'AE', d:9, w:350, cl:2, b:0,rank:7},
+// ── SUPABASE INIT ──
+const SUPABASE_URL = 'https://mdnqghmmbepqzvblgqxs.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kbnFnaG1tYmVwcXp2YmxncXhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMjgyNjgsImV4cCI6MjA5MjgwNDI2OH0.76KX8LwZZgJffgUD5Kgu_AH_ge_u6fyRS-Dmd6KKsBs';
+const INVITE_CODE = 'FPA2025';
+
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+var currentUser = null;
+var currentProfile = null;
+var isLight = false;
+var tc = {s:0,t:0,p:0,c:0};
+var tgt = {s:60,t:18,p:5,c:3};
+var colors = {s:'var(--blue)',t:'var(--teal)',p:'var(--amber)',c:'var(--t3)'};
+
+var lbData = [
+  {i:'DK',n:'Destiny King',c:'#F59E0B',r:'JPM',d:67,w:5850,cl:33,b:5,rank:1},
+  {i:'AR',n:'Aaliyah Roberts',c:'#00C9A7',r:'LT',d:41,w:4200,cl:24,b:4,rank:2},
+  {i:'JM',n:'Jordan Mitchell',c:'#4F8EF7',r:'AE',d:23,w:3150,cl:18,b:3,rank:3},
+  {i:'DC',n:'Devon Carter',c:'#4F8EF7',r:'AE',d:12,w:1400,cl:8,b:1,rank:4},
+  {i:'MT',n:'Marcus Thomas',c:'#22C55E',r:'AE',d:17,w:875,cl:5,b:1,rank:5},
 ];
 
-function toggleTheme(){
+// ── AUTH INIT ──
+async function initAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    await loadUserProfile(session.user);
+  }
+
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      await loadUserProfile(session.user);
+    } else if (event === 'SIGNED_OUT') {
+      showAuthScreen();
+    }
+  });
+}
+
+async function loadUserProfile(user) {
+  currentUser = user;
+  // Try to get profile from profiles table
+  const { data: profile } = await sb
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .single();
+
+  if (profile) {
+    currentProfile = profile;
+  } else {
+    // Create profile if doesn't exist (first time owner)
+    const isOwner = user.email === 'aton@frontpageagencyinc.com' || user.user_metadata?.role === 'owner';
+    const newProfile = {
+      id: user.id,
+      email: user.email,
+      full_name: user.user_metadata?.full_name || user.email.split('@')[0],
+      role: isOwner ? 'owner' : (user.user_metadata?.role || 'ae'),
+      office: 'FPA DFW',
+      day_number: 1,
+      created_at: new Date().toISOString()
+    };
+    await sb.from('profiles').insert(newProfile);
+    currentProfile = newProfile;
+  }
+
+  showApp();
+}
+
+function showAuthScreen() {
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('app-shell').style.display = 'none';
+  currentUser = null;
+  currentProfile = null;
+}
+
+function showApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app-shell').style.display = 'grid';
+
+  const name = currentProfile?.full_name || currentUser?.email || 'User';
+  const role = currentProfile?.role || 'ae';
+  const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const day = currentProfile?.day_number || 1;
+  const office = currentProfile?.office || 'FPA DFW';
+
+  // Update topbar
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('home-greeting').textContent = greeting + ', ' + name.split(' ')[0] + ' 👋';
+  document.getElementById('home-sub').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'}) + ' · Day ' + day + ' of 90 · Spectrum · ' + office;
+  document.getElementById('tbar-ctx').innerHTML = 'Welcome back, <strong>' + name.split(' ')[0] + '</strong>';
+  document.getElementById('user-av').textContent = initials;
+  document.getElementById('user-name').textContent = name.split(' ')[0] + ' ' + (name.split(' ')[1]?name.split(' ')[1][0]+'.':'');
+
+  // Role badge
+  const roleLabels = {owner:'Owner',ae:'AE',lt:'Lead Trainer',jpm:'JPM',pm:'PM'};
+  const roleClasses = {owner:'rb-owner',ae:'rb-ae',lt:'rb-lt',jpm:'rb-jpm',pm:'rb-pm'};
+  const badge = document.getElementById('user-role-badge');
+  badge.textContent = roleLabels[role] || role.toUpperCase();
+  badge.className = 'role-badge ' + (roleClasses[role] || 'rb-ae');
+
+  // Avatar color by role
+  const avColors = {owner:'#FFE033',ae:'#4F8EF7',lt:'#00C9A7',jpm:'#F59E0B',pm:'#EF4444'};
+  const av = document.getElementById('user-av');
+  av.style.background = avColors[role] || '#4F8EF7';
+  if(role==='owner') av.style.color = '#0A0A0A';
+
+  buildSidebar(role);
+  buildDots();
+  renderLB();
+}
+
+// ── SIDEBAR BY ROLE ──
+function buildSidebar(role) {
+  const sb_el = document.getElementById('sidebar');
+  const isOwner = role === 'owner' || role === 'pm';
+  const isLeader = ['lt','jpm','pm','owner'].includes(role);
+
+  sb_el.innerHTML = `
+    <div class="sbg">
+      <div class="sbg-lbl">Dashboard</div>
+      <div class="sbi active" onclick="nav('home',this)">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="1.5" width="4.5" height="4.5" rx="1"/><rect x="8" y="1.5" width="4.5" height="4.5" rx="1"/><rect x="1.5" y="8" width="4.5" height="4.5" rx="1"/><rect x="8" y="8" width="4.5" height="4.5" rx="1"/></svg>
+        Home
+      </div>
+      <div class="sbi" onclick="nav('field',this)">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="5.5"/><path d="M7 4v3l2 2"/></svg>
+        Field day
+        <span class="sbt" style="color:var(--green);background:rgba(34,197,94,.1);">Live</span>
+      </div>
+      <div class="sbi" onclick="nav('progress',this)">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 10.5l3-3.5 2.5 2.5 4.5-5.5"/></svg>
+        My progress
+      </div>
+      <div class="sbi" onclick="nav('training',this)">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4.5h10M4 7.5h6M5.5 10.5h3"/></svg>
+        Training vault
+      </div>
+      <div class="sbi" onclick="nav('goals',this)">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="5.5"/><circle cx="7" cy="7" r="2.5"/></svg>
+        Weekly goals
+      </div>
+      ${isLeader ? '' : '<div class="sbi lk"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5.5" cy="5" r="2"/><path d="M1 12c0-2.5 2-4.5 4.5-4.5"/><circle cx="10.5" cy="7" r="1.8"/><path d="M8.5 12c0-2 1.6-3.5 3.5-3.5"/></svg>Recruitment<span class="sbt">LT+</span></div>'}
+    </div>
+    <div class="sbg">
+      <div class="sbg-lbl">Recognition</div>
+      <div class="sbi" onclick="nav('highroller',this)">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7 2l1.4 3.4H12l-2.8 2.4 1 3.6L7 9.5l-3.2 1.9 1-3.6L2 5.4h3.6z"/></svg>
+        High roller board
+      </div>
+    </div>
+    ${isOwner ? `
+    <div class="sbg">
+      <div class="sbg-lbl">Owner</div>
+      <div class="sbi" onclick="nav('scorecard',this)">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M5 9V7M7 9V5M9 9V7"/></svg>
+        Scorecard
+      </div>
+      <div class="sbi" onclick="nav('bulletin',this)">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M4.5 5.5h5M4.5 7.5h5M4.5 9.5h3"/></svg>
+        Weekly bulletin
+      </div>
+      <div class="sbi" onclick="nav('admin',this)">
+        <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5.5" cy="4.5" r="2"/><path d="M1 12c0-2.8 2-5 4.5-5s4.5 2.2 4.5 5"/><path d="M10 7l1.5 1.5L14 6"/></svg>
+        Rep management
+      </div>
+    </div>` : ''}
+    <div class="sbfoot">
+      <div class="sbfoot-chip">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="5" r="4"/><path d="M5 3v2l1.5 1"/></svg>
+        Day ${currentProfile?.day_number || 1} · ${currentProfile?.office || 'FPA DFW'}
+      </div>
+    </div>`;
+
+  if (isOwner) loadRepsTable();
+}
+
+// ── LOAD REPS TABLE ──
+async function loadRepsTable() {
+  const tbody = document.getElementById('reps-table-body');
+  if (!tbody) return;
+
+  const { data: profiles, error } = await sb.from('profiles').select('*').order('created_at', {ascending:false});
+
+  if (error || !profiles || profiles.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--t3);padding:20px;">No reps yet. Invite your first rep above.</td></tr>';
+    return;
+  }
+
+  const roleLabels = {owner:'Owner',ae:'AE',lt:'Lead Trainer',jpm:'JPM',pm:'PM'};
+  const roleColors = {owner:'var(--y)',ae:'var(--blue)',lt:'var(--teal)',jpm:'var(--amber)',pm:'var(--red)'};
+
+  tbody.innerHTML = profiles.map(p => `
+    <tr>
+      <td><strong>${p.full_name || '—'}</strong></td>
+      <td>${p.email}</td>
+      <td><span style="color:${roleColors[p.role]||'var(--blue)'};">${roleLabels[p.role]||p.role||'AE'}</span></td>
+      <td><span class="status-active">● Active</span></td>
+      <td>${p.created_at ? new Date(p.created_at).toLocaleDateString() : '—'}</td>
+    </tr>
+  `).join('');
+}
+
+// ── INVITE REP ──
+async function inviteRep() {
+  const name = document.getElementById('inv-name').value.trim();
+  const email = document.getElementById('inv-email').value.trim();
+  const role = document.getElementById('inv-role').value;
+  const msg = document.getElementById('invite-msg');
+
+  if (!name || !email) {
+    msg.style.display = 'block';
+    msg.style.color = '#FCA5A5';
+    msg.textContent = 'Enter a name and email.';
+    return;
+  }
+
+  msg.style.display = 'block';
+  msg.style.color = 'var(--teal)';
+  msg.textContent = 'Sending invite...';
+
+  // Use Supabase admin invite
+  const { error } = await sb.auth.signInWithOtp({
+    email: email,
+    options: {
+      data: { full_name: name, role: role },
+      shouldCreateUser: true
+    }
+  });
+
+  if (error) {
+    msg.style.color = '#FCA5A5';
+    msg.textContent = 'Error: ' + error.message;
+  } else {
+    msg.style.color = '#86EFAC';
+    msg.textContent = '✓ Magic link sent to ' + email + '. They can also use invite code FPA2025 to sign up directly.';
+    document.getElementById('inv-name').value = '';
+    document.getElementById('inv-email').value = '';
+    setTimeout(() => loadRepsTable(), 1000);
+  }
+}
+
+// ── LOGIN ──
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+
+  if (!email || !pass) { showErr(err, 'Enter your email and password.'); return; }
+  btn.disabled = true; btn.textContent = 'Signing in...';
+
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+
+  if (error) {
+    showErr(err, error.message === 'Invalid login credentials' ? 'Wrong email or password. Try again.' : error.message);
+    btn.disabled = false; btn.textContent = 'Sign in';
+  }
+}
+
+// ── SIGNUP ──
+async function doSignup() {
+  const name = document.getElementById('signup-name').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const pass = document.getElementById('signup-pass').value;
+  const code = document.getElementById('signup-code').value.trim().toUpperCase();
+  const btn = document.getElementById('signup-btn');
+  const err = document.getElementById('signup-error');
+  const suc = document.getElementById('signup-success');
+
+  if (!name||!email||!pass) { showErr(err,'Fill in all fields.'); return; }
+  if (pass.length < 8) { showErr(err,'Password must be at least 8 characters.'); return; }
+  if (code !== INVITE_CODE) { showErr(err,'Invalid invite code. Contact your owner for the correct code.'); return; }
+
+  btn.disabled = true; btn.textContent = 'Creating account...';
+  err.classList.remove('show');
+
+  const { error } = await sb.auth.signUp({
+    email, password: pass,
+    options: { data: { full_name: name, role: 'ae' } }
+  });
+
+  if (error) {
+    showErr(err, error.message);
+    btn.disabled = false; btn.textContent = 'Create account';
+  } else {
+    suc.classList.add('show');
+    suc.textContent = '✓ Account created! Check your email to confirm, then sign in.';
+    btn.textContent = 'Account created!';
+    setTimeout(() => showLogin(), 3000);
+  }
+}
+
+// ── RESET ──
+async function doReset() {
+  const email = document.getElementById('reset-email').value.trim();
+  const btn = document.getElementById('reset-btn');
+  const err = document.getElementById('reset-error');
+  const suc = document.getElementById('reset-success');
+  if (!email) { showErr(err,'Enter your email.'); return; }
+  btn.disabled = true; btn.textContent = 'Sending...';
+  const { error } = await sb.auth.resetPasswordForEmail(email);
+  if (error) { showErr(err, error.message); btn.disabled=false; btn.textContent='Send reset link'; }
+  else { suc.classList.add('show'); suc.textContent='✓ Reset link sent! Check your email.'; }
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+}
+
+// ── FORM HELPERS ──
+function showErr(el, msg) { el.textContent = msg; el.classList.add('show'); }
+function showLogin() { document.getElementById('login-form').style.display='block'; document.getElementById('signup-form').style.display='none'; document.getElementById('reset-form').style.display='none'; document.getElementById('login-error').classList.remove('show'); }
+function showSignup() { document.getElementById('login-form').style.display='none'; document.getElementById('signup-form').style.display='block'; document.getElementById('reset-form').style.display='none'; }
+function showReset() { document.getElementById('login-form').style.display='none'; document.getElementById('signup-form').style.display='none'; document.getElementById('reset-form').style.display='block'; }
+
+// ── NAV ──
+function nav(id,btn) {
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);
+  if(pg)pg.classList.add('active');
+  document.querySelectorAll('.sbi').forEach(b=>b.classList.remove('active'));
+  if(btn&&!btn.classList.contains('lk'))btn.classList.add('active');
+  else document.querySelectorAll('.sbi').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');});
+  if(id==='highroller')renderLB();
+  if(id==='admin')loadRepsTable();
+}
+
+// ── THEME ──
+function toggleTheme() {
   isLight=!isLight;
   document.body.classList.toggle('light',isLight);
   document.getElementById('tt').classList.toggle('on',isLight);
 }
 
-function nav(id,btn){
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
-  var pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');
-  document.querySelectorAll('.sbi').forEach(b=>b.classList.remove('active'));
-  if(btn&&!btn.classList.contains('lk'))btn.classList.add('active');
-  else document.querySelectorAll('.sbi').forEach(b=>{
-    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');
-  });
-  if(id==='highroller')renderLB();
-}
-
-function buildDots(){
-  var c=document.getElementById('dd');if(!c)return;
-  var logged=[1,2,3,4,5,6,8,9,10,11,12,14,15,16,17,18,19,21,22];
-  for(var i=1;i<=30;i++){
-    var d=document.createElement('div');d.className='dd';d.textContent=i;
+// ── DAY DOTS ──
+function buildDots() {
+  const c=document.getElementById('dd'); if(!c)return;
+  const logged=[1,2,3,4,5,6,8,9,10,11,12,14,15,16,17,18,19,21,22];
+  for(let i=1;i<=30;i++){
+    const d=document.createElement('div');d.className='dd';d.textContent=i;
     if(i===23)d.classList.add('dd-today');
     else if(logged.includes(i))d.classList.add('dd-on');
     else if(i<23)d.classList.add('dd-off');
@@ -508,35 +859,38 @@ function buildDots(){
   }
 }
 
-function tap(k){
+// ── TALLY ──
+function tap(k) {
   tc[k]++;
-  var el=document.getElementById('tc-'+k);
+  const el=document.getElementById('tc-'+k);
   if(el){el.textContent=tc[k];el.classList.remove('pulse');void el.offsetWidth;el.classList.add('pulse');}
   updateBars();
 }
-function undo(k){
-  if(tc[k]>0){tc[k]--;var el=document.getElementById('tc-'+k);if(el)el.textContent=tc[k];updateBars();}
+function undo(k) {
+  if(tc[k]>0){tc[k]--;const el=document.getElementById('tc-'+k);if(el)el.textContent=tc[k];updateBars();}
 }
-function updateBars(){
-  ['s','t','p','c'].forEach(function(k){
-    var pct=Math.min(100,Math.round(tc[k]/tgt[k]*100));
-    var f=document.getElementById('tf-'+k);
+function updateBars() {
+  ['s','t','p','c'].forEach(k=>{
+    const pct=Math.min(100,Math.round(tc[k]/tgt[k]*100));
+    const f=document.getElementById('tf-'+k);
     if(f){f.style.width=pct+'%';f.style.background=pct>=100?'var(--green)':colors[k];}
   });
-  var tr=document.getElementById('f-tr');
+  const tr=document.getElementById('f-tr');
   if(tr)tr.textContent=tc.s>0?Math.round(tc.t/tc.s*100)+'%':'—';
 }
 
-function renderLB(){
-  var c=document.getElementById('lb');if(!c)return;c.innerHTML='';
-  lb.forEach(function(r){
-    var rc=r.rank===1?'var(--gold)':r.rank===2?'var(--silver)':r.rank===3?'var(--bronze)':'var(--t3)';
-    var rt=r.rank<=3?['🥇','🥈','🥉'][r.rank-1]:r.rank;
-    var row=document.createElement('div');
-    row.className='lbrow'+(r.me?' me':'');
+// ── LEADERBOARD ──
+function renderLB() {
+  const c=document.getElementById('lb'); if(!c)return; c.innerHTML='';
+  lbData.forEach(r=>{
+    const rc=r.rank===1?'var(--gold)':r.rank===2?'var(--silver)':r.rank===3?'var(--bronze)':'var(--t3)';
+    const rt=r.rank<=3?['🥇','🥈','🥉'][r.rank-1]:r.rank;
+    const isMe = currentProfile && r.n.toLowerCase().includes((currentProfile.full_name||'').split(' ')[0].toLowerCase());
+    const row=document.createElement('div');
+    row.className='lbrow'+(isMe?' me':'');
     row.innerHTML='<div class="lbrank" style="color:'+rc+';">'+rt+'</div>'
       +'<div class="lbp"><div class="lbav" style="background:'+r.c+'20;color:'+r.c+';">'+r.i+'</div>'
-      +'<div><div class="lbn">'+r.n+(r.me?' <span style="font-size:8px;color:var(--y);font-weight:700;background:rgba(255,224,51,.1);padding:1px 4px;border-radius:5px;">YOU</span>':'')+'</div>'
+      +'<div><div class="lbn">'+r.n+(isMe?' <span style="font-size:8px;color:var(--y);font-weight:700;background:rgba(255,224,51,.1);padding:1px 4px;border-radius:5px;">YOU</span>':'')+'</div>'
       +'<div class="lbr">'+r.r+' · D'+r.d+'</div></div></div>'
       +'<div class="lbv" style="color:var(--y);">$'+r.w.toLocaleString()+'</div>'
       +'<div class="lbv" style="color:var(--teal);">'+r.cl+'</div>'
@@ -545,8 +899,8 @@ function renderLB(){
   });
 }
 
-buildDots();
-renderLB();
+// ── BOOT ──
+initAuth();
 </script>
 </body>
 </html>

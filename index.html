@@ -301,8 +301,17 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
     <div class="phbar" style="cursor:pointer;" onclick="openRoadmapModal()"><div class="phfill" id="phase-fill" style="width:1%;"></div></div>
   </div>
   <div class="ann"><div class="ann-dot"></div><div><div class="ann-ttl" id="ann-t">Welcome to FPA 🎉</div><div class="ann-body" id="ann-b">Your journey begins here. Check this space before every shift for targets, shoutouts, and updates from your leader.</div></div></div>
+
+  <!-- ATTENDANCE CHECK-IN CARD -->
+  <div id="home-checkin-card" style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+    <div>
+      <div style="font-size:13px;font-weight:600;color:var(--t1);" id="home-att-label">Not checked in today</div>
+      <div style="font-size:11px;color:var(--t3);margin-top:2px;" id="home-att-sub">Tap to log your arrival at the office</div>
+    </div>
+    <button class="btn btn-p" id="home-att-btn" style="padding:9px 20px;font-size:12px;font-weight:600;white-space:nowrap;" onclick="doCheckIn('home')">📍 Check in</button>
+  </div>
   <div class="g4">
-    <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);" id="h-closes">0</div><div class="sl">Closes this week</div><div class="sd" id="h-closes-d" style="color:var(--t3);">Log your first sale</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--blue);">
     <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);" id="h-wire">$0</div><div class="sl">Wire this week</div><div class="sd" style="color:var(--t3);">Target: $<span id="wire-tgt-lbl">2,100</span></div></div>
     <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);" id="h-bells">0</div><div class="sl">Bells this week</div><div class="sd" style="color:var(--t3);" id="bell-def-home">2 customers + 3 services</div></div>
     <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);" id="h-streak">0%</div><div class="sl">Log streak</div><div class="sd" style="color:var(--t3);">Log your first day</div></div>
@@ -374,7 +383,88 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
   <div id="sales-today-list" style="margin-top:14px;"></div>
 </div>
 
+<!-- ATTENDANCE -->
+<div id="page-attendance" class="pg">
+  <div class="pgt">Attendance</div>
+  <div class="pgs" id="att-page-sub">Your check-in record · on time streak · monthly overview</div>
+
+  <!-- REP VIEW: personal stats -->
+  <div id="att-rep-view">
+    <!-- Streak + summary cards -->
+    <div class="g4" style="margin-bottom:14px;">
+      <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);" id="att-streak-val">0</div><div class="sl">On-time streak</div><div class="sd" style="color:var(--t3);">Consecutive days</div></div>
+      <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);" id="att-present-val">0</div><div class="sl">Days this month</div><div class="sd" style="color:var(--t3);">Total check-ins</div></div>
+      <div class="stat"><div class="sacc" style="background:var(--amber);"></div><div class="sv" style="color:var(--amber);" id="att-late-val">0</div><div class="sl">Late arrivals</div><div class="sd" style="color:var(--t3);">This month</div></div>
+      <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);" id="att-pct-val">—</div><div class="sl">On-time rate</div><div class="sd" style="color:var(--t3);">This month</div></div>
+    </div>
+
+    <!-- Monthly calendar grid -->
+    <div class="card" style="margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div class="slbl" style="margin-bottom:0;" id="att-month-label">April 2026</div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-g" style="padding:4px 10px;font-size:10px;" onclick="attMonthNav(-1)">← Prev</button>
+          <button class="btn btn-g" style="padding:4px 10px;font-size:10px;" onclick="attMonthNav(1)">Next →</button>
+        </div>
+      </div>
+      <div id="att-calendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;"></div>
+      <div style="display:flex;gap:14px;margin-top:10px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);"><div style="width:10px;height:10px;border-radius:2px;background:rgba(34,197,94,.25);"></div>On time</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);"><div style="width:10px;height:10px;border-radius:2px;background:rgba(245,158,11,.25);"></div>Late</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);"><div style="width:10px;height:10px;border-radius:2px;background:var(--s4);"></div>Absent / no data</div>
+      </div>
+    </div>
+
+    <!-- Check-in history list -->
+    <div class="card">
+      <div class="slbl" style="margin-bottom:10px;">Check-in history</div>
+      <div id="att-rep-log"><div style="font-size:12px;color:var(--t3);">No check-ins recorded yet. Check in from your Home page each morning.</div></div>
+    </div>
+  </div>
+
+  <!-- OWNER VIEW: all reps -->
+  <div id="att-owner-view" style="display:none;">
+    <!-- Filters -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="slbl" style="margin-bottom:10px;">Filter records</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 90px;gap:9px;align-items:end;">
+        <div>
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Rep</div>
+          <select id="att-filter-rep" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
+            <option value="">All reps</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">From</div>
+          <input type="date" id="att-filter-from" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">To</div>
+          <input type="date" id="att-filter-to" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/>
+        </div>
+        <div><button class="btn btn-p" style="width:100%;justify-content:center;" onclick="applyAttFilter()">Filter</button></div>
+      </div>
+    </div>
+
+    <!-- Summary by rep -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="slbl" style="margin-bottom:10px;">Attendance summary</div>
+      <div id="att-owner-summary"><div style="font-size:12px;color:var(--t3);">No data yet. Reps check in from their Home page.</div></div>
+    </div>
+
+    <!-- Full log -->
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="slbl" style="margin-bottom:0;">Full check-in log</div>
+        <span id="att-log-count" style="font-size:10px;color:var(--t3);">0 records</span>
+      </div>
+      <div id="att-owner-log"><div style="font-size:12px;color:var(--t3);">No check-ins recorded yet.</div></div>
+    </div>
+  </div>
+</div>
+
 <!-- PROGRESS -->
+
 <div id="page-progress" class="pg">
   <div class="pgt">My progress</div><div class="pgs">Week overview · promo tracking · path to next level</div>
   <div class="g4">
@@ -1720,6 +1810,7 @@ function showApp(){
   if(['owner','pm'].includes(role)){loadRepsTable();buildOrgChart();renderActiveAnnouncements();}
   renderTrainingVault();
   if(todayCloses>0)renderTodaySales();
+  initCheckInBar();
   // Show announcement
   if(ANNOUNCEMENTS.length>0){
     const a=ANNOUNCEMENTS[0];
@@ -1783,6 +1874,7 @@ function buildSidebar(role){
     <div class="sbi" onclick="nav('progress',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 10.5l3-3.5 2.5 2.5 4.5-5.5"/></svg>My progress</div>
     <div class="sbi" onclick="nav('training',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4.5h10M4 7.5h6M5.5 10.5h3"/></svg>Training vault</div>
     <div class="sbi" onclick="nav('goals',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="5.5"/><circle cx="7" cy="7" r="2.5"/></svg>Submit Sunday goals</div>
+    <div class="sbi" onclick="nav('attendance',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M5 2v2M9 2v2M2 6h10"/><path d="M5 9l1.5 1.5L9 8"/></svg>Attendance</div>
     ${isLeader?`<div class="sbi" onclick="nav('recruit',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5" cy="5" r="2.5"/><path d="M1 12.5c0-2.5 1.8-4.5 4-4.5"/><circle cx="10" cy="8" r="2"/><path d="M8 13c0-1.6 1-3 2-3"/></svg>Recruitment</div>`:'<div class="sbi lk"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5" cy="5" r="2"/><path d="M1 12c0-2.5 2-4.5 4.5-4.5"/><circle cx="10.5" cy="7" r="1.8"/></svg>Recruitment<span class="sbt">LT+</span></div>'}
   </div>
   <div class="sbg">
@@ -3256,6 +3348,7 @@ function nav(id,btn){
   const _safe=(name,fn)=>{try{fn();}catch(e){console.error('nav '+name+' error:',e.message,e.stack);}};
   if(id==='admin')_safe('loadRepsTable',()=>loadRepsTable());
   if(id==='field'){_safe('renderFieldStoreSelect',()=>renderFieldStoreSelect());_safe('initCheckInBar',initCheckInBar);}
+  if(id==='attendance')_safe('renderAttendancePage',renderAttendancePage);
   if(id==='goals')_safe('loadGoalsPage',()=>loadGoalsPage());
   if(id==='settings'){_safe('setStab',()=>setStab('criteria',document.querySelector('.stab-btn')));_safe('renderRankTiersList',renderRankTiersList);_safe('renderCrewSettings',renderCrewSettings);}
   if(id==='training')_safe('renderTrainingVault',renderTrainingVault);
@@ -3693,90 +3786,75 @@ function getDistanceMeters(lat1,lng1,lat2,lng2){
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-function doCheckIn(){
-  const btn=document.getElementById('att-checkin-btn');
-  const label=document.getElementById('att-status-label');
-  const sub=document.getElementById('att-status-sub');
-
-  // Already checked in today?
+function doCheckIn(ctx){
+  ctx = ctx || 'field';
   const todayStr=new Date().toISOString().slice(0,10);
   const name=P?.full_name||U?.email||'Rep';
+
+  // Helper to update both home and field UI
+  function setUI(label, sub, btnText, btnDisabled, labelColor){
+    ['home','field'].forEach(c=>{
+      const lEl=document.getElementById(c==='home'?'home-att-label':'att-status-label');
+      const sEl=document.getElementById(c==='home'?'home-att-sub':'att-status-sub');
+      const bEl=document.getElementById(c==='home'?'home-att-btn':'att-checkin-btn');
+      if(lEl){lEl.textContent=label;if(labelColor)lEl.style.color=labelColor;}
+      if(sEl)sEl.textContent=sub;
+      if(bEl){bEl.textContent=btnText;bEl.disabled=btnDisabled;if(btnDisabled){bEl.style.background='var(--s3)';bEl.style.color='var(--t2)';}else{bEl.style.background='';bEl.style.color='';}}
+    });
+  }
+
+  // Already checked in today?
   const alreadyIn=ATT_LOG.find(l=>l.date===todayStr&&l.name===name&&l.type==='in');
   if(alreadyIn){
-    if(label)label.textContent='✓ Already checked in at '+alreadyIn.time;
-    if(sub)sub.textContent='You\'re good — have a great field day!';
+    const col=alreadyIn.late?'var(--amber)':'#86EFAC';
+    setUI((alreadyIn.late?'⚠ Checked in late — ':'✓ Checked in — ')+alreadyIn.time, alreadyIn.late?'Required time was '+ATT_CFG.startTime+'. See your leader.':'You\'re on time. Have a great day!', '✓ Checked in', true, col);
     return;
   }
 
-  // No office set?
+  // No office configured?
   if(!ATT_CFG.lat||!ATT_CFG.lng){
-    if(label)label.style.color='var(--amber)';
-    if(label)label.textContent='⚠ Office location not set';
-    if(sub)sub.textContent='Ask your owner to set the office location in Settings → Attendance.';
+    setUI('⚠ Office location not set','Ask your owner to configure Settings → Attendance.','📍 Check in',false,'var(--amber)');
     return;
   }
 
   if(!navigator.geolocation){
-    if(label)label.textContent='Geolocation not supported';
+    setUI('Geolocation not supported','Use a modern browser to check in.','📍 Check in',false,null);
     return;
   }
 
-  if(btn){btn.disabled=true;btn.textContent='📍 Getting location...';}
+  setUI('Getting your location...','Hold on a moment...','📍 Locating...',true,null);
 
   navigator.geolocation.getCurrentPosition(
-    (pos)=>{
-      const repLat=pos.coords.lat||pos.coords.latitude;
-      const repLng=pos.coords.lng||pos.coords.longitude;
-      const dist=getDistanceMeters(repLat,repLng,ATT_CFG.lat,ATT_CFG.lng);
-      const now=new Date();
-      const timeStr=now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
-
-      // Check if late
-      const [reqH,reqM]=ATT_CFG.startTime.split(':').map(Number);
-      const reqMins=reqH*60+reqM;
-      const nowMins=now.getHours()*60+now.getMinutes();
-      const isLate=nowMins>reqMins;
+    function(pos){
+      var repLat=pos.coords.latitude;
+      var repLng=pos.coords.longitude;
+      var dist=getDistanceMeters(repLat,repLng,parseFloat(ATT_CFG.lat),parseFloat(ATT_CFG.lng));
+      var now=new Date();
+      var timeStr=now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
+      var reqParts=ATT_CFG.startTime.split(':').map(Number);
+      var reqMins=reqParts[0]*60+reqParts[1];
+      var nowMins=now.getHours()*60+now.getMinutes();
+      var isLate=nowMins>reqMins;
 
       if(dist>ATT_CFG.radius){
-        // Out of range
-        const distFt=Math.round(dist*3.28084);
-        const reqFt=Math.round(ATT_CFG.radius*3.28084);
-        if(label){label.style.color='#FCA5A5';label.textContent='❌ Too far from office';}
-        if(sub)sub.textContent='You\'re '+distFt+'ft away. Need to be within '+reqFt+'ft to check in.';
-        if(btn){btn.disabled=false;btn.textContent='📍 Try again';}
+        var distFt=Math.round(dist*3.28084);
+        var reqFt=Math.round(ATT_CFG.radius*3.28084);
+        setUI('❌ Too far from office','You\'re '+distFt+'ft away. Need within '+reqFt+'ft.','📍 Try again',false,'#FCA5A5');
         return;
       }
 
-      // Success — log it
-      const entry={
-        name, email:U?.email||'',role:P?.role||'ae',
-        date:todayStr, time:timeStr,
-        late:isLate, dist:Math.round(dist),
-        type:'in', ts:Date.now()
-      };
+      // Log it
+      var entry={name:name,email:U?.email||'',role:P?.role||'ae',date:todayStr,time:timeStr,late:isLate,dist:Math.round(dist),type:'in',ts:Date.now()};
       ATT_LOG.unshift(entry);
-      if(ATT_LOG.length>500)ATT_LOG=ATT_LOG.slice(0,500);
+      if(ATT_LOG.length>1000)ATT_LOG=ATT_LOG.slice(0,1000);
       saveAttendanceLog();
 
-      // Update UI
-      if(label){
-        label.style.color=isLate?'var(--amber)':'#86EFAC';
-        label.textContent=(isLate?'⚠ Checked in late — ':'✓ Checked in — ')+timeStr;
-      }
-      if(sub)sub.textContent=isLate?'Required time was '+ATT_CFG.startTime+'. See your leader.':'You\'re on time. Have a great field day!';
-      if(btn){
-        btn.textContent='✓ Checked in';
-        btn.style.background='var(--s3)';
-        btn.style.color='var(--t2)';
-        btn.disabled=true;
-      }
-      renderAttendanceLog();
+      var col=isLate?'var(--amber)':'#86EFAC';
+      setUI((isLate?'⚠ Checked in late — ':'✓ Checked in — ')+timeStr, isLate?'Required time was '+ATT_CFG.startTime+'. See your leader.':'You\'re on time. Have a great day!', '✓ Checked in', true, col);
     },
-    (err)=>{
-      const msgs={1:'Location permission denied — allow it in your browser to check in.',2:'Location unavailable. Try again.',3:'Timed out. Try again.'};
-      if(label){label.style.color='#FCA5A5';label.textContent='Could not get location';}
-      if(sub)sub.textContent=msgs[err.code]||'Location error.';
-      if(btn){btn.disabled=false;btn.textContent='📍 Try again';}
+    function(err){
+      var msgs={1:'Location permission denied — allow it in your browser settings.',2:'Location unavailable. Try again.',3:'Timed out. Try again.'};
+      setUI('Could not get location', msgs[err.code]||'Location error.', '📍 Try again', false, '#FCA5A5');
     },
     {enableHighAccuracy:true,timeout:10000,maximumAge:0}
   );
@@ -3817,14 +3895,222 @@ function loadAttendanceSettingsUI(){
 function initCheckInBar(){
   const todayStr=new Date().toISOString().slice(0,10);
   const name=P?.full_name||U?.email||'Rep';
-  const alreadyIn=ATT_LOG.find(l=>l.date===todayStr&&l.name===name&&l.type==='in');
-  const label=document.getElementById('att-status-label');
-  const sub=document.getElementById('att-status-sub');
-  const btn=document.getElementById('att-checkin-btn');
-  if(alreadyIn){
-    if(label){label.style.color=alreadyIn.late?'var(--amber)':'#86EFAC';label.textContent=(alreadyIn.late?'⚠ Checked in late — ':'✓ Checked in — ')+alreadyIn.time;}
-    if(sub)sub.textContent=alreadyIn.late?'Required time was '+ATT_CFG.startTime+'. See your leader.':'You\'re on time. Have a great field day!';
-    if(btn){btn.textContent='✓ Checked in';btn.style.background='var(--s3)';btn.style.color='var(--t2)';btn.disabled=true;}
+  const alreadyIn=ATT_LOG.find(function(l){return l.date===todayStr&&l.name===name&&l.type==='in';});
+  if(!alreadyIn)return;
+  var col=alreadyIn.late?'var(--amber)':'#86EFAC';
+  var labelTxt=(alreadyIn.late?'⚠ Checked in late — ':'✓ Checked in — ')+alreadyIn.time;
+  var subTxt=alreadyIn.late?'Required time was '+ATT_CFG.startTime+'. See your leader.':'You\'re on time. Have a great day!';
+  ['home','field'].forEach(function(c){
+    var lEl=document.getElementById(c==='home'?'home-att-label':'att-status-label');
+    var sEl=document.getElementById(c==='home'?'home-att-sub':'att-status-sub');
+    var bEl=document.getElementById(c==='home'?'home-att-btn':'att-checkin-btn');
+    if(lEl){lEl.textContent=labelTxt;lEl.style.color=col;}
+    if(sEl)sEl.textContent=subTxt;
+    if(bEl){bEl.textContent='✓ Checked in';bEl.style.background='var(--s3)';bEl.style.color='var(--t2)';bEl.disabled=true;}
+  });
+}
+
+// Attendance page state
+var attViewMonth = null; // {year, month} currently viewing
+
+function renderAttendancePage(){
+  var role=P?.role||'ae';
+  var isOwner=['owner','pm'].includes(role);
+  var repView=document.getElementById('att-rep-view');
+  var ownerView=document.getElementById('att-owner-view');
+  if(repView)repView.style.display=isOwner?'none':'block';
+  if(ownerView)ownerView.style.display=isOwner?'block':'none';
+
+  var sub=document.getElementById('att-page-sub');
+  if(sub)sub.textContent=isOwner?'All reps · filter by date range · full check-in log':'Your check-in record · on time streak · monthly overview';
+
+  if(!attViewMonth){
+    var now=new Date();
+    attViewMonth={year:now.getFullYear(),month:now.getMonth()};
+  }
+
+  if(isOwner){
+    renderOwnerAttendance();
+  } else {
+    renderRepAttendance();
+  }
+}
+
+function renderRepAttendance(){
+  var name=P?.full_name||U?.email||'Rep';
+  var now=new Date();
+  var monthStart=new Date(attViewMonth.year,attViewMonth.month,1);
+  var monthEnd=new Date(attViewMonth.year,attViewMonth.month+1,0);
+
+  // Filter log for this rep
+  var myLog=ATT_LOG.filter(function(l){return l.name===name&&l.type==='in';});
+
+  // This month's entries
+  var monthKey=attViewMonth.year+'-'+String(attViewMonth.month+1).padStart(2,'0');
+  var monthLog=myLog.filter(function(l){return l.date.startsWith(monthKey);});
+
+  var present=monthLog.length;
+  var late=monthLog.filter(function(l){return l.late;}).length;
+  var onTime=present-late;
+  var pct=present>0?Math.round(onTime/present*100)+'%':'—';
+
+  // Streak: count consecutive on-time days going back from today
+  var streak=0;
+  var d=new Date();
+  for(var i=0;i<60;i++){
+    var ds=d.toISOString().slice(0,10);
+    var entry=myLog.find(function(l){return l.date===ds;});
+    if(entry&&!entry.late)streak++;
+    else if(i>0)break; // streak broken (skip today if not checked in yet)
+    d.setDate(d.getDate()-1);
+  }
+
+  // Update stat cards
+  var sv=document.getElementById('att-streak-val');if(sv)sv.textContent=streak;
+  var pv=document.getElementById('att-present-val');if(pv)pv.textContent=present;
+  var lv=document.getElementById('att-late-val');if(lv)lv.textContent=late;
+  var pctv=document.getElementById('att-pct-val');if(pctv)pctv.textContent=pct;
+
+  // Calendar
+  var monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var ml=document.getElementById('att-month-label');
+  if(ml)ml.textContent=monthNames[attViewMonth.month]+' '+attViewMonth.year;
+
+  var cal=document.getElementById('att-calendar');
+  if(cal){
+    var days=['Su','Mo','Tu','We','Th','Fr','Sa'];
+    var headers=days.map(function(d){return '<div style="font-size:9px;font-weight:600;text-align:center;color:var(--t3);padding:3px 0;">'+d+'</div>';}).join('');
+
+    var firstDay=monthStart.getDay();
+    var blanks='';
+    for(var b=0;b<firstDay;b++) blanks+='<div></div>';
+
+    var cellsHtml='';
+    var daysInMonth=monthEnd.getDate();
+    var todayStr=now.toISOString().slice(0,10);
+
+    for(var day=1;day<=daysInMonth;day++){
+      var dateStr=attViewMonth.year+'-'+String(attViewMonth.month+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+      var entry=monthLog.find(function(l){return l.date===dateStr;});
+      var isToday=dateStr===todayStr;
+      var isFuture=dateStr>todayStr;
+      var bg='var(--s4)';
+      var textColor='var(--t3)';
+      var title='';
+      if(entry){
+        bg=entry.late?'rgba(245,158,11,.25)':'rgba(34,197,94,.25)';
+        textColor=entry.late?'var(--amber)':'var(--green)';
+        title=entry.time+(entry.late?' · Late':'· On time');
+      } else if(isFuture){
+        bg='transparent';
+        textColor='var(--b2)';
+      }
+      cellsHtml+='<div title="'+title+'" style="aspect-ratio:1;border-radius:4px;background:'+bg+';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:'+(isToday?'800':'500')+';color:'+textColor+';border:'+(isToday?'1px solid var(--y)':'none')+';">'+day+'</div>';
+    }
+    cal.innerHTML=headers+blanks+cellsHtml;
+  }
+
+  // History list
+  var rl=document.getElementById('att-rep-log');
+  if(rl){
+    if(myLog.length===0){rl.innerHTML='<div style="font-size:12px;color:var(--t3);">No check-ins yet. Check in from your Home page each morning.</div>';return;}
+    rl.innerHTML='<div style="display:grid;grid-template-columns:100px 1fr 80px 70px;gap:6px;padding:0 4px 8px;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1);margin-bottom:4px;"><span>Date</span><span>Day</span><span>Time</span><span>Status</span></div>'
+    +myLog.slice(0,60).map(function(l){
+      var d2=new Date(l.date+'T12:00');
+      var dayName=d2.toLocaleDateString('en-US',{weekday:'short'});
+      var dateLabel=d2.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      return '<div style="display:grid;grid-template-columns:100px 1fr 80px 70px;gap:6px;align-items:center;padding:7px 4px;border-bottom:1px solid var(--b1);">'
+        +'<div style="font-size:11px;color:var(--t3);">'+dateLabel+'</div>'
+        +'<div style="font-size:12px;font-weight:500;">'+dayName+'</div>'
+        +'<div style="font-size:11px;color:var(--t2);">'+l.time+'</div>'
+        +'<div><span style="font-size:10px;padding:2px 7px;border-radius:20px;background:'+(l.late?'rgba(245,158,11,.15)':'rgba(34,197,94,.1)')+'";color:'+(l.late?'var(--amber)':'var(--green)')+';">'+(l.late?'Late':'On time')+'</span></div>'
+        +'</div>';
+    }).join('');
+  }
+}
+
+function attMonthNav(dir){
+  if(!attViewMonth){var now=new Date();attViewMonth={year:now.getFullYear(),month:now.getMonth()};}
+  attViewMonth.month+=dir;
+  if(attViewMonth.month>11){attViewMonth.month=0;attViewMonth.year++;}
+  if(attViewMonth.month<0){attViewMonth.month=11;attViewMonth.year--;}
+  renderRepAttendance();
+}
+
+function renderOwnerAttendance(){
+  // Populate rep filter
+  var repSel=document.getElementById('att-filter-rep');
+  if(repSel){
+    var names=[...new Set(ATT_LOG.map(function(l){return l.name;}))].sort();
+    repSel.innerHTML='<option value="">All reps</option>'+names.map(function(n){return '<option value="'+n+'">'+n+'</option>';}).join('');
+  }
+  // Set default date range (this month)
+  var now=new Date();
+  var fromEl=document.getElementById('att-filter-from');
+  var toEl=document.getElementById('att-filter-to');
+  if(fromEl&&!fromEl.value)fromEl.value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-01';
+  if(toEl&&!toEl.value)toEl.value=now.toISOString().slice(0,10);
+  applyAttFilter();
+}
+
+function applyAttFilter(){
+  var repFilter=document.getElementById('att-filter-rep')?.value||'';
+  var fromFilter=document.getElementById('att-filter-from')?.value||'';
+  var toFilter=document.getElementById('att-filter-to')?.value||'9999-99-99';
+
+  var filtered=ATT_LOG.filter(function(l){
+    if(repFilter&&l.name!==repFilter)return false;
+    if(fromFilter&&l.date<fromFilter)return false;
+    if(toFilter&&l.date>toFilter)return false;
+    return true;
+  });
+
+  var countEl=document.getElementById('att-log-count');
+  if(countEl)countEl.textContent=filtered.length+' record'+(filtered.length!==1?'s':'');
+
+  // Summary by rep
+  var summaryEl=document.getElementById('att-owner-summary');
+  if(summaryEl){
+    if(filtered.length===0){summaryEl.innerHTML='<div style="font-size:12px;color:var(--t3);">No records match the selected filters.</div>';}
+    else{
+      var byRep={};
+      filtered.forEach(function(l){
+        if(!byRep[l.name])byRep[l.name]={name:l.name,total:0,late:0,onTime:0};
+        byRep[l.name].total++;
+        if(l.late)byRep[l.name].late++;
+        else byRep[l.name].onTime++;
+      });
+      var sorted=Object.values(byRep).sort(function(a,b){return b.total-a.total;});
+      summaryEl.innerHTML='<div style="display:grid;grid-template-columns:1fr 60px 60px 60px 70px;gap:6px;padding:0 4px 8px;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1);margin-bottom:4px;"><span>Rep</span><span style="text-align:right;">Total</span><span style="text-align:right;">On time</span><span style="text-align:right;">Late</span><span style="text-align:right;">Rate</span></div>'
+      +sorted.map(function(r){
+        var rate=r.total>0?Math.round(r.onTime/r.total*100)+'%':'—';
+        var rateColor=r.total>0?(r.onTime/r.total>=0.9?'var(--green)':r.onTime/r.total>=0.7?'var(--amber)':'#FCA5A5'):'var(--t3)';
+        return '<div style="display:grid;grid-template-columns:1fr 60px 60px 60px 70px;gap:6px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--b1);">'
+          +'<div style="font-size:12px;font-weight:500;">'+r.name+'</div>'
+          +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;text-align:right;">'+r.total+'</div>'
+          +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--green);text-align:right;">'+r.onTime+'</div>'
+          +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--amber);text-align:right;">'+r.late+'</div>'
+          +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:'+rateColor+';text-align:right;">'+rate+'</div>'
+          +'</div>';
+      }).join('');
+    }
+  }
+
+  // Full log
+  var logEl=document.getElementById('att-owner-log');
+  if(logEl){
+    if(filtered.length===0){logEl.innerHTML='<div style="font-size:12px;color:var(--t3);">No records match the selected filters.</div>';return;}
+    logEl.innerHTML='<div style="display:grid;grid-template-columns:90px 1fr 70px 70px 70px;gap:6px;padding:0 4px 8px;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1);margin-bottom:4px;"><span>Date</span><span>Rep</span><span>Time</span><span>Status</span><span>Dist</span></div>'
+    +filtered.map(function(l){
+      var d2=new Date(l.date+'T12:00');
+      return '<div style="display:grid;grid-template-columns:90px 1fr 70px 70px 70px;gap:6px;align-items:center;padding:7px 4px;border-bottom:1px solid var(--b1);">'
+        +'<div style="font-size:11px;color:var(--t3);">'+d2.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+'</div>'
+        +'<div style="font-size:12px;font-weight:500;">'+l.name+'</div>'
+        +'<div style="font-size:11px;color:var(--t2);">'+l.time+'</div>'
+        +'<div><span style="font-size:10px;padding:2px 6px;border-radius:20px;background:'+(l.late?'rgba(245,158,11,.15)':'rgba(34,197,94,.1)')+'";color:'+(l.late?'var(--amber)':'var(--green)')+';">'+(l.late?'Late':'On time')+'</span></div>'
+        +'<div style="font-size:11px;color:var(--t3);">'+l.dist+'m</div>'
+        +'</div>';
+    }).join('');
   }
 }
 

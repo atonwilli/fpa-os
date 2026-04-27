@@ -1947,13 +1947,103 @@ function buildDayDots(day){
 
 // TALLY
 var tallyCols={s:'var(--blue)',t:'var(--teal)',p:'var(--amber)',c:'var(--t3)'};
+// SUPABASE SYNC
+var _tallyDebounce = null;
+
+function syncTallyToSupabase(){
+  if(!U||!P)return;
+  clearTimeout(_tallyDebounce);
+  _tallyDebounce = setTimeout(async function(){
+    const todayStr = new Date().toISOString().slice(0,10);
+    try {
+      await sb.from('daily_tally').upsert({
+        user_id: U.id,
+        profile_name: P.full_name||P.email||'Rep',
+        date: todayStr,
+        stops: tc.s||0,
+        tabs: tc.t||0,
+        presentations: tc.p||0,
+        credit_checks: tc.c||0,
+        closes: todayCloses||0,
+        wire: todayWire||0,
+        bells: todayBells||0,
+        last_updated: new Date().toISOString()
+      }, { onConflict: 'user_id,date' });
+    } catch(e) { console.warn('[FPI OS] tally sync error:', e.message); }
+  }, 1500);
+}
+
+async function syncSaleToSupabase(sale){
+  if(!U||!P)return;
+  const todayStr = new Date().toISOString().slice(0,10);
+  try {
+    await sb.from('sales_log').insert({
+      user_id: U.id,
+      profile_name: P.full_name||P.email||'Rep',
+      date: todayStr,
+      customer: sale.customer||'',
+      services: sale.services||[],
+      wire: sale.wire||0,
+      pia: sale.pia||0,
+      bell: sale.bell||false,
+      time_logged: sale.time||''
+    });
+  } catch(e) { console.warn('[FPI OS] sale sync error:', e.message); }
+}
+
+// Load all reps' tally data from Supabase for leaderboard/scorecard
+var _sbTallyCache = null;
+var _sbTallyCacheDate = null;
+
+async function loadTeamTallyFromSupabase(){
+  if(!U||!P)return null;
+  const role = P.role||'ae';
+  const isLeader = ['owner','pm','jpm','lt'].includes(role);
+  if(!isLeader)return null;
+  const todayStr = new Date().toISOString().slice(0,10);
+  // Use cache if fresh (within 30 seconds)
+  if(_sbTallyCache && _sbTallyCacheDate && (Date.now()-_sbTallyCacheDate)<30000) return _sbTallyCache;
+  try {
+    const weekStart = weekKey();
+    const {data, error} = await sb.from('daily_tally')
+      .select('*')
+      .gte('date', weekStart)
+      .order('date', {ascending:false});
+    if(error)throw error;
+    _sbTallyCache = data||[];
+    _sbTallyCacheDate = Date.now();
+    return _sbTallyCache;
+  } catch(e) {
+    console.warn('[FPI OS] team tally load error:', e.message);
+    return null;
+  }
+}
+
+// Aggregate weekly totals per rep from Supabase tally data
+function aggregateWeeklyTotals(tallyRows){
+  if(!tallyRows||tallyRows.length===0)return {};
+  const byRep = {};
+  tallyRows.forEach(function(row){
+    const name = row.profile_name||row.user_id;
+    if(!byRep[name]) byRep[name] = {name, wire:0, closes:0, bells:0, stops:0, tabs:0, pres:0, user_id:row.user_id};
+    byRep[name].wire += row.wire||0;
+    byRep[name].closes += row.closes||0;
+    byRep[name].bells += row.bells||0;
+    byRep[name].stops += row.stops||0;
+    byRep[name].tabs += row.tabs||0;
+    byRep[name].pres += row.presentations||0;
+  });
+  return byRep;
+}
+
 function tap(k){
   tc[k]++;
   const el=document.getElementById('tc-'+k);
   if(el){el.textContent=tc[k];el.classList.remove('pulse');void el.offsetWidth;el.classList.add('pulse');}
   updateTallyBars();
+  syncTallyToSupabase();
 }
-function undo(k){if(tc[k]>0){tc[k]--;const el=document.getElementById('tc-'+k);if(el)el.textContent=tc[k];updateTallyBars();}}
+function undo(k){if(tc[k]>0){tc[k]--;const el=document.getElementById('tc-'+k);if(el)el.textContent=tc[k];updateTallyBars();syncTallyToSupabase();}}
 function updateTallyBars(){
   const tgts={s:CFG.stops,t:CFG.tabs,p:CFG.pres,c:CFG.checks};
   ['s','t','p','c'].forEach(k=>{
@@ -2111,6 +2201,8 @@ function submitSale(){
   todayCloses++;
   if(isBell)todayBells++;
   saveLocal();
+  syncTallyToSupabase();
+  syncSaleToSupabase(sale);
   // Update field page stats
   document.getElementById('f-cl').textContent=todayCloses;
   document.getElementById('f-w').textContent='$'+todayWire.toLocaleString();
@@ -2902,6 +2994,7 @@ function renderHRLeaderboard(){
 }
 
 function buildLBData(){
+  // Start with localStorage data (always available, includes current user's live data)
   const weekData=JSON.parse(localStorage.getItem('fpa_week_'+weekKey())||'{}');
   if(P&&todayCloses>0){
     const uid=P.full_name||P.email;
@@ -2911,6 +3004,22 @@ function buildLBData(){
     weekData[uid].bells=Math.max(weekData[uid].bells,todayBells);
     weekData[uid].crew=CREWS[P.full_name]||P.office||'FPA DFW';
     localStorage.setItem('fpa_week_'+weekKey(),JSON.stringify(weekData));
+  }
+  // Merge Supabase cache if available (adds other reps' data)
+  if(_sbTallyCache&&_sbTallyCache.length>0){
+    const sbTotals=aggregateWeeklyTotals(_sbTallyCache);
+    Object.values(sbTotals).forEach(function(r){
+      const existing=weekData[r.name];
+      if(!existing||r.wire>existing.wire){
+        weekData[r.name]={
+          name:r.name,role:'ae',
+          wire:r.wire,closes:r.closes,bells:r.bells,
+          crew:CREWS[r.name]||'FPA DFW',
+          stops:r.stops,tabs:r.tabs,pres:r.pres,
+          user_id:r.user_id
+        };
+      }
+    });
   }
   let arr=Object.values(weekData);
   if(HR_SORT==='closes')arr.sort((a,b)=>b.closes-a.closes);
@@ -3655,6 +3764,18 @@ function renderScorecard(){
   const isLT=role==='lt';
   const isFullAccess=['jpm','pm','owner'].includes(role);
 
+  // Load fresh Supabase data for leaders, then re-render
+  if(isFullAccess||isLT){
+    loadTeamTallyFromSupabase().then(function(){
+      _renderScorecardUI(role,isAE,isLT,isFullAccess);
+    });
+  } else {
+    _renderScorecardUI(role,isAE,isLT,isFullAccess);
+  }
+}
+
+function _renderScorecardUI(role,isAE,isLT,isFullAccess){
+
   // Role-based header message
   const scTitle=document.getElementById('sc-title-role');
   if(scTitle){
@@ -3717,7 +3838,11 @@ function renderScorecard(){
   const scReps2=document.getElementById('sc-reps2');if(scReps2)scReps2.textContent=Math.max(1,lbData.length);
   const bellRate=totalCloses>0?Math.round(totalBells/totalCloses*100)+'%':'—';
   const brEl=document.getElementById('sc-bell-rate');if(brEl)brEl.textContent=bellRate;
-  const avgC=document.getElementById('sc-avg-closes');if(avgC)avgC.textContent=lbData.length>0?(totalCloses/lbData.length).toFixed(1):'—';
+  // Field OS tally — live from today's counters
+  const scStops=document.getElementById('sc-team-stops');if(scStops)scStops.textContent=tc.s||0;
+  const scTabRate=document.getElementById('sc-team-tabrate');if(scTabRate)scTabRate.textContent=tc.s>0?Math.round(tc.t/tc.s*100)+'%':'—';
+  const scPres=document.getElementById('sc-team-pres');if(scPres)scPres.textContent=tc.p||0;
+  const avgClosesEl=document.getElementById('sc-avg-closes');if(avgClosesEl)avgClosesEl.textContent=lbData.length>0?(totalCloses/lbData.length).toFixed(1):'—';
   // Rep rows today
   if(todayCloses>0){
     const name=P?.full_name||'You';const role=P?.role||'ae';
@@ -3741,6 +3866,85 @@ function renderScorecard(){
     paceEl.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:12px;"><span style="color:var(--t2);">Your pace → projected</span><span style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:15px;color:'+color+';">$'+projected.toLocaleString()+' projected</span></div>'
       +'<div class="prog-tr" style="height:10px;"><div class="prog-f" style="width:'+pct+'%;background:'+color+';"></div></div>'
       +'<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:4px;"><span>Target: $'+CFG.wireTgt.toLocaleString()+'</span><span>'+pct+'% of weekly target</span></div>';
+  }
+
+  // Build clickable rep rows for owner drill-down
+  if(isFullAccess){
+    const rowsEl=document.getElementById('sc-rep-rows');
+    if(rowsEl){
+      const allReps=buildLBData();
+      if(allReps.length>0){
+        rowsEl.innerHTML=allReps.map(function(r){
+          const avC={ae:'#4F8EF7',lt:'#00C9A7',jpm:'#F59E0B',pm:'#EF4444',owner:'#FFE033'}[r.role]||'#4F8EF7';
+          const ini=(r.name||'?').split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+          const isMe=r.name===P?.full_name;
+          return '<div onclick="openRepDrilldown(\''+r.name+'\')" style="display:grid;grid-template-columns:1fr 70px 60px 50px;gap:6px;padding:8px 6px;border-bottom:1px solid var(--b1);align-items:center;cursor:pointer;border-radius:var(--r1);transition:background .15s;" onmouseover="this.style.background=\'var(--s3)\'" onmouseout="this.style.background=\'\';">'
+            +'<div style="display:flex;align-items:center;gap:8px;"><div style="width:26px;height:26px;border-radius:50%;background:'+avC+'22;color:'+avC+';display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">'+ini+'</div>'
+            +'<div><div style="font-size:12px;font-weight:500;">'+(r.name||'Rep').split(' ')[0]+(isMe?' <span style="font-size:9px;color:var(--t3);">(you)</span>':'')+'</div>'
+            +'<div style="font-size:9px;color:var(--t3);">'+((r.role||'ae').toUpperCase())+' · tap to see detail</div></div></div>'
+            +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--y);text-align:right;">$'+(r.wire||0).toLocaleString()+'</div>'
+            +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--green);text-align:right;">'+(r.closes||0)+'</div>'
+            +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--amber);text-align:right;">'+(r.bells>0?'🔔'+r.bells:'—')+'</div>'
+            +'</div>';
+        }).join('');
+      }
+    }
+  }
+}
+
+// REP DRILL-DOWN MODAL
+async function openRepDrilldown(repName){
+  const modal=document.getElementById('rep-drill-modal');
+  const title=document.getElementById('rep-drill-name');
+  const content=document.getElementById('rep-drill-content');
+  if(!modal)return;
+  if(title)title.textContent=repName;
+  if(content)content.innerHTML='<div style="text-align:center;padding:20px;color:var(--t3);">Loading live data...</div>';
+  modal.classList.add('show');
+
+  const todayStr=new Date().toISOString().slice(0,10);
+  try {
+    // Get today's tally
+    const {data:tally}=await sb.from('daily_tally')
+      .select('*').eq('profile_name',repName).eq('date',todayStr).single();
+
+    // Get today's sales
+    const {data:sales}=await sb.from('sales_log')
+      .select('*').eq('profile_name',repName).eq('date',todayStr)
+      .order('created_at',{ascending:true});
+
+    const t=tally||{stops:0,tabs:0,presentations:0,closes:0,wire:0,bells:0,last_updated:null};
+    const s=sales||[];
+    const tabRate=t.stops>0?Math.round(t.tabs/t.stops*100)+'%':'—';
+    const presRate=t.tabs>0?Math.round(t.presentations/t.tabs*100)+'%':'—';
+    const closeRate=t.presentations>0?Math.round(t.closes/t.presentations*100)+'%':'—';
+    const lastSeen=t.last_updated?new Date(t.last_updated).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'No activity yet';
+
+    content.innerHTML=
+      '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;">'
+      +'<div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);">'+t.stops+'</div><div class="sl">Stops</div></div>'
+      +'<div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);">'+t.tabs+'</div><div class="sl">Tabs</div><div class="sd" style="color:var(--t3);">'+tabRate+'</div></div>'
+      +'<div class="stat"><div class="sacc" style="background:var(--amber);"></div><div class="sv" style="color:var(--amber);">'+t.presentations+'</div><div class="sl">Pres</div><div class="sd" style="color:var(--t3);">'+presRate+'</div></div>'
+      +'<div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);">'+t.closes+'</div><div class="sl">Closes</div><div class="sd" style="color:var(--t3);">'+closeRate+'</div></div>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">'
+      +'<div class="card" style="padding:10px 12px;"><div style="font-size:11px;color:var(--t3);margin-bottom:2px;">Wire today</div><div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:22px;color:var(--y);">$'+t.wire.toLocaleString()+'</div></div>'
+      +'<div class="card" style="padding:10px 12px;"><div style="font-size:11px;color:var(--t3);margin-bottom:2px;">Last active</div><div style="font-size:13px;font-weight:600;color:var(--t1);">'+lastSeen+'</div></div>'
+      +'</div>'
+      +(s.length>0?
+        '<div class="slbl" style="margin-bottom:8px;">Sales today ('+s.length+')</div>'
+        +s.map(function(sale){
+          return '<div style="background:var(--s3);border-radius:var(--r1);padding:8px 10px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;">'
+            +'<div><div style="font-size:12px;font-weight:500;">'+sale.customer+'</div>'
+            +'<div style="font-size:10px;color:var(--t3);">'+(sale.services||[]).join(', ')+'</div>'
+            +'<div style="font-size:10px;color:var(--t3);">'+sale.time_logged+'</div></div>'
+            +'<div style="text-align:right;"><div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;color:var(--y);">$'+sale.wire.toLocaleString()+'</div>'
+            +(sale.bell?'<div style="font-size:10px;color:var(--y);">🔔 Bell</div>':'')
+            +'</div></div>';
+        }).join('')
+      :'<div style="font-size:12px;color:var(--t3);text-align:center;padding:10px 0;">No sales logged today yet.</div>');
+  } catch(e) {
+    content.innerHTML='<div style="font-size:12px;color:#FCA5A5;padding:10px;">Could not load data: '+e.message+'</div>';
   }
 }
 
@@ -4195,6 +4399,22 @@ function demoReset(){
 // BOOT
 boot();
 </script>
+
+<!-- REP DRILL-DOWN MODAL -->
+<div class="modal-bg" id="rep-drill-modal">
+  <div class="modal" style="max-width:500px;">
+    <div class="modal-hd">
+      <div>
+        <div class="modal-title" id="rep-drill-name">Rep</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:2px;">Live field data — today</div>
+      </div>
+      <button class="modal-x" onclick="document.getElementById('rep-drill-modal').classList.remove('show')">✕</button>
+    </div>
+    <div id="rep-drill-content" style="max-height:70vh;overflow-y:auto;">
+      <div style="text-align:center;padding:20px;color:var(--t3);">Loading...</div>
+    </div>
+  </div>
+</div>
 
 <!-- ERROR OVERLAY for debugging -->
 <div id="err-overlay" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(239,68,68,.95);color:#fff;padding:12px 16px;font-family:monospace;font-size:12px;z-index:9999;max-height:200px;overflow-y:auto;">

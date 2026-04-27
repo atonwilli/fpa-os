@@ -3,27 +3,44 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FPA OS — Growth Operating System</title>
+<title>FPA OS</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --y:#FFE033;--k:#08080A;
-  --s0:#09090C;--s1:#111115;--s2:#18181C;--s3:#1E1E23;--s4:#26262C;--s5:#2E2E35;
-  --b1:#202026;--b2:#2A2A32;--b3:#36363F;
-  --t1:#F0F0F4;--t2:#8A8A98;--t3:#48485A;
-  --teal:#00C9A7;--blue:#4F8EF7;--amber:#F59E0B;--red:#EF4444;--green:#22C55E;
-  --gold:#FFD700;--silver:#A0A0B8;--bronze:#CD7F32;
-  --sh-y:0 4px 20px rgba(255,224,51,.18);
-  --r1:6px;--r2:10px;--r3:14px;
-}
+:root{--y:#FFE033;--k:#08080A;--s0:#09090C;--s1:#111115;--s2:#18181C;--s3:#1E1E23;--s4:#26262C;--s5:#2E2E35;--b1:#202026;--b2:#2A2A32;--b3:#36363F;--t1:#F0F0F4;--t2:#8A8A98;--t3:#48485A;--teal:#00C9A7;--blue:#4F8EF7;--amber:#F59E0B;--red:#EF4444;--green:#22C55E;--purple:#8B5CF6;--gold:#FFD700;--silver:#A0A0B8;--bronze:#CD7F32;--sh-y:0 4px 20px rgba(255,224,51,.18);--r1:6px;--r2:10px;--r3:14px;}
 body.light{--s0:#EFEFF3;--s1:#F8F8FA;--s2:#FFF;--s3:#F2F2F6;--s4:#EAEAEF;--b1:#DDDDE5;--b2:#CCCCD6;--t1:#0A0A10;--t2:#6A6A7A;--t3:#9A9AAA;}
 html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:var(--t1);-webkit-font-smoothing:antialiased;}
 ::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--b3);border-radius:2px;}
-.app{display:grid;grid-template-rows:52px 1fr;grid-template-columns:216px 1fr;height:100vh;overflow:hidden;display:none;}
-
-/* TOPBAR */
+.loading{display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:12px;}
+.loading-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;color:var(--y);}
+.loading-logo span{color:var(--t1);}
+.spinner{width:20px;height:20px;border:2px solid var(--b3);border-top-color:var(--y);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-sub{font-size:12px;color:var(--t3);}
+.auth-wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;display:none;}
+.auth-card{background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:40px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(0,0,0,.5);}
+.auth-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;color:var(--y);display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.auth-logo span{color:var(--t1);}
+.auth-pip{width:8px;height:8px;border-radius:50%;background:var(--y);box-shadow:var(--sh-y);}
+.auth-tag{font-size:11px;color:var(--t3);margin-bottom:28px;}
+.auth-h{font-size:19px;font-weight:600;margin-bottom:3px;}
+.auth-s{font-size:12px;color:var(--t2);margin-bottom:20px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:4px;}
+.field input,.field select,.field textarea{width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:9px 11px;font-family:'Inter',sans-serif;font-size:13px;color:var(--t1);outline:none;}
+.field input:focus,.field select:focus{border-color:var(--y);}
+.field textarea{resize:vertical;min-height:60px;}
+.btn-auth{width:100%;background:var(--y);color:var(--k);border:none;border-radius:var(--r1);padding:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:var(--sh-y);margin-top:4px;}
+.btn-auth:hover{opacity:.9;}
+.btn-auth:disabled{opacity:.5;cursor:not-allowed;}
+.auth-tog{text-align:center;margin-top:16px;font-size:12px;color:var(--t2);}
+.auth-tog a{color:var(--y);cursor:pointer;font-weight:500;}
+.ae{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:var(--r1);padding:9px 12px;font-size:12px;color:#FCA5A5;margin-bottom:12px;display:none;}
+.ae.show{display:block;}
+.ao{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:var(--r1);padding:9px 12px;font-size:12px;color:#86EFAC;margin-bottom:12px;display:none;}
+.ao.show{display:block;}
+.app{display:none;grid-template-rows:52px 1fr;grid-template-columns:216px 1fr;height:100vh;overflow:hidden;}
 .topbar{grid-column:1/-1;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 18px;gap:12px;z-index:50;}
 .logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:20px;color:var(--y);display:flex;align-items:center;gap:6px;}
 .logo span{color:var(--t1);}
@@ -34,15 +51,14 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .tright{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .thm{display:flex;align-items:center;gap:5px;}
 .thm-lbl{font-size:10px;color:var(--t3);}
-.thm-tog{width:30px;height:16px;border-radius:8px;background:var(--s4);border:1px solid var(--b2);cursor:pointer;position:relative;transition:background .2s;}
-.thm-tog.on{background:var(--y);}
-.thm-t{position:absolute;top:1.5px;left:1.5px;width:13px;height:13px;border-radius:50%;background:var(--t3);transition:all .18s;}
-.thm-tog.on .thm-t{transform:translateX(14px);background:var(--k);}
-.uchip{display:flex;align-items:center;gap:7px;padding:3px 10px 3px 4px;border-radius:20px;background:var(--s3);border:1px solid var(--b1);cursor:pointer;}
-.uchip:hover{background:var(--s4);}
-.uav{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;background:var(--blue);}
+.tt{width:30px;height:16px;border-radius:8px;background:var(--s4);border:1px solid var(--b2);cursor:pointer;position:relative;}
+.tt.on{background:var(--y);}
+.tt-t{position:absolute;top:1.5px;left:1.5px;width:13px;height:13px;border-radius:50%;background:var(--t3);transition:all .18s;}
+.tt.on .tt-t{transform:translateX(14px);background:var(--k);}
+.uchip{display:flex;align-items:center;gap:7px;padding:3px 10px 3px 4px;border-radius:20px;background:var(--s3);border:1px solid var(--b1);}
+.uav{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;}
 .uname{font-size:11px;font-weight:500;}
-.role-badge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;}
+.rb{font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;}
 .rb-owner{background:rgba(255,224,51,.15);color:var(--y);border:1px solid rgba(255,224,51,.25);}
 .rb-ae{background:rgba(79,142,247,.12);color:#93BBFF;border:1px solid rgba(79,142,247,.2);}
 .rb-lt{background:rgba(0,201,167,.12);color:#5EEAD4;border:1px solid rgba(0,201,167,.2);}
@@ -50,12 +66,10 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .rb-pm{background:rgba(239,68,68,.12);color:#FCA5A5;border:1px solid rgba(239,68,68,.2);}
 .logout-btn{background:none;border:none;font-size:11px;color:var(--t3);cursor:pointer;padding:4px 8px;border-radius:var(--r1);font-family:'Inter',sans-serif;}
 .logout-btn:hover{color:var(--red);}
-
-/* SIDEBAR */
 .sidebar{background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow-y:auto;padding:10px 0 16px;}
 .sbg{margin-bottom:4px;}
 .sbg-lbl{font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);padding:6px 15px 3px;}
-.sbi{display:flex;align-items:center;gap:8px;padding:7.5px 12px;margin:0 5px;border-radius:var(--r1);cursor:pointer;font-size:12px;font-weight:500;color:var(--t2);transition:all .1s;border:1px solid transparent;position:relative;}
+.sbi{display:flex;align-items:center;gap:8px;padding:7.5px 12px;margin:0 5px;border-radius:var(--r1);cursor:pointer;font-size:12px;font-weight:500;color:var(--t2);border:1px solid transparent;position:relative;}
 .sbi svg{width:13px;height:13px;flex-shrink:0;opacity:.6;}
 .sbi:hover{background:var(--s3);color:var(--t1);}
 .sbi.active{background:rgba(255,224,51,.07);color:var(--y);border-color:rgba(255,224,51,.1);}
@@ -63,19 +77,19 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .sbi.active svg,.sbi:hover svg{opacity:1;}
 .sbt{margin-left:auto;font-size:9px;font-weight:600;padding:1px 5px;border-radius:5px;background:var(--s4);color:var(--t3);}
 .sbi.lk{opacity:.3;cursor:not-allowed;}
-.sbi.lk:hover{background:transparent;color:var(--t2);}
+.sbi.lk:hover{background:transparent;}
 .sbfoot{margin-top:auto;padding:10px 12px 0;border-top:1px solid var(--b1);}
 .sbfoot-chip{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3);padding:6px 8px;background:var(--s3);border-radius:var(--r1);}
-
-/* MAIN */
 .main{overflow-y:auto;background:var(--s0);}
 .pg{display:none;padding:22px;}
 .pg.active{display:block;}
 .pgt{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:25px;margin-bottom:3px;}
 .pgs{font-size:11px;color:var(--t2);margin-bottom:20px;}
 .slbl{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:10px;}
-.card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r3);padding:15px 17px;box-shadow:0 1px 3px rgba(0,0,0,.3);}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r3);padding:15px 17px;box-shadow:0 1px 3px rgba(0,0,0,.3);margin-bottom:14px;}
+.inset{background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:12px 14px;margin-bottom:8px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px;}
 .stat{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 15px;position:relative;overflow:hidden;}
 .sacc{position:absolute;top:0;left:0;width:100%;height:2px;}
@@ -85,11 +99,13 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .up{color:var(--green);}.dn{color:var(--red);}.wn{color:var(--amber);}
 .phbar{height:3px;border-radius:2px;background:var(--s4);overflow:hidden;margin-bottom:16px;}
 .phfill{height:100%;border-radius:2px;background:var(--blue);}
-.btn{display:inline-flex;align-items:center;gap:5px;border:none;border-radius:var(--r1);padding:7px 14px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .14s;}
+.btn{display:inline-flex;align-items:center;gap:5px;border:none;border-radius:var(--r1);padding:7px 14px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;}
 .btn-p{background:var(--y);color:var(--k);box-shadow:var(--sh-y);}
-.btn-p:hover{opacity:.9;transform:translateY(-1px);}
+.btn-p:hover{opacity:.9;}
 .btn-g{background:var(--s3);color:var(--t2);border:1px solid var(--b2);}
 .btn-g:hover{background:var(--s4);color:var(--t1);}
+.btn-t{background:rgba(0,201,167,.1);color:var(--teal);border:1px solid rgba(0,201,167,.2);}
+.btn-r{background:rgba(239,68,68,.1);color:#FCA5A5;border:1px solid rgba(239,68,68,.2);}
 .brow{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;}
 .bd{display:inline-flex;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:600;}
 .bd-g{background:rgba(34,197,94,.1);color:#86EFAC;border:1px solid rgba(34,197,94,.18);}
@@ -97,6 +113,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .bd-b{background:rgba(79,142,247,.1);color:#93BBFF;border:1px solid rgba(79,142,247,.18);}
 .bd-t{background:rgba(0,201,167,.1);color:#5EEAD4;border:1px solid rgba(0,201,167,.18);}
 .bd-y{background:rgba(255,224,51,.1);color:var(--y);border:1px solid rgba(255,224,51,.18);}
+.bd-r{background:rgba(239,68,68,.1);color:#FCA5A5;border:1px solid rgba(239,68,68,.18);}
 .prog{margin-bottom:8px;}
 .prog-hd{display:flex;justify-content:space-between;font-size:11px;color:var(--t2);margin-bottom:3px;}
 .prog-tr{height:5px;background:var(--s4);border-radius:2px;overflow:hidden;}
@@ -105,19 +122,12 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .ann-dot{width:7px;height:7px;border-radius:50%;background:var(--y);flex-shrink:0;margin-top:4px;}
 .ann-ttl{font-size:12px;font-weight:600;color:var(--y);margin-bottom:2px;}
 .ann-body{font-size:11px;color:var(--t2);line-height:1.5;}
-.empty-state{text-align:center;padding:40px 20px;}
-.empty-state .icon{font-size:36px;margin-bottom:12px;}
-.empty-state .title{font-size:14px;font-weight:500;color:var(--t2);margin-bottom:6px;}
-.empty-state .sub{font-size:12px;color:var(--t3);line-height:1.5;}
-
-/* PROMO PATH BLOCKS */
-.pmb{background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:12px 14px;margin-bottom:8px;}
-.pmb-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.pmb-name{font-size:12px;font-weight:500;}
-
-/* TALLY */
+.empty{text-align:center;padding:40px 20px;}
+.empty .icon{font-size:36px;margin-bottom:12px;}
+.empty .title{font-size:14px;font-weight:500;color:var(--t2);margin-bottom:6px;}
+.empty .sub{font-size:12px;color:var(--t3);line-height:1.5;}
 .tg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px;}
-.tb{background:var(--s3);border:1px solid var(--b2);border-radius:var(--r3);padding:16px 10px 13px;text-align:center;cursor:pointer;transition:all .14s;user-select:none;position:relative;}
+.tb{background:var(--s3);border:1px solid var(--b2);border-radius:var(--r3);padding:16px 10px 13px;text-align:center;cursor:pointer;user-select:none;position:relative;}
 .tb:active{transform:scale(.97);}
 .tlbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
 .tcnt{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:54px;line-height:1;}
@@ -127,549 +137,876 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .tundo{position:absolute;top:7px;right:8px;background:var(--s4);border:none;border-radius:4px;padding:2px 6px;font-size:9px;color:var(--t3);cursor:pointer;font-family:'Inter',sans-serif;}
 .pulse{animation:tp .14s ease-out;}
 @keyframes tp{0%{transform:scale(1.07);}100%{transform:scale(1);}}
-
-/* AUTH */
-.auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
-.auth-card{background:var(--s2);border:1px solid var(--b1);border-radius:20px;padding:40px;width:100%;max-width:420px;box-shadow:0 24px 80px rgba(0,0,0,.5);}
-.auth-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:32px;color:var(--y);display:flex;align-items:center;gap:8px;margin-bottom:4px;}
-.auth-logo span{color:var(--t1);}
-.auth-pip{width:8px;height:8px;border-radius:50%;background:var(--y);box-shadow:var(--sh-y);}
-.auth-tagline{font-size:11px;color:var(--t3);margin-bottom:28px;}
-.auth-title{font-size:19px;font-weight:600;margin-bottom:3px;}
-.auth-sub{font-size:12px;color:var(--t2);margin-bottom:20px;}
-.field{margin-bottom:12px;}
-.field label{display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:4px;}
-.field input{width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:10px 12px;font-family:'Inter',sans-serif;font-size:14px;color:var(--t1);outline:none;transition:border-color .15s;}
-.field input:focus{border-color:var(--y);}
-.btn-auth{width:100%;background:var(--y);color:var(--k);border:none;border-radius:var(--r1);padding:12px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;box-shadow:var(--sh-y);margin-top:4px;}
-.btn-auth:hover{opacity:.9;}
-.btn-auth:disabled{opacity:.5;cursor:not-allowed;}
-.auth-toggle{text-align:center;margin-top:18px;font-size:12px;color:var(--t2);}
-.auth-toggle a{color:var(--y);cursor:pointer;font-weight:500;}
-.auth-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:var(--r1);padding:10px 12px;font-size:12px;color:#FCA5A5;margin-bottom:12px;display:none;}
-.auth-error.show{display:block;}
-.auth-success{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:var(--r1);padding:10px 12px;font-size:12px;color:#86EFAC;margin-bottom:12px;display:none;}
-.auth-success.show{display:block;}
-
-/* ADMIN */
-.admin-table{width:100%;border-collapse:collapse;}
-.admin-table th{font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);padding:8px 12px;text-align:left;border-bottom:1px solid var(--b1);}
-.admin-table td{padding:10px 12px;font-size:12px;border-bottom:1px solid var(--b1);color:var(--t2);}
-.admin-table tr:last-child td{border-bottom:none;}
-.admin-table td strong{color:var(--t1);font-weight:500;}
-.inv-form{background:var(--s3);border:1px solid var(--b2);border-radius:var(--r2);padding:16px;margin-bottom:14px;}
-.inv-grid{display:grid;grid-template-columns:1fr 1fr 110px 90px;gap:10px;align-items:end;}
-.inv-f label{display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;}
-.inv-f input,.inv-f select{width:100%;background:var(--s4);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-family:'Inter',sans-serif;font-size:12px;color:var(--t1);outline:none;}
-.inv-f input:focus,.inv-f select:focus{border-color:var(--y);}
-
-/* OWNER SETTINGS */
-.setting-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--b1);}
-.setting-row:last-child{border-bottom:none;}
-.sr-name{font-size:13px;font-weight:500;}
-.sr-sub{font-size:11px;color:var(--t3);margin-top:2px;}
-.sr-input{background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:6px 10px;font-family:'Inter',sans-serif;font-size:13px;color:var(--t1);outline:none;width:100px;text-align:right;}
-.sr-input:focus{border-color:var(--y);}
-
-/* LOADING */
-.loading-screen{display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:12px;}
-.loading-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;color:var(--y);}
-.loading-logo span{color:var(--t1);}
-.spinner{width:20px;height:20px;border:2px solid var(--b3);border-top-color:var(--y);border-radius:50%;animation:spin .7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.loading-sub{font-size:12px;color:var(--t3);}
-
-/* FUNNEL ROW */
-.fr{display:grid;grid-template-columns:100px 1fr 50px 50px;gap:8px;align-items:center;margin-bottom:7px;}
-.flbl{font-size:11px;color:var(--t2);}
-.ftr{height:14px;background:var(--s4);border-radius:3px;overflow:hidden;}
-.ffl{height:100%;border-radius:3px;}
-.fv{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;text-align:right;}
-.fb{font-size:10px;color:var(--t3);text-align:right;}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-bg.show{display:flex;}
+.modal{background:var(--s2);border:1px solid var(--b2);border-radius:var(--r3);padding:22px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.modal-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;}
+.modal-x{background:none;border:none;color:var(--t2);cursor:pointer;font-size:20px;line-height:1;}
+.modal-x:hover{color:var(--t1);}
+.svc-chk{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--s3);border-radius:var(--r1);margin-bottom:6px;cursor:pointer;}
+.svc-chk:hover{background:var(--s4);}
+.chk-box{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--b3);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--s4);}
+.chk-box.on{background:var(--teal);border-color:var(--teal);}
+.chk-box.on::after{content:'✓';color:#fff;font-size:11px;font-weight:700;}
+.svc-lbl{flex:1;font-size:12px;font-weight:500;}
+.svc-sub{font-size:10px;color:var(--t3);}
+.svc-wire{font-size:12px;color:var(--y);font-weight:600;min-width:40px;text-align:right;}
+.sale-tot{background:var(--s3);border:1px solid var(--b2);border-radius:var(--r2);padding:12px 14px;margin:10px 0;}
+.sale-tot-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;color:var(--t2);}
+.sale-tot-row.big{font-weight:700;font-size:15px;color:var(--t1);margin-bottom:0;}
+.bell-ind{background:rgba(255,224,51,.08);border:1px solid rgba(255,224,51,.2);border-radius:var(--r1);padding:8px 12px;font-size:11px;color:var(--y);margin-top:8px;display:none;}
+.bell-ind.show{display:block;}
+.lbhd{display:grid;grid-template-columns:28px 1fr 70px 56px 46px;gap:7px;padding:0 10px 8px;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1);}
+.lbrow{display:grid;grid-template-columns:28px 1fr 70px 56px 46px;gap:7px;align-items:center;padding:8px 10px;border-radius:var(--r1);}
+.lbrow:hover{background:var(--s3);}
+.lbrow.me{background:rgba(255,224,51,.04);border:1px solid rgba(255,224,51,.09);}
+.lbrank{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;text-align:center;}
+.lbp{display:flex;align-items:center;gap:8px;}
+.lbav{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;}
+.lbn{font-size:12px;font-weight:500;}
+.lbr{font-size:9px;color:var(--t3);}
+.lbv{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;text-align:right;}
+.pod{display:flex;align-items:flex-end;justify-content:center;gap:9px;padding:20px 0 0;}
+.ps{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;max-width:140px;}
+.pav{border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;color:#fff;}
+.pbase{border-radius:var(--r1) var(--r1) 0 0;width:100%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:rgba(255,255,255,.12);}
+.pname{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-align:center;}
+.prole{font-size:9px;color:var(--t3);text-align:center;}
+.pwire{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;text-align:center;}
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--b1);}
+.set-row:last-child{border-bottom:none;}
+.set-name{font-size:13px;font-weight:500;}
+.set-sub{font-size:11px;color:var(--t3);margin-top:2px;}
+.set-inp{background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:6px 10px;font-family:'Inter',sans-serif;font-size:13px;color:var(--t1);outline:none;width:90px;text-align:right;}
+.set-inp:focus{border-color:var(--y);}
+.tog{width:34px;height:18px;border-radius:9px;background:var(--s4);border:none;cursor:pointer;position:relative;flex-shrink:0;}
+.tog.on{background:var(--teal);}
+.tog-t{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .15s;}
+.tog.on .tog-t{transform:translateX(16px);}
+.atbl{width:100%;border-collapse:collapse;}
+.atbl th{font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);padding:8px 12px;text-align:left;border-bottom:1px solid var(--b1);}
+.atbl td{padding:10px 12px;font-size:12px;border-bottom:1px solid var(--b1);color:var(--t2);}
+.atbl tr:last-child td{border-bottom:none;}
+.atbl td strong{color:var(--t1);font-weight:500;}
+.pipe-card{background:var(--s3);border:1px solid var(--b2);border-radius:var(--r2);padding:12px 14px;margin-bottom:8px;}
+.pipe-hd{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.pipe-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;}
+.pipe-name{font-size:13px;font-weight:500;}
+.pipe-meta{font-size:10px;color:var(--t3);}
+.pipe-det{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--b1);}
+.pipe-card.open .pipe-det{display:block;}
+.ps-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--s4);border-radius:var(--r1);margin-bottom:5px;}
+.ps-chk{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--b3);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--s3);cursor:pointer;}
+.ps-chk.on{background:var(--teal);border-color:var(--teal);}
+.ps-chk.on::after{content:'✓';color:#fff;font-size:10px;font-weight:700;}
+.ps-lbl{flex:1;font-size:12px;color:var(--t2);}
+.ps-lbl.done{text-decoration:line-through;color:var(--t3);}
+.ctx-menu{position:fixed;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r2);padding:6px;min-width:180px;z-index:500;box-shadow:0 8px 32px rgba(0,0,0,.6);display:none;}
+.ctx-menu.show{display:block;}
+.ctx-item{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:var(--r1);cursor:pointer;font-size:12px;color:var(--t2);}
+.ctx-item:hover{background:var(--s3);color:var(--t1);}
+.ctx-item.danger{color:#FC8181;}
+.ctx-item.danger:hover{background:rgba(239,68,68,.1);}
+.ctx-sep{height:1px;background:var(--b1);margin:3px 0;}
+.ctx-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;padding:5px 10px 2px;}
+.stab-btn{padding:6px 14px;font-size:11px;}
+.stab-btn.active-tab{background:var(--y);color:var(--k);}
+.bp-band{background:#0A0A0A;margin:-15px -17px 20px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-radius:var(--r3) var(--r3) 0 0;}
+.bp-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:var(--y);}
+.bp-logo span{color:#fff;}
+.bp-sec{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:#0A0A0A;padding:4px 10px;border-radius:4px;display:inline-block;margin-bottom:10px;}
+.bp-stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+.bp-stat{background:var(--s3);border-radius:6px;padding:10px;text-align:center;}
+.bp-stat-v{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;color:var(--t1);}
+.bp-stat-l{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;}
+.bp-shout{background:var(--s3);border-left:3px solid var(--y);padding:9px 13px;margin-bottom:7px;border-radius:0 4px 4px 0;}
+.bp-name{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:2px;}
+.bp-text{font-size:11px;color:var(--t2);line-height:1.5;}
+.ter-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b1);font-size:12px;}
+.ter-row:last-child{border-bottom:none;}
+.rec-row{display:grid;grid-template-columns:1fr 90px 90px 36px;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--b1);}
+.rec-row:last-child{border-bottom:none;}
+.sc-mod{background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:12px;margin-bottom:8px;}
+.sc-hd{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
+.sc-ico{width:30px;height:30px;border-radius:var(--r1);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.sc-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--b1);font-size:11px;}
+.sc-row:last-child{border-bottom:none;}
+.sc-lbl{color:var(--t2);}
+.sc-v{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;}
+.org-wrap{position:relative;height:500px;background:var(--s3);border-radius:var(--r2);overflow:hidden;}
+.org-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;}
+.onode{position:absolute;transform:translate(-50%,-50%);cursor:grab;}
+.obub{border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid;user-select:none;}
+.oi{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;pointer-events:none;}
+.on2{font-size:8px;pointer-events:none;}
 </style>
 </head>
 <body>
-
-<div id="loading-screen" class="loading-screen">
-  <div class="loading-logo">FPA <span>OS</span></div>
-  <div class="spinner"></div>
-  <div class="loading-sub">Loading...</div>
-</div>
-
-<div class="auth-screen" id="auth-screen" style="display:none;">
+<div id="loading" class="loading"><div class="loading-logo">FPA <span>OS</span></div><div class="spinner"></div><div class="loading-sub">Loading your dashboard...</div></div>
+<div class="auth-wrap" id="auth-wrap">
   <div class="auth-card">
     <div class="auth-logo"><div class="auth-pip"></div>FPA <span>OS</span></div>
-    <div class="auth-tagline">Growth Operating System · Front Page Agency</div>
-    <div id="login-form">
-      <div class="auth-title">Welcome back</div>
-      <div class="auth-sub">Sign in to your account</div>
-      <div class="auth-error" id="login-err"></div>
-      <div class="field"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doLogin()"/></div>
-      <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+    <div class="auth-tag">Growth Operating System · Front Page Agency</div>
+    <div id="f-login">
+      <div class="auth-h">Welcome back</div><div class="auth-s">Sign in to your account</div>
+      <div class="ae" id="login-err"></div>
+      <div class="field"><label>Email</label><input type="email" id="l-email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <div class="field"><label>Password</label><input type="password" id="l-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"/></div>
       <button class="btn-auth" id="login-btn" onclick="doLogin()">Sign in</button>
-      <div class="auth-toggle">New? <a onclick="showForm('signup')">Create account</a> &nbsp;·&nbsp; <a onclick="showForm('reset')">Forgot password?</a></div>
+      <div class="auth-tog">New? <a onclick="showForm('signup')">Create account</a> · <a onclick="showForm('reset')">Forgot password?</a></div>
     </div>
-    <div id="signup-form" style="display:none;">
-      <div class="auth-title">Create account</div>
-      <div class="auth-sub">Enter the invite code from your owner</div>
-      <div class="auth-error" id="signup-err"></div>
-      <div class="auth-success" id="signup-ok"></div>
+    <div id="f-signup" style="display:none;">
+      <div class="auth-h">Create account</div><div class="auth-s">Enter invite code from your owner</div>
+      <div class="ae" id="su-err"></div><div class="ao" id="su-ok"></div>
       <div class="field"><label>Full name</label><input type="text" id="su-name" placeholder="First and last name"/></div>
       <div class="field"><label>Email</label><input type="email" id="su-email" placeholder="you@example.com"/></div>
       <div class="field"><label>Password</label><input type="password" id="su-pass" placeholder="Min 8 characters"/></div>
-      <div class="field"><label>Invite code</label><input type="text" id="su-code" placeholder="From your owner"/></div>
-      <button class="btn-auth" id="signup-btn" onclick="doSignup()">Create account</button>
-      <div class="auth-toggle"><a onclick="showForm('login')">Back to sign in</a></div>
+      <div class="field"><label>Invite code</label><input type="text" id="su-code" placeholder="From your owner · current: FPA2025"/></div>
+      <button class="btn-auth" id="su-btn" onclick="doSignup()">Create account</button>
+      <div class="auth-tog"><a onclick="showForm('login')">Back to sign in</a></div>
     </div>
-    <div id="reset-form" style="display:none;">
-      <div class="auth-title">Reset password</div>
-      <div class="auth-error" id="reset-err"></div>
-      <div class="auth-success" id="reset-ok"></div>
-      <div class="field"><label>Email</label><input type="email" id="reset-email" placeholder="you@example.com"/></div>
-      <button class="btn-auth" id="reset-btn" onclick="doReset()">Send reset link</button>
-      <div class="auth-toggle"><a onclick="showForm('login')">Back to sign in</a></div>
+    <div id="f-reset" style="display:none;">
+      <div class="auth-h">Reset password</div>
+      <div class="ae" id="rs-err"></div><div class="ao" id="rs-ok"></div>
+      <div class="field"><label>Email</label><input type="email" id="rs-email" placeholder="you@example.com"/></div>
+      <button class="btn-auth" id="rs-btn" onclick="doReset()">Send reset link</button>
+      <div class="auth-tog"><a onclick="showForm('login')">Back to sign in</a></div>
     </div>
   </div>
 </div>
-
-<div class="app" id="app-shell">
+<div class="app" id="app">
   <header class="topbar">
     <div class="logo"><div class="logo-pip"></div>FPA <span>OS</span></div>
-    <div class="tsep"></div>
-    <div class="tctx" id="tbar-ctx">Loading...</div>
+    <div class="tsep"></div><div class="tctx" id="tctx">Loading...</div>
     <div class="tright">
-      <div class="thm">
-        <span class="thm-lbl">Dark</span>
-        <div class="thm-tog" id="tt" onclick="toggleTheme()"><div class="thm-t"></div></div>
-        <span class="thm-lbl">Light</span>
-      </div>
-      <div class="uchip">
-        <div class="uav" id="uav">?</div>
-        <span class="uname" id="uname">...</span>
-        <span class="role-badge" id="urole">...</span>
-      </div>
+      <div class="thm"><span class="thm-lbl">Dark</span><div class="tt" id="thm-tt" onclick="toggleTheme()"><div class="tt-t"></div></div><span class="thm-lbl">Light</span></div>
+      <div class="uchip"><div class="uav" id="u-av">?</div><span class="uname" id="u-name">...</span><span class="rb" id="u-role">...</span></div>
       <button class="logout-btn" onclick="doLogout()">Sign out</button>
     </div>
   </header>
   <aside class="sidebar" id="sidebar"></aside>
   <main class="main" id="main">
-
-    <!-- HOME -->
-    <div id="page-home" class="pg active">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px;flex-wrap:wrap;gap:9px;">
-        <div><div class="pgt" id="home-greeting">Good morning 👋</div><div class="pgs" id="home-sub">Loading...</div></div>
-        <button class="btn btn-p" onclick="nav('field',null)">
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v2.5l2 1.5"/></svg>
-          Start field day
-        </button>
-      </div>
-      <div style="margin-bottom:14px;">
-        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-bottom:3px;">
-          <span style="color:var(--blue);font-weight:500;" id="phase-lbl">Phase 1 — Learn the floor</span>
-          <span id="phase-pct">Day 1</span>
-        </div>
-        <div class="phbar"><div class="phfill" id="phase-fill" style="width:1%;"></div></div>
-      </div>
-      <div class="ann"><div class="ann-dot"></div><div>
-        <div class="ann-ttl" id="ann-title">Welcome to FPA OS 🎉</div>
-        <div class="ann-body" id="ann-body">Your owner will post announcements here before each shift — targets, shoutouts, and updates.</div>
-      </div></div>
-      <div class="g4">
-        <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);" id="s-closes">0</div><div class="sl">Closes this week</div><div class="sd" id="s-closes-d" style="color:var(--t3);">Log your first sale</div></div>
-        <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);" id="s-wire">$0</div><div class="sl">Wire this week</div><div class="sd" id="s-wire-d" style="color:var(--t3);">Target: $<span id="wire-target-lbl">2,100</span></div></div>
-        <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);" id="s-bells">0</div><div class="sl">Bells this week</div><div class="sd" style="color:var(--t3);">2 sales + 3 services</div></div>
-        <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);" id="s-streak">0%</div><div class="sl">Log streak</div><div class="sd" style="color:var(--t3);">Log your first day</div></div>
-      </div>
-      <div class="g2">
-        <div class="card">
-          <div class="slbl">Path to Lead Trainer — hit any one</div>
-          <div class="pmb">
-            <div class="pmb-hd"><span class="pmb-name">Path A — Wire threshold</span><span class="bd bd-a" id="pa-badge">$0</span></div>
-            <div class="prog"><div class="prog-hd"><span id="pa-lbl">$0 of $<span id="pa-target">2,100</span></span><span id="pa-pct" style="color:var(--amber);">0%</span></div><div class="prog-tr"><div class="prog-f" id="pa-fill" style="width:0%;background:var(--amber);"></div></div></div>
-          </div>
-          <div class="pmb">
-            <div class="pmb-hd"><span class="pmb-name">Path B — PIA internet sales</span><span class="bd bd-a" id="pb-badge">0/6</span></div>
-            <div class="prog"><div class="prog-hd"><span id="pb-lbl">0 of 6 PIA</span><span id="pb-pct" style="color:var(--amber);">0%</span></div><div class="prog-tr"><div class="prog-f" id="pb-fill" style="width:0%;background:var(--amber);"></div></div></div>
-          </div>
-          <div class="pmb" style="margin-bottom:0;">
-            <div class="pmb-hd"><span class="pmb-name">Path C — Total customers</span><span class="bd bd-a" id="pc-badge">0/8</span></div>
-            <div class="prog" style="margin-bottom:0;"><div class="prog-hd"><span id="pc-lbl">0 of 8 customers</span><span id="pc-pct" style="color:var(--amber);">0%</span></div><div class="prog-tr"><div class="prog-f" id="pc-fill" style="width:0%;background:var(--amber);"></div></div></div>
-          </div>
-          <div id="promo-cta" style="display:none;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.14);border-radius:var(--r1);padding:8px 11px;font-size:11px;color:#86EFAC;margin-top:9px;">🎉 Criteria met — speak to your leader about promotion review.</div>
-        </div>
-        <div>
-          <div class="card" style="margin-bottom:11px;">
-            <div class="slbl">Quick actions</div>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;" id="qa-grid"></div>
-          </div>
-          <div class="card"><div class="slbl">30-day activity</div><div id="day-dots" style="display:flex;gap:3px;flex-wrap:wrap;"></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- FIELD DAY -->
-    <div id="page-field" class="pg">
-      <div class="pgt">Field day</div>
-      <div class="pgs">Tap to count · sales auto-calculate wire and bell status</div>
-      <div class="tg">
-        <div class="tb" style="border-color:rgba(79,142,247,.25);" onclick="tap('s')"><button class="tundo" onclick="event.stopPropagation();undo('s')">undo</button><div class="tlbl" style="color:var(--blue);">Stops</div><div class="tcnt" id="tc-s" style="color:var(--blue);">0</div><div class="tsub" id="tt-s">tap to count</div><div class="tpbar"><div class="tpfill" id="tf-s" style="width:0%;background:var(--blue);"></div></div></div>
-        <div class="tb" style="border-color:rgba(0,201,167,.25);" onclick="tap('t')"><button class="tundo" onclick="event.stopPropagation();undo('t')">undo</button><div class="tlbl" style="color:var(--teal);">Tabs</div><div class="tcnt" id="tc-t" style="color:var(--teal);">0</div><div class="tsub" id="tt-t">tap to count</div><div class="tpbar"><div class="tpfill" id="tf-t" style="width:0%;background:var(--teal);"></div></div></div>
-        <div class="tb" style="border-color:rgba(245,158,11,.25);" onclick="tap('p')"><button class="tundo" onclick="event.stopPropagation();undo('p')">undo</button><div class="tlbl" style="color:var(--amber);">Presentations</div><div class="tcnt" id="tc-p" style="color:var(--amber);">0</div><div class="tsub" id="tt-p">tap to count</div><div class="tpbar"><div class="tpfill" id="tf-p" style="width:0%;background:var(--amber);"></div></div></div>
-        <div class="tb" style="border-color:rgba(72,72,90,.4);" onclick="tap('c')"><button class="tundo" onclick="event.stopPropagation();undo('c')">undo</button><div class="tlbl" style="color:var(--t2);">Credit checks</div><div class="tcnt" id="tc-c" style="color:var(--t2);">0</div><div class="tsub" id="tt-c">tap to count</div><div class="tpbar"><div class="tpfill" id="tf-c" style="width:0%;background:var(--t3);"></div></div></div>
-      </div>
-      <div class="card" style="margin-bottom:10px;">
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;">
-          <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--green);" id="f-cl">0</div><div style="font-size:10px;color:var(--t3);">Sales</div></div>
-          <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--y);" id="f-w">$0</div><div style="font-size:10px;color:var(--t3);">Wire</div></div>
-          <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--teal);" id="f-tr">—</div><div style="font-size:10px;color:var(--t3);">Tab rate</div></div>
-          <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;color:var(--amber);" id="f-bl">No bell</div><div style="font-size:10px;color:var(--t3);">Bell</div></div>
-        </div>
-      </div>
-      <button class="btn btn-p" style="width:100%;justify-content:center;padding:11px;">Log a sale</button>
-    </div>
-
-    <!-- PROGRESS -->
-    <div id="page-progress" class="pg">
-      <div class="pgt">My progress</div>
-      <div class="pgs" id="prog-sub">Week overview · promo tracking · your path to the next level</div>
-      <div class="g4" id="prog-stats">
-        <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);">0</div><div class="sl">Stops this week</div><div class="sd" style="color:var(--t3);" id="prog-stops-tgt">Target: 500</div></div>
-        <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);">0</div><div class="sl">Tabs</div><div class="sd" style="color:var(--t3);" id="prog-tabs-tgt">Target: 150</div></div>
-        <div class="stat"><div class="sacc" style="background:var(--amber);"></div><div class="sv" style="color:var(--amber);">0</div><div class="sl">Presentations</div><div class="sd" style="color:var(--t3);" id="prog-pres-tgt">Target: 50</div></div>
-        <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);">0</div><div class="sl">Closes</div><div class="sd" style="color:var(--t3);" id="prog-closes-tgt">Target: 20</div></div>
-      </div>
-      <div class="g2">
-        <div class="card">
-          <div class="slbl">Promotion path — AE → Lead Trainer</div>
-          <div style="background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:12px 14px;margin-bottom:8px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;font-weight:500;">Path A — Wire $<span id="prog-wire-tgt">2,100</span>/wk</span><span class="bd" id="prog-pa-bd" style="background:rgba(245,158,11,.1);color:#FCD34D;border:1px solid rgba(245,158,11,.18);">0%</span></div>
-            <div class="prog"><div class="prog-hd"><span id="prog-pa-lbl">$0 this week</span><span id="prog-pa-pct" style="color:var(--amber);">0%</span></div><div class="prog-tr"><div class="prog-f" id="prog-pa-fill" style="width:0%;background:var(--amber);"></div></div></div>
-          </div>
-          <div style="background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:12px 14px;margin-bottom:8px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;font-weight:500;">Path B — 6 PIA internet sales</span><span class="bd" id="prog-pb-bd" style="background:rgba(245,158,11,.1);color:#FCD34D;border:1px solid rgba(245,158,11,.18);">0/6</span></div>
-            <div class="prog"><div class="prog-hd"><span>0 of 6 PIA this week</span><span id="prog-pb-pct" style="color:var(--amber);">0%</span></div><div class="prog-tr"><div class="prog-f" id="prog-pb-fill" style="width:0%;background:var(--amber);"></div></div></div>
-          </div>
-          <div style="background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:12px 14px;margin-bottom:0;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;font-weight:500;">Path C — 8 total customers</span><span class="bd" id="prog-pc-bd" style="background:rgba(245,158,11,.1);color:#FCD34D;border:1px solid rgba(245,158,11,.18);">0/8</span></div>
-            <div class="prog" style="margin-bottom:0;"><div class="prog-hd"><span>0 of 8 customers this week</span><span id="prog-pc-pct" style="color:var(--amber);">0%</span></div><div class="prog-tr"><div class="prog-f" id="prog-pc-fill" style="width:0%;background:var(--amber);"></div></div></div>
-          </div>
-          <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.15);border-radius:var(--r1);padding:8px 11px;font-size:11px;color:#93BBFF;margin-top:10px;">Hit any one of the three paths in the same week to qualify for LT promotion review.</div>
-        </div>
-        <div class="card">
-          <div class="slbl">Daily benchmark targets</div>
-          <div style="display:flex;flex-direction:column;gap:0;">
-            <div class="setting-row" style="padding:9px 0;"><div><div class="sr-name">Stops (Elite)</div><div class="sr-sub">Walk past 100 people minimum</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--blue);" id="bm-stops">100</div></div>
-            <div class="setting-row" style="padding:9px 0;"><div><div class="sr-name">Tabs</div><div class="sr-sub">30% conversion of stops</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--teal);" id="bm-tabs">30</div></div>
-            <div class="setting-row" style="padding:9px 0;"><div><div class="sr-name">Presentations</div><div class="sr-sub">Full pitch to decision maker</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--amber);" id="bm-pres">15</div></div>
-            <div class="setting-row" style="padding:9px 0;"><div><div class="sr-name">Credit checks</div><div class="sr-sub">7-8 to get 3-4 closes</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--t2);" id="bm-checks">7</div></div>
-            <div class="setting-row" style="padding:9px 0;border:none;"><div><div class="sr-name">Closes</div><div class="sr-sub">Target minimum per day</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--green);" id="bm-closes">3</div></div>
-          </div>
-          <div style="font-size:10px;color:var(--t3);margin-top:6px;">Set by your owner in Settings · these are the elite daily benchmarks</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TRAINING -->
-    <div id="page-training" class="pg">
-      <div class="pgt">Training vault</div>
-      <div class="pgs">AE modules active · expands as you advance</div>
-      <div class="card" style="margin-bottom:10px;">
-        <div class="slbl">Account Executive — unlocked</div>
-        <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);"><div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📋</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Sales fundamentals & pitch mastery</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Scripts, objection handling, store etiquette</div></div><span class="bd bd-g">Open</span></div>
-        <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);"><div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🎯</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Daily drill sheets & practice routines</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Warm-up drills, roleplay guides</div></div><span class="bd bd-g">Open</span></div>
-        <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);"><div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🗺️</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">30-day success roadmap</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Day-by-day expectations and milestones</div></div><span class="bd bd-g">Open</span></div>
-        <div style="display:flex;align-items:center;gap:10px;padding:9px 0;"><div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📱</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Product knowledge — Spectrum</div><div style="font-size:11px;color:var(--t2);margin-top:1px;">Internet, TV, Mobile · wire values per service</div></div><span class="bd bd-g">Open</span></div>
-      </div>
-      <div class="card" style="opacity:.3;">
-        <div class="slbl">Lead Trainer — locked</div>
-        <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);"><div style="width:32px;height:32px;border-radius:var(--r1);background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:14px;">🔒</div><div><div style="font-size:12px;font-weight:500;color:var(--t3);">Team management & leadership systems</div><div style="font-size:11px;color:var(--t3);">Unlocks at LT promotion</div></div></div>
-        <div style="display:flex;align-items:center;gap:10px;padding:9px 0;"><div style="width:32px;height:32px;border-radius:var(--r1);background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:14px;">🔒</div><div><div style="font-size:12px;font-weight:500;color:var(--t3);">Recruiting fundamentals</div><div style="font-size:11px;color:var(--t3);">Unlocks at LT promotion</div></div></div>
-      </div>
-    </div>
-
-    <!-- GOALS -->
-    <div id="page-goals" class="pg">
-      <div class="pgt">Weekly goals</div>
-      <div class="pgs">Commit to your week before Monday · your owner sees every submission</div>
+<!-- HOME PAGE -->
+<div id="page-home" class="pg active">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px;flex-wrap:wrap;gap:9px;">
+    <div><div class="pgt" id="hg">Good morning 👋</div><div class="pgs" id="hs">Loading...</div></div>
+    <button class="btn btn-p" onclick="nav('field',null)"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v2.5l2 1.5"/></svg>Start field day</button>
+  </div>
+  <div style="margin-bottom:14px;">
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-bottom:3px;"><span style="color:var(--blue);font-weight:500;" id="phase-lbl">Phase 1</span><span id="phase-pct">Day 1</span></div>
+    <div class="phbar"><div class="phfill" id="phase-fill" style="width:1%;"></div></div>
+  </div>
+  <div class="ann"><div class="ann-dot"></div><div><div class="ann-ttl" id="ann-t">Welcome to FPA OS 🎉</div><div class="ann-body" id="ann-b">Your owner posts announcements here before each shift — targets, shoutouts, updates.</div></div></div>
+  <div class="g4">
+    <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);" id="h-closes">0</div><div class="sl">Closes this week</div><div class="sd" id="h-closes-d" style="color:var(--t3);">Log your first sale</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);" id="h-wire">$0</div><div class="sl">Wire this week</div><div class="sd" style="color:var(--t3);">Target: $<span id="wire-tgt-lbl">2,100</span></div></div>
+    <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);" id="h-bells">0</div><div class="sl">Bells this week</div><div class="sd" style="color:var(--t3);" id="bell-def-home">2 customers + 3 services</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);" id="h-streak">0%</div><div class="sl">Log streak</div><div class="sd" style="color:var(--t3);">Log your first day</div></div>
+  </div>
+  <div class="g2">
+    <div>
       <div class="card">
-        <div class="slbl">This week's commitment</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
-          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Closes target</div><input type="number" id="goal-closes" placeholder="e.g. 20" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
-          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Wire target ($)</div><input type="number" id="goal-wire" placeholder="e.g. 2100" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+        <div class="slbl">Path to Lead Trainer — hit any one</div>
+        <div class="inset">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;"><span style="font-size:12px;font-weight:500;">Path A — Wire $<span id="pa-tgt">2,100</span>/wk</span><span class="bd bd-a" id="pa-bd">0%</span></div>
+          <div class="prog"><div class="prog-hd"><span id="pa-lbl">$0 this week</span><span id="pa-pct" style="color:var(--amber);">0%</span></div><div class="prog-tr"><div class="prog-f" id="pa-f" style="width:0%;background:var(--amber);"></div></div></div>
         </div>
-        <div style="margin-bottom:9px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">My focus this week</div>
-          <select id="goal-focus" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
-            <option value="">Select your focus</option>
-            <option>Push through to more presentations</option>
-            <option>Focus on bundles — going for bells</option>
-            <option>Control my energy after early no's</option>
-            <option>Get more credit checks to close more</option>
-            <option>Be at store earlier and stay later</option>
-          </select>
+        <div class="inset">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;"><span style="font-size:12px;font-weight:500;">Path B — <span id="pb-tgt">6</span> PIA sales/wk</span><span class="bd bd-a" id="pb-bd">0/6</span></div>
+          <div class="prog"><div class="prog-hd"><span>0 of <span id="pb-tgt2">6</span> PIA</span><span id="pb-pct" style="color:var(--amber);">0%</span></div><div class="prog-tr"><div class="prog-f" id="pb-f" style="width:0%;background:var(--amber);"></div></div></div>
         </div>
-        <button class="btn btn-p" style="width:100%;justify-content:center;" onclick="submitGoal()">Submit my goal</button>
-        <div id="goal-msg" style="display:none;font-size:11px;margin-top:8px;"></div>
+        <div class="inset" style="margin-bottom:0;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;"><span style="font-size:12px;font-weight:500;">Path C — <span id="pc-tgt">8</span> customers/wk</span><span class="bd bd-a" id="pc-bd">0/8</span></div>
+          <div class="prog" style="margin-bottom:0;"><div class="prog-hd"><span>0 of <span id="pc-tgt2">8</span></span><span id="pc-pct" style="color:var(--amber);">0%</span></div><div class="prog-tr"><div class="prog-f" id="pc-f" style="width:0%;background:var(--amber);"></div></div></div>
+        </div>
+        <div id="promo-cta" style="display:none;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.14);border-radius:var(--r1);padding:8px 11px;font-size:11px;color:#86EFAC;margin-top:9px;">🎉 Criteria cleared — speak to your leader about promotion review.</div>
       </div>
     </div>
-
-    <!-- HIGH ROLLER -->
-    <div id="page-highroller" class="pg">
-      <div class="pgt">High Roller Board 🏆</div>
-      <div class="pgs">FPA DFW · Rankings update live as sales are logged</div>
-      <div class="card">
-        <div class="empty-state">
-          <div class="icon">🏆</div>
-          <div class="title">Board is empty — be the first on it</div>
-          <div class="sub">The first rep to log a sale this week claims the #1 spot. Rankings appear automatically.</div>
-        </div>
+    <div>
+      <div class="card" style="margin-bottom:12px;">
+        <div class="slbl">Quick actions</div>
+        <div id="qa-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;"></div>
       </div>
+      <div class="card"><div class="slbl">30-day activity</div><div id="day-dots" style="display:flex;gap:3px;flex-wrap:wrap;"></div></div>
     </div>
-
-    <!-- SCORECARD -->
-    <div id="page-scorecard" class="pg">
-      <div class="pgt">Scorecard</div>
-      <div class="pgs">All modules · one source of truth · FPA DFW</div>
-      <div class="g4">
-        <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);">$0</div><div class="sl">Org wire this week</div><div class="sd" style="color:var(--t3);">Reps onboarding soon</div></div>
-        <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);">0</div><div class="sl">Total closes</div><div class="sd" style="color:var(--t3);">Reps onboarding soon</div></div>
-        <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);">0</div><div class="sl">Bells rung</div><div class="sd" style="color:var(--t3);">Reps onboarding soon</div></div>
-        <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);" id="sc-reps">1</div><div class="sl">Active reps</div><div class="sd" style="color:var(--t3);">Add team in Rep Mgmt</div></div>
-      </div>
-      <div class="card">
-        <div class="empty-state">
-          <div class="icon">📊</div>
-          <div class="title">Scorecard populates as your team logs</div>
-          <div class="sub">Add reps → they log field days → all data flows here in real time. You see everything. Reps see their own.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- REP MANAGEMENT -->
-    <div id="page-admin" class="pg">
-      <div class="pgt">Rep management</div>
-      <div class="pgs">Add reps, set roles, control access · Owner only</div>
-      <div class="inv-form">
-        <div class="slbl" style="margin-bottom:12px;">Add a new rep</div>
-        <div class="inv-grid">
-          <div class="inv-f"><label>Full name</label><input type="text" id="inv-name" placeholder="First and last name"/></div>
-          <div class="inv-f"><label>Email</label><input type="email" id="inv-email" placeholder="rep@email.com"/></div>
-          <div class="inv-f"><label>Role</label>
-            <select id="inv-role">
-              <option value="ae">AE</option>
-              <option value="lt">Lead Trainer</option>
-              <option value="jpm">JPM</option>
-              <option value="pm">PM</option>
-            </select>
-          </div>
-          <div class="inv-f"><label>&nbsp;</label><button class="btn btn-p" style="width:100%;justify-content:center;" onclick="inviteRep()">Send invite</button></div>
-        </div>
-        <div id="inv-msg" style="display:none;font-size:11px;margin-top:8px;"></div>
-        <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--b2);font-size:11px;color:var(--t3);">
-          🔑 Self-signup code: <strong style="color:var(--y);letter-spacing:1px;font-size:13px;">FPA2025</strong>
-          <span style="margin-left:6px;">· Share with reps to create their own account at <strong style="color:var(--t2);">fpa-os.vercel.app</strong></span>
-        </div>
-      </div>
-      <div class="card">
-        <div class="slbl">Your team</div>
-        <table class="admin-table">
-          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Office</th><th>Day</th><th>Joined</th></tr></thead>
-          <tbody id="reps-tbody"><tr><td colspan="6" style="text-align:center;color:var(--t3);padding:20px;">Loading...</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- BULLETIN -->
-    <div id="page-bulletin" class="pg">
-      <div class="pgt">Weekly bulletin</div>
-      <div class="pgs">Wins only · auto Sunday 11pm · emails Monday 7am · print and post in the Atmosphere</div>
-      <div style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.13);border-radius:var(--r2);padding:10px 13px;font-size:11px;color:#86EFAC;margin-bottom:16px;">
-        📌 Celebrates wins only. Top performers named publicly. Underperformers coached privately — never on the wall.
-      </div>
-      <div class="card">
-        <div class="empty-state">
-          <div class="icon">📄</div>
-          <div class="title">First bulletin after your first full week</div>
-          <div class="sub">Onboard your team → they log their week → Sunday night the bulletin auto-generates and emails Monday morning.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- OWNER SETTINGS -->
-    <div id="page-settings" class="pg">
-      <div class="pgt">Settings</div>
-      <div class="pgs">Configure targets, benchmarks, and criteria for your office</div>
-      <div class="g2">
-        <div class="card">
-          <div class="slbl">Daily field benchmarks (Elite)</div>
-          <div class="setting-row"><div><div class="sr-name">Stops target</div><div class="sr-sub">Elite daily stop count</div></div><input class="sr-input" id="cfg-stops" type="number" value="100" onchange="saveSettings()"/></div>
-          <div class="setting-row"><div><div class="sr-name">Tabs target</div><div class="sr-sub">30% of stops</div></div><input class="sr-input" id="cfg-tabs" type="number" value="30" onchange="saveSettings()"/></div>
-          <div class="setting-row"><div><div class="sr-name">Presentations target</div><div class="sr-sub">Full pitches per day</div></div><input class="sr-input" id="cfg-pres" type="number" value="15" onchange="saveSettings()"/></div>
-          <div class="setting-row"><div><div class="sr-name">Credit checks target</div><div class="sr-sub">Per day</div></div><input class="sr-input" id="cfg-checks" type="number" value="7" onchange="saveSettings()"/></div>
-          <div class="setting-row"><div><div class="sr-name">Closes target</div><div class="sr-sub">Minimum per day</div></div><input class="sr-input" id="cfg-closes" type="number" value="3" onchange="saveSettings()"/></div>
-        </div>
-        <div class="card">
-          <div class="slbl">AE → Lead Trainer criteria</div>
-          <div class="setting-row"><div><div class="sr-name">Path A — Wire threshold</div><div class="sr-sub">Weekly wire to qualify</div></div><input class="sr-input" id="cfg-wire-tgt" type="number" value="2100" onchange="saveSettings()"/></div>
-          <div class="setting-row"><div><div class="sr-name">Path B — PIA sales</div><div class="sr-sub">PIA internet sales/week</div></div><input class="sr-input" id="cfg-pia-tgt" type="number" value="6" onchange="saveSettings()"/></div>
-          <div class="setting-row"><div><div class="sr-name">Path C — Total customers</div><div class="sr-sub">Total customers/week</div></div><input class="sr-input" id="cfg-cust-tgt" type="number" value="8" onchange="saveSettings()"/></div>
-          <div class="setting-row"><div><div class="sr-name">Bell definition</div><div class="sr-sub">Min customers for a bell</div></div><input class="sr-input" id="cfg-bell" type="number" value="2" onchange="saveSettings()"/></div>
-        </div>
-      </div>
-      <button class="btn btn-p" onclick="saveSettings(true)">Save all settings</button>
-      <div id="settings-msg" style="display:none;font-size:11px;margin-top:8px;color:#86EFAC;"></div>
-    </div>
-
-  </main>
+  </div>
 </div>
 
+<!-- FIELD DAY -->
+<div id="page-field" class="pg">
+  <div class="pgt">Field day</div>
+  <div class="pgs">Tap to count · sales auto-calculate wire and bells</div>
+  <div style="background:rgba(255,224,51,.05);border:1px solid rgba(255,224,51,.13);border-radius:var(--r2);padding:10px 13px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+    <span style="font-size:11px;color:var(--y);" id="field-store-lbl">No store selected — choose from your territory</span>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <select id="field-store-sel" style="background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:5px 9px;font-size:11px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;max-width:200px;"></select>
+      <button class="btn btn-g" style="padding:5px 10px;font-size:10px;" onclick="setFieldStore()">Set</button>
+    </div>
+  </div>
+  <div class="tg">
+    <div class="tb" style="border-color:rgba(79,142,247,.25);" onclick="tap('s')"><button class="tundo" onclick="event.stopPropagation();undo('s')">undo</button><div class="tlbl" style="color:var(--blue);">Stops</div><div class="tcnt" id="tc-s" style="color:var(--blue);">0</div><div class="tsub">of <span id="tgt-s">100</span></div><div class="tpbar"><div class="tpfill" id="tf-s" style="width:0%;background:var(--blue);"></div></div></div>
+    <div class="tb" style="border-color:rgba(0,201,167,.25);" onclick="tap('t')"><button class="tundo" onclick="event.stopPropagation();undo('t')">undo</button><div class="tlbl" style="color:var(--teal);">Tabs</div><div class="tcnt" id="tc-t" style="color:var(--teal);">0</div><div class="tsub">of <span id="tgt-t">30</span></div><div class="tpbar"><div class="tpfill" id="tf-t" style="width:0%;background:var(--teal);"></div></div></div>
+    <div class="tb" style="border-color:rgba(245,158,11,.25);" onclick="tap('p')"><button class="tundo" onclick="event.stopPropagation();undo('p')">undo</button><div class="tlbl" style="color:var(--amber);">Presentations</div><div class="tcnt" id="tc-p" style="color:var(--amber);">0</div><div class="tsub">of <span id="tgt-p">15</span></div><div class="tpbar"><div class="tpfill" id="tf-p" style="width:0%;background:var(--amber);"></div></div></div>
+    <div class="tb" style="border-color:rgba(72,72,90,.4);" onclick="tap('c')"><button class="tundo" onclick="event.stopPropagation();undo('c')">undo</button><div class="tlbl" style="color:var(--t2);">Credit checks</div><div class="tcnt" id="tc-c" style="color:var(--t2);">0</div><div class="tsub">of <span id="tgt-c">7</span></div><div class="tpbar"><div class="tpfill" id="tf-c" style="width:0%;background:var(--t3);"></div></div></div>
+  </div>
+  <div class="card" style="margin-bottom:10px;">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;">
+      <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--green);" id="f-cl">0</div><div style="font-size:10px;color:var(--t3);">Sales</div></div>
+      <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--y);" id="f-w">$0</div><div style="font-size:10px;color:var(--t3);">Wire</div></div>
+      <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--teal);" id="f-tr">—</div><div style="font-size:10px;color:var(--t3);">Tab rate</div></div>
+      <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;color:var(--amber);" id="f-bell-stat">No bell yet</div><div style="font-size:10px;color:var(--t3);">Bell</div></div>
+    </div>
+  </div>
+  <button class="btn btn-p" style="width:100%;justify-content:center;padding:11px;" onclick="openSaleModal()">+ Log a sale</button>
+  <div id="sales-today-list" style="margin-top:14px;"></div>
+</div>
+
+<!-- PROGRESS -->
+<div id="page-progress" class="pg">
+  <div class="pgt">My progress</div><div class="pgs">Week overview · promo tracking · path to next level</div>
+  <div class="g4">
+    <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);" id="pr-stops">0</div><div class="sl">Stops this week</div><div class="sd" id="pr-stops-t" style="color:var(--t3);">Target: 100/day</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);" id="pr-tabs">0</div><div class="sl">Tabs</div><div class="sd" id="pr-tabs-t" style="color:var(--t3);">Target: 30/day</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--amber);"></div><div class="sv" style="color:var(--amber);" id="pr-pres">0</div><div class="sl">Presentations</div><div class="sd" id="pr-pres-t" style="color:var(--t3);">Target: 15/day</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);" id="pr-closes">0</div><div class="sl">Closes</div><div class="sd" id="pr-closes-t" style="color:var(--t3);">Target: 3/day</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="slbl">AE → Lead Trainer — hit any one path this week</div>
+      <div class="inset">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;"><span style="font-size:12px;font-weight:500;">Path A — Wire $<span id="prpa-tgt">2,100</span>/wk</span><span class="bd bd-a" id="prpa-bd">0%</span></div>
+        <div class="prog"><div class="prog-hd"><span>$0 this week</span><span id="prpa-pct" style="color:var(--amber);">0%</span></div><div class="prog-tr"><div class="prog-f" id="prpa-f" style="width:0%;background:var(--amber);"></div></div></div>
+      </div>
+      <div class="inset">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;"><span style="font-size:12px;font-weight:500;">Path B — <span id="prpb-tgt">6</span> PIA/wk</span><span class="bd bd-a" id="prpb-bd">0/6</span></div>
+        <div class="prog"><div class="prog-hd"><span>0 PIA this week</span><span id="prpb-pct" style="color:var(--amber);">0%</span></div><div class="prog-tr"><div class="prog-f" id="prpb-f" style="width:0%;background:var(--amber);"></div></div></div>
+      </div>
+      <div class="inset" style="margin-bottom:0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;"><span style="font-size:12px;font-weight:500;">Path C — <span id="prpc-tgt">8</span> customers/wk</span><span class="bd bd-a" id="prpc-bd">0/8</span></div>
+        <div class="prog" style="margin-bottom:0;"><div class="prog-hd"><span>0 customers</span><span id="prpc-pct" style="color:var(--amber);">0%</span></div><div class="prog-tr"><div class="prog-f" id="prpc-f" style="width:0%;background:var(--amber);"></div></div></div>
+      </div>
+      <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.14);border-radius:var(--r1);padding:8px 11px;font-size:11px;color:#93BBFF;margin-top:9px;">Bell = <span id="bell-def-prog">2 customers + 3 services</span> in one day OR single sale ≥$400 wire.</div>
+    </div>
+    <div class="card">
+      <div class="slbl">Elite daily benchmarks</div>
+      <div class="set-row" style="padding:8px 0;"><div><div class="set-name">Stops</div><div class="set-sub">Walk past per shift</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--blue);" id="bm-stops">100</div></div>
+      <div class="set-row" style="padding:8px 0;"><div><div class="set-name">Tabs</div><div class="set-sub">30% conversion</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--teal);" id="bm-tabs">30</div></div>
+      <div class="set-row" style="padding:8px 0;"><div><div class="set-name">Presentations</div><div class="set-sub">Full pitch to DM</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--amber);" id="bm-pres">15</div></div>
+      <div class="set-row" style="padding:8px 0;"><div><div class="set-name">Credit checks</div><div class="set-sub">7-8 to get 3-4 closes</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--t2);" id="bm-checks">7</div></div>
+      <div class="set-row" style="padding:8px 0;border:none;"><div><div class="set-name">Closes</div><div class="set-sub">Minimum per day</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--green);" id="bm-closes">3</div></div>
+      <div style="font-size:10px;color:var(--t3);margin-top:4px;">Set by your owner in Settings</div>
+    </div>
+  </div>
+</div>
+
+<!-- TRAINING -->
+<div id="page-training" class="pg">
+  <div class="pgt">Training vault</div><div class="pgs">AE modules active · expands as you promote</div>
+  <div class="card">
+    <div class="slbl">Account Executive — unlocked</div>
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);"><div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📋</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Sales fundamentals & pitch mastery</div><div style="font-size:11px;color:var(--t2);">Scripts, objection handling, store etiquette</div></div><span class="bd bd-g">Open</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);"><div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🎯</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Daily drill sheets & practice routines</div><div style="font-size:11px;color:var(--t2);">Warm-up drills, roleplay guides</div></div><span class="bd bd-g">Open</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);"><div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🗺️</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">First 30 days success roadmap</div><div style="font-size:11px;color:var(--t2);">Day-by-day expectations, milestones</div></div><span class="bd bd-g">Open</span></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;"><div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📱</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Product knowledge — Spectrum</div><div style="font-size:11px;color:var(--t2);">Internet, TV, Mobile tiers · wire values per service</div></div><span class="bd bd-g">Open</span></div>
+  </div>
+  <div class="card" style="opacity:.3;">
+    <div class="slbl">Lead Trainer — locked</div>
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);"><div style="width:32px;height:32px;border-radius:var(--r1);background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:14px;">🔒</div><div><div style="font-size:12px;font-weight:500;color:var(--t3);">Team management & leadership systems</div></div></div>
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;"><div style="width:32px;height:32px;border-radius:var(--r1);background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:14px;">🔒</div><div><div style="font-size:12px;font-weight:500;color:var(--t3);">Recruiting fundamentals</div></div></div>
+  </div>
+</div>
+
+<!-- GOALS -->
+<div id="page-goals" class="pg">
+  <div class="pgt">Weekly goals</div><div class="pgs">Commit before Monday · your owner sees every submission</div>
+  <div class="card" style="background:var(--s3);border:1px solid var(--b1);">
+    <div class="slbl">Last week recap</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;">
+      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--blue);" id="lw-stops">0</div><div style="font-size:10px;color:var(--t3);">Stops</div></div>
+      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--teal);" id="lw-tabs">0</div><div style="font-size:10px;color:var(--t3);">Tabs</div></div>
+      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--green);" id="lw-closes">0</div><div style="font-size:10px;color:var(--t3);">Closes</div></div>
+      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--y);" id="lw-wire">$0</div><div style="font-size:10px;color:var(--t3);">Wire</div></div>
+      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--amber);" id="lw-bells">0</div><div style="font-size:10px;color:var(--t3);">Bells</div></div>
+      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--t2);" id="lw-recruits">0</div><div style="font-size:10px;color:var(--t3);">Recruits</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="slbl">This week's commitment</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
+      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Closes target</div><input type="number" id="g-closes" placeholder="e.g. 20" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Wire target ($)</div><input type="number" id="g-wire" placeholder="e.g. 2100" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+    </div>
+    <div style="margin-bottom:9px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">My focus this week</div>
+      <select id="g-focus" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
+        <option value="">Select your focus</option>
+        <option>Push through to more presentations</option>
+        <option>Focus on bundles — going for bells</option>
+        <option>Control energy after early no's</option>
+        <option>Get more credit checks to close more</option>
+        <option>Be at store earlier and stay later</option>
+      </select>
+    </div>
+    <div style="margin-bottom:9px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">If behind Wednesday I will</div>
+      <select id="g-commit" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
+        <option value="">Select your commitment</option>
+        <option>Call leader immediately for coaching</option>
+        <option>Put in extra stops Wed to make up gap</option>
+        <option>Run 50+ extra role plays Thursday morning</option>
+        <option>Shadow a top performer for one full shift</option>
+      </select>
+    </div>
+    <button class="btn btn-p" style="width:100%;justify-content:center;" onclick="submitGoal()">Generate & submit my goal</button>
+    <div id="goal-out" style="display:none;background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:12px 14px;margin-top:12px;font-size:12px;color:var(--t2);line-height:1.6;"></div>
+  </div>
+</div>
+
+<!-- HIGH ROLLER BOARD -->
+<div id="page-highroller" class="pg">
+  <div class="pgt">High Roller Board 🏆</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:8px;">
+    <div class="pgs" style="margin-bottom:0;">FPA DFW · Live rankings · Resets Monday midnight</div>
+    <div id="owner-lb-tools" style="display:none;gap:6px;flex-wrap:wrap;" class="brow" style="margin-bottom:0;">
+      <button class="btn btn-g" style="padding:5px 10px;font-size:10px;" onclick="openShoutoutModal()">+ Shoutout</button>
+      <button class="btn btn-g" style="padding:5px 10px;font-size:10px;" onclick="openBadgeModal()">+ Award badge</button>
+    </div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px;">
+    <div id="podium-wrap" style="padding:20px;text-align:center;color:var(--t3);font-size:12px;">Board empty — log a sale to claim the #1 spot 🏆</div>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:7px;">
+      <div class="slbl" style="margin-bottom:0;">Full leaderboard</div>
+      <div style="display:flex;gap:5px;">
+        <button class="btn btn-g stab-btn active-tab" id="hr-week-btn" onclick="setHRView('week',this)">This week</button>
+        <button class="btn btn-g stab-btn" onclick="setHRView('alltime',this)">All time</button>
+        <button class="btn btn-g stab-btn" onclick="setHRView('streaks',this)">Streaks</button>
+      </div>
+    </div>
+    <div class="lbhd"><span>#</span><span>Rep</span><span style="text-align:right;">Wire</span><span style="text-align:right;">Closes</span><span style="text-align:right;">Bells</span></div>
+    <div id="lb-rows"><div class="empty"><div class="icon">🏆</div><div class="title">No sales logged yet</div><div class="sub">Rankings appear as reps log sales.</div></div></div>
+  </div>
+</div>
+
+<!-- SCORECARD -->
+<div id="page-scorecard" class="pg">
+  <div class="pgt">Scorecard</div><div class="pgs">All modules · one source of truth · FPA DFW</div>
+  <div class="g4">
+    <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);" id="sc-wire">$0</div><div class="sl">Org wire this week</div><div class="sd" style="color:var(--t3);">Onboarding team</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);" id="sc-closes">0</div><div class="sl">Total closes</div><div class="sd" style="color:var(--t3);">Onboarding team</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);" id="sc-bells">0</div><div class="sl">Bells rung</div><div class="sd" style="color:var(--t3);">Onboarding team</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);" id="sc-reps">1</div><div class="sl">Active reps</div><div class="sd" style="color:var(--t3);">Add team below</div></div>
+  </div>
+  <div class="g2">
+    <div>
+      <div class="sc-mod"><div class="sc-hd"><div class="sc-ico" style="background:rgba(79,142,247,.1);">📊</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Field OS</div><div style="font-size:9px;color:var(--t3);">Live tally</div></div><span class="bd bd-g">Live</span></div><div class="sc-row"><span class="sc-lbl">Team stops today</span><span class="sc-v" style="color:var(--blue);">0</span></div><div class="sc-row"><span class="sc-lbl">Tab conversion</span><span class="sc-v" style="color:var(--teal);">—</span></div><div class="sc-row"><span class="sc-lbl">Presentations</span><span class="sc-v" style="color:var(--amber);">0</span></div></div>
+      <div class="sc-mod"><div class="sc-hd"><div class="sc-ico" style="background:rgba(255,224,51,.08);">💰</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Sales log</div><div style="font-size:9px;color:var(--t3);">Auto wire calc</div></div><span class="bd bd-g">Live</span></div><div class="sc-row"><span class="sc-lbl">Wire today</span><span class="sc-v" style="color:var(--y);" id="sc-wire-today">$0</span></div><div class="sc-row"><span class="sc-lbl">Closes today</span><span class="sc-v" style="color:var(--green);" id="sc-closes-today">0</span></div><div class="sc-row"><span class="sc-lbl">Bells today</span><span class="sc-v" style="color:var(--amber);" id="sc-bells-today">0</span></div></div>
+      <div class="sc-mod"><div class="sc-hd"><div class="sc-ico" style="background:rgba(139,92,246,.1);">👥</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Recruitment</div><div style="font-size:9px;color:var(--t3);">Pipeline</div></div><span class="bd bd-b">Active</span></div><div class="sc-row"><span class="sc-lbl">Interviews this wk</span><span class="sc-v" style="color:var(--purple);" id="sc-interviews">0</span></div><div class="sc-row"><span class="sc-lbl">New starts</span><span class="sc-v" style="color:var(--green);" id="sc-starts">0</span></div><div class="sc-row"><span class="sc-lbl">Promo eligible</span><span class="sc-v" style="color:var(--y);">0</span></div></div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:10px;">
+        <div class="slbl">Office wire</div>
+        <div class="prog"><div class="prog-hd"><span style="color:var(--y);">FPA DFW</span><span style="color:var(--y);" id="sc-dfw">$0</span></div><div class="prog-tr"><div class="prog-f" id="sc-dfw-bar" style="width:0%;background:var(--y);"></div></div></div>
+        <div class="prog"><div class="prog-hd"><span style="color:var(--teal);">Elevation Global (Sara A.)</span><span style="color:var(--teal);">—</span></div><div class="prog-tr"><div class="prog-f" style="width:0%;background:var(--teal);"></div></div></div>
+        <div class="prog" style="margin-bottom:0;"><div class="prog-hd"><span style="color:var(--blue);">MP Enterprises (Joseph M.)</span><span style="color:var(--blue);">—</span></div><div class="prog-tr"><div class="prog-f" style="width:0%;background:var(--blue);"></div></div></div>
+      </div>
+      <div class="card">
+        <div class="slbl">Promo pipeline</div>
+        <div class="sc-row"><span class="sc-lbl">AE → LT eligible now</span><span class="sc-v" style="color:var(--green);">0</span></div>
+        <div class="sc-row"><span class="sc-lbl">Within 1 week</span><span class="sc-v" style="color:var(--amber);">0</span></div>
+        <div class="sc-row" style="border:none;"><span class="sc-lbl">Active reps total</span><span class="sc-v" id="sc-reps2">1</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REP MANAGEMENT -->
+<div id="page-admin" class="pg">
+  <div class="pgt">Rep management</div><div class="pgs">Add reps · set roles · manage access · Owner only</div>
+  <div class="card">
+    <div class="slbl" style="margin-bottom:12px;">Add a new rep</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 110px 90px;gap:10px;align-items:end;">
+      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Full name</div><input type="text" id="inv-name" placeholder="First and last name" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Email</div><input type="email" id="inv-email" placeholder="rep@email.com" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Role</div><select id="inv-role" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"><option value="ae">AE</option><option value="lt">Lead Trainer</option><option value="jpm">JPM</option><option value="pm">PM</option></select></div>
+      <div><div style="font-size:10px;margin-bottom:4px;">&nbsp;</div><button class="btn btn-p" style="width:100%;justify-content:center;" onclick="inviteRep()">Add rep</button></div>
+    </div>
+    <div id="inv-msg" style="display:none;font-size:11px;margin-top:8px;"></div>
+    <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--b1);font-size:11px;color:var(--t3);">🔑 Self-signup: <strong style="color:var(--y);letter-spacing:1px;font-size:13px;">FPA2025</strong> · Share → reps go to <strong style="color:var(--t2);">fpa-os.vercel.app</strong> → Create account</div>
+  </div>
+  <div class="card">
+    <div class="slbl">Your team</div>
+    <table class="atbl"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Office</th><th>Day</th><th>Joined</th></tr></thead><tbody id="reps-tbody"><tr><td colspan="6" style="text-align:center;color:var(--t3);padding:20px;">Loading...</td></tr></tbody></table>
+  </div>
+</div>
+
+<!-- ORG CHART -->
+<div id="page-org" class="pg">
+  <div class="pgt">Org chart</div><div class="pgs">FPA DFW hierarchy · click for stats · right-click / hold for actions · drag to reposition</div>
+  <div style="background:rgba(255,224,51,.04);border:1px solid rgba(255,224,51,.13);border-radius:var(--r2);padding:10px 13px;margin-bottom:14px;">
+    <div style="font-size:11px;color:var(--y);font-weight:600;margin-bottom:6px;">⚡ Unassigned starts — drag onto a leader to assign crew</div>
+    <div id="ua-chips" style="display:flex;flex-wrap:wrap;gap:7px;"><span style="font-size:11px;color:var(--t3);">No unassigned starts.</span></div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <div class="org-wrap" id="org-canvas">
+      <svg class="org-svg" id="org-svg"></svg>
+      <div id="org-nodes"></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:10px;color:var(--t3);"><span>🖱 Right-click → actions</span><span>📱 Hold 1s → actions</span><span>👆 Click → sales stats</span></div>
+</div>
+<div class="ctx-menu" id="ctx-menu">
+  <div class="ctx-lbl" id="ctx-pname">Person</div>
+  <div class="ctx-item" onclick="ctxAction('stats')">📊 View stats</div>
+  <div class="ctx-item" onclick="ctxAction('reassign')">↔ Reassign crew</div>
+  <div class="ctx-item" onclick="ctxAction('promote')">⬆ Promote role</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item danger" onclick="ctxAction('deactivate')">🚫 Deactivate access</div>
+  <div class="ctx-item danger" onclick="ctxAction('alumni')">📁 Move to alumni</div>
+</div>
+
+<!-- RECRUITMENT -->
+<div id="page-recruit" class="pg">
+  <div class="pgt">Recruitment</div><div class="pgs">Your pipeline · 4+1 crew progress · drop-off intelligence</div>
+  <div class="g4">
+    <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);" id="rec-ints">0</div><div class="sl">Interviews this wk</div><div class="sd" style="color:var(--t3);">Target: <span id="rec-int-tgt">8</span>/wk</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);" id="rec-offers">0</div><div class="sl">Offers made</div><div class="sd" style="color:var(--t3);">—</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);" id="rec-starts">0</div><div class="sl">New starts</div><div class="sd" style="color:var(--t3);">—</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--red);"></div><div class="sv" style="color:var(--red);" id="rec-denied">0</div><div class="sl">Denied / fell off</div><div class="sd" style="color:var(--t3);">—</div></div>
+  </div>
+  <div class="card" style="background:rgba(255,224,51,.03);border-color:rgba(255,224,51,.13);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+      <div><div style="font-size:13px;font-weight:500;">4+1 crew progress</div><div style="font-size:11px;color:var(--t3);">4 first-gen + 1 second-gen = LT → JPM path</div></div>
+      <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:11px;color:var(--t3);">Weekly interview target:</span><input type="number" id="int-tgt-inp" value="8" style="width:55px;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:5px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;color:var(--y);outline:none;text-align:center;"/></div>
+    </div>
+    <div class="g2">
+      <div><div style="font-size:10px;color:var(--t3);margin-bottom:5px;">First-gen leaders (need 4)</div><div class="prog-tr" style="height:8px;"><div class="prog-f" id="fg-bar" style="width:0%;background:var(--blue);"></div></div><div style="font-size:11px;color:var(--t2);margin-top:4px;"><span id="fg-count">0</span>/4</div></div>
+      <div><div style="font-size:10px;color:var(--t3);margin-bottom:5px;">Second-gen leader (need 1)</div><div class="prog-tr" style="height:8px;"><div class="prog-f" id="sg-bar" style="width:0%;background:var(--teal);"></div></div><div style="font-size:11px;color:var(--t2);margin-top:4px;"><span id="sg-count">0</span>/1</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="slbl" style="margin-bottom:12px;">Add a candidate</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
+      <div class="field"><label>Candidate name</label><input type="text" id="c-name" placeholder="Full name"/></div>
+      <div class="field"><label>Interview date</label><input type="date" id="c-date"/></div>
+      <div class="field"><label>Phone</label><input type="text" id="c-phone" placeholder="(555) 000-0000"/></div>
+      <div class="field"><label>Source</label><select id="c-source"><option>Indeed</option><option>ZipRecruiter</option><option>LinkedIn</option><option>Referral — team member</option><option>Referral — personal</option><option>Walk-in</option></select></div>
+    </div>
+    <div class="field"><label>Notes</label><textarea id="c-notes" placeholder="Energy, attitude, why they're a fit..."></textarea></div>
+    <div style="display:flex;gap:8px;"><button class="btn btn-p" onclick="addCandidate()">Add to pipeline</button><button class="btn btn-g" onclick="clearCandForm()">Clear</button></div>
+  </div>
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><div class="slbl" style="margin-bottom:0;">Active pipeline</div></div>
+    <div id="cand-list"><div class="empty"><div class="icon">👥</div><div class="title">No candidates yet</div><div class="sub">Add your first candidate above.</div></div></div>
+  </div>
+</div>
+
+<!-- BULLETIN -->
+<div id="page-bulletin" class="pg">
+  <div class="pgt">Weekly bulletin</div><div class="pgs">Recognition only · auto Sunday 11pm · email Monday 7am · post in the Atmosphere</div>
+  <div style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.13);border-radius:var(--r2);padding:10px 13px;font-size:11px;color:#86EFAC;margin-bottom:16px;">📌 Celebrates wins only. Top performers named publicly. Underperformers coached privately — never on the wall.</div>
+  <div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;">
+    <button class="btn btn-g stab-btn active-tab" onclick="setBulView('office',this)">Office bulletin</button>
+    <button class="btn btn-g stab-btn" onclick="setBulView('org',this)">Org bulletin</button>
+  </div>
+  <div class="brow">
+    <button class="btn btn-p" onclick="window.print()">Print PDF</button>
+    <button class="btn btn-t">Send to recipients</button>
+    <button class="btn btn-g" onclick="nav('bulletin-cfg',null)">Configure</button>
+  </div>
+  <div id="bulletin-preview"></div>
+</div>
+
+<!-- BULLETIN CONFIG -->
+<div id="page-bulletin-cfg" class="pg">
+  <div class="pgt">Bulletin settings</div><div class="pgs">Configure recipients, schedule, and sections</div>
+  <div class="card" style="background:rgba(34,197,94,.04);border-color:rgba(34,197,94,.15);">
+    <div style="font-size:13px;font-weight:600;color:#86EFAC;margin-bottom:4px;">📌 Bulletin philosophy — locked</div>
+    <div style="font-size:12px;color:var(--t2);line-height:1.6;">This bulletin celebrates wins only. Top performers named publicly. Underperformers coached privately — never on the wall, never in print. This cannot be changed.</div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="slbl">Email recipients</div>
+      <div id="recipients-list" style="margin-bottom:12px;"></div>
+      <div style="display:grid;grid-template-columns:1fr 90px 90px 70px;gap:7px;margin-bottom:8px;">
+        <input type="email" id="rec-email" placeholder="email@domain.com" style="background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:6px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/>
+        <input type="text" id="rec-name" placeholder="Name" style="background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:6px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/>
+        <select id="rec-type" style="background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:6px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"><option value="both">Both</option><option value="office">Office only</option><option value="org">Org only</option></select>
+        <button class="btn btn-p" onclick="addRecipient()">Add</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="slbl">Schedule</div>
+      <div class="set-row"><div><div class="set-name">Auto-generate</div><div class="set-sub">Sunday 11pm</div></div><button class="tog on" onclick="this.classList.toggle('on')"><div class="tog-t"></div></button></div>
+      <div class="set-row"><div><div class="set-name">Auto-send</div><div class="set-sub">Monday 7am</div></div><button class="tog on" onclick="this.classList.toggle('on')"><div class="tog-t"></div></button></div>
+      <div class="set-row"><div><div class="set-name">Leaderboard cutoff</div></div><select style="background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:5px 8px;font-size:11px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"><option>Top 5</option><option>Top 3</option><option>Full team</option></select></div>
+      <div class="set-row" style="flex-direction:column;align-items:flex-start;gap:5px;"><div class="set-name">Owner email</div><input type="email" value="atonwilli@gmail.com" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:6px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="page-settings" class="pg">
+  <div class="pgt">Settings</div><div class="pgs">Criteria · benchmarks · services & wire · territory · terminology · announcements</div>
+  <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;">
+    <button class="btn btn-g stab-btn active-tab" onclick="setStab('criteria',this)">Promo criteria</button>
+    <button class="btn btn-g stab-btn" onclick="setStab('benchmarks',this)">Benchmarks</button>
+    <button class="btn btn-g stab-btn" onclick="setStab('services',this)">Services & wire</button>
+    <button class="btn btn-g stab-btn" onclick="setStab('territory',this)">Territory</button>
+    <button class="btn btn-g stab-btn" onclick="setStab('terminology',this)">Terminology</button>
+    <button class="btn btn-g stab-btn" onclick="setStab('announce',this)">Announcements</button>
+  </div>
+
+  <!-- CRITERIA -->
+  <div id="stab-criteria">
+    <div class="g2">
+      <div class="card">
+        <div class="slbl">AE → Lead Trainer — any one path</div>
+        <div class="set-row"><div><div class="set-name">Path A — Wire threshold/wk</div></div><div style="display:flex;align-items:center;gap:4px;"><span style="font-size:12px;color:var(--t3);">$</span><input class="set-inp" id="cfg-wire" type="number" value="2100"/></div></div>
+        <div class="set-row"><div><div class="set-name">Path B — PIA sales/wk</div></div><input class="set-inp" id="cfg-pia" type="number" value="6"/></div>
+        <div class="set-row"><div><div class="set-name">Path C — Total customers/wk</div></div><input class="set-inp" id="cfg-cust" type="number" value="8"/></div>
+      </div>
+      <div class="card">
+        <div class="slbl">Bell definition (owner-configurable)</div>
+        <div class="set-row"><div><div class="set-name">Min customers for bell</div></div><input class="set-inp" id="cfg-bell-cust" type="number" value="2" onchange="updateBellPreview()"/></div>
+        <div class="set-row"><div><div class="set-name">Min collective services</div></div><input class="set-inp" id="cfg-bell-svc" type="number" value="3" onchange="updateBellPreview()"/></div>
+        <div style="background:rgba(255,224,51,.06);border:1px solid rgba(255,224,51,.15);border-radius:var(--r1);padding:9px 12px;font-size:11px;color:var(--y);margin-top:10px;">Bell = <span id="bell-prev-c">2</span> customers + <span id="bell-prev-s">3</span> collective services in one day · OR single sale ≥$400 wire</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="slbl">LT → JPM criteria</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
+        <div><div style="font-size:11px;color:var(--t3);margin-bottom:5px;">First-gen leaders</div><input class="set-inp" style="width:100%;text-align:left;" id="cfg-fg" type="number" value="4"/></div>
+        <div><div style="font-size:11px;color:var(--t3);margin-bottom:5px;">Second-gen leaders</div><input class="set-inp" style="width:100%;text-align:left;" id="cfg-sg" type="number" value="1"/></div>
+        <div><div style="font-size:11px;color:var(--t3);margin-bottom:5px;">Team wire 2 consec wks</div><input class="set-inp" style="width:100%;text-align:left;" id="cfg-team-wire" type="number" value="10000"/></div>
+        <div><div style="font-size:11px;color:var(--t3);margin-bottom:5px;">Quality rate %</div><input class="set-inp" style="width:100%;text-align:left;" id="cfg-quality" type="number" value="60"/></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="slbl">JPM → PM criteria</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.7;">10+ strong team · $10K+ weekly wire sustained · Incorporate C-Corp · Legal contracts between entities · Owner approval required</div>
+    </div>
+    <div style="display:flex;gap:8px;"><button class="btn btn-p" onclick="saveAllSettings()">Save all criteria</button></div>
+    <div id="settings-msg" style="display:none;font-size:11px;margin-top:8px;color:#86EFAC;"></div>
+  </div>
+
+  <!-- BENCHMARKS -->
+  <div id="stab-benchmarks" style="display:none;">
+    <div class="g2">
+      <div class="card">
+        <div class="slbl">Elite daily benchmarks</div>
+        <div class="set-row"><div><div class="set-name">Stops (Elite)</div><div class="set-sub">Walk past per shift</div></div><input class="set-inp" id="cfg-stops" type="number" value="100"/></div>
+        <div class="set-row"><div><div class="set-name">Tabs</div><div class="set-sub">30% conversion</div></div><input class="set-inp" id="cfg-tabs" type="number" value="30"/></div>
+        <div class="set-row"><div><div class="set-name">Presentations</div><div class="set-sub">Full pitch to DM</div></div><input class="set-inp" id="cfg-pres" type="number" value="15"/></div>
+        <div class="set-row"><div><div class="set-name">Credit checks</div></div><input class="set-inp" id="cfg-checks" type="number" value="7"/></div>
+        <div class="set-row"><div><div class="set-name">Closes</div><div class="set-sub">Min per day</div></div><input class="set-inp" id="cfg-closes" type="number" value="3"/></div>
+      </div>
+      <div class="card">
+        <div class="slbl">Red flag thresholds (below = coaching call)</div>
+        <div class="set-row"><div><div class="set-name">Closes red flag</div></div><input class="set-inp" id="cfg-rf-closes" type="number" value="1"/></div>
+        <div class="set-row"><div><div class="set-name">Stops red flag</div></div><input class="set-inp" id="cfg-rf-stops" type="number" value="50"/></div>
+        <div class="set-row"><div><div class="set-name">Tabs red flag</div></div><input class="set-inp" id="cfg-rf-tabs" type="number" value="15"/></div>
+        <div class="set-row"><div><div class="set-name">Presentations red flag</div></div><input class="set-inp" id="cfg-rf-pres" type="number" value="6"/></div>
+      </div>
+    </div>
+    <button class="btn btn-p" onclick="saveAllSettings()">Save benchmarks</button>
+  </div>
+
+  <!-- SERVICES & WIRE -->
+  <div id="stab-services" style="display:none;">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><div class="slbl" style="margin-bottom:0;">Spectrum services — wire rates</div><div style="font-size:11px;color:var(--t3);">Auto-calculates when rep logs a sale</div></div>
+      <div id="services-list"></div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--b1);">
+        <div class="slbl">Add custom service</div>
+        <div style="display:grid;grid-template-columns:1fr 100px 100px 80px;gap:8px;align-items:end;">
+          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Service name</div><input type="text" id="new-svc-name" placeholder="e.g. Xfinity Internet" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Category</div><input type="text" id="new-svc-cat" placeholder="Internet" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Wire ($)</div><input type="number" id="new-svc-wire" placeholder="175" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+          <div><button class="btn btn-p" style="width:100%;justify-content:center;" onclick="addService()">Add</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERRITORY -->
+  <div id="stab-territory" style="display:none;">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;"><div class="slbl" style="margin-bottom:0;">Territory locations</div><div style="font-size:11px;color:var(--t3);">Reps pick their store before each shift from this list</div></div>
+      <div id="territory-list" style="margin-bottom:14px;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 110px 70px;gap:8px;align-items:end;margin-bottom:14px;">
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Store name</div><input type="text" id="new-ter-name" placeholder="e.g. Walmart Supercenter" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">City</div><input type="text" id="new-ter-city" placeholder="Arlington, TX" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Type</div><select id="new-ter-type" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"><option>Walmart</option><option>Sam's Club</option><option>Kiosk</option><option>Event</option><option>Other</option></select></div>
+        <div><button class="btn btn-p" style="width:100%;justify-content:center;" onclick="addTerritory()">Add</button></div>
+      </div>
+      <div style="border-top:1px solid var(--b1);padding-top:12px;">
+        <div style="font-size:11px;color:var(--t3);margin-bottom:8px;">Bulk import — paste one per line: <em>Store Name, City</em></div>
+        <textarea id="bulk-ter" placeholder="Walmart Supercenter, Arlington TX&#10;Walmart Supercenter, Fort Worth TX&#10;Sam's Club, Irving TX" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:8px 10px;font-family:'Inter',sans-serif;font-size:12px;color:var(--t1);outline:none;min-height:80px;resize:vertical;"></textarea>
+        <button class="btn btn-g" style="margin-top:8px;" onclick="bulkAddTerritory()">Import list</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERMINOLOGY -->
+  <div id="stab-terminology" style="display:none;">
+    <div class="card">
+      <div class="slbl">Customize your terminology</div>
+      <div style="font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6;">These labels appear throughout the app for your reps. Change them to match your org's language.</div>
+      <div id="terminology-list"></div>
+      <button class="btn btn-p" style="margin-top:12px;" onclick="saveTerminology()">Save terminology</button>
+    </div>
+  </div>
+
+  <!-- ANNOUNCEMENTS -->
+  <div id="stab-announce" style="display:none;">
+    <div class="card">
+      <div class="slbl">Post an announcement</div>
+      <div class="field"><label>Title</label><input type="text" id="ann-title-inp" placeholder="e.g. Friday High Roller Call — top 3 speak at 6pm 🏆"/></div>
+      <div class="field"><label>Message</label><textarea id="ann-body-inp" placeholder="This week's top performers share their strategies live. Bring your numbers and your energy." style="min-height:80px;"></textarea></div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn btn-p" onclick="postAnnouncement()">Post now</button>
+        <span style="font-size:11px;color:var(--t3);">Shows to all reps on their home screen immediately</span>
+      </div>
+      <div id="ann-msg" style="display:none;font-size:11px;margin-top:8px;color:#86EFAC;"></div>
+    </div>
+    <div class="card">
+      <div class="slbl">Active announcements</div>
+      <div id="ann-active-list"><div class="empty"><div class="icon">📢</div><div class="title">No announcements posted</div><div class="sub">Post an announcement above and it shows immediately to all reps.</div></div></div>
+    </div>
+  </div>
+</div>
+
+  </main><!-- end main -->
+</div><!-- end app -->
+
+<!-- SALE LOG MODAL -->
+<div class="modal-bg" id="sale-modal">
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-title">Log a sale</div><button class="modal-x" onclick="closeSaleModal()">✕</button></div>
+    <div class="field"><label>Customer name (optional)</label><input type="text" id="sale-customer" placeholder="First name is fine"/></div>
+    <div class="field"><label>Address / apartment (optional)</label><input type="text" id="sale-address" placeholder="123 Main St #4B"/></div>
+    <div class="slbl" style="margin-bottom:8px;">Services sold — select all that apply</div>
+    <div id="svc-list-modal"></div>
+    <div class="sale-tot" id="sale-total-box">
+      <div class="sale-tot-row"><span>Total wire value</span><span id="sale-wire-total" style="color:var(--y);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;">$0</span></div>
+      <div class="sale-tot-row"><span>Services selected</span><span id="sale-svc-count">0</span></div>
+      <div class="sale-tot-row big"><span>Running total today</span><span id="sale-running" style="color:var(--y);">$0</span></div>
+    </div>
+    <div class="bell-ind" id="sale-bell-ind">🔔 BELL — criteria met!</div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="btn btn-p" style="flex:1;justify-content:center;" onclick="submitSale()">Submit sale</button>
+      <button class="btn btn-g" onclick="closeSaleModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 <script>
-const SUPABASE_URL='https://mdnqghmmbepqzvblgqxs.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kbnFnaG1tYmVwcXp2YmxncXhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMjgyNjgsImV4cCI6MjA5MjgwNDI2OH0.76KX8LwZZgJffgUD5Kgu_AH_ge_u6fyRS-Dmd6KKsBs';
-const INVITE_CODE='FPA2025';
+const SB_URL='https://mdnqghmmbepqzvblgqxs.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1kbnFnaG1tYmVwcXp2YmxncXhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMjgyNjgsImV4cCI6MjA5MjgwNDI2OH0.76KX8LwZZgJffgUD5Kgu_AH_ge_u6fyRS-Dmd6KKsBs';
+const INVITE='FPA2025';
 const {createClient}=supabase;
-const sb=createClient(SUPABASE_URL,SUPABASE_KEY);
+const sb=createClient(SB_URL,SB_KEY);
 
-var currentUser=null,currentProfile=null,isLight=false;
-var tc={s:0,t:0,p:0,c:0};
-// Default settings — override from DB
-var CFG={stops:100,tabs:30,pres:15,checks:7,closes:3,wireTgt:2100,piaTgt:6,custTgt:8,bell:2};
+// STATE
+var U=null,P=null,isLight=false,tc={s:0,t:0,p:0,c:0};
+var todaySales=[],todayWire=0,todayCloses=0,todayBells=0;
+var CTX_NODE=null;
 
+// DEFAULT CONFIG — owner can override in Settings
+var CFG={
+  wireTgt:2100,piaTgt:6,custTgt:8,
+  bellCust:2,bellSvc:3,
+  stops:100,tabs:30,pres:15,checks:7,closes:3,
+  rfCloses:1,rfStops:50,rfTabs:15,rfPres:6,
+  fg:4,sg:1,teamWire:10000,quality:60,
+  intTgt:8
+};
+
+// DEFAULT SERVICES — Spectrum wire rates
+var SERVICES=[
+  {id:'int-std',name:'Internet Standard',cat:'Internet',wire:175,pia:false},
+  {id:'int-ultra',name:'Internet Ultra',cat:'Internet',wire:225,pia:false},
+  {id:'int-multigig',name:'Internet Multi-Gig',cat:'Internet',wire:275,pia:false},
+  {id:'int-pia',name:'Internet PIA',cat:'Internet',wire:125,pia:true},
+  {id:'tv-select',name:'TV Select',cat:'TV',wire:125,pia:false},
+  {id:'tv-gold',name:'TV Gold',cat:'TV',wire:175,pia:false},
+  {id:'tv-platinum',name:'TV Platinum',cat:'TV',wire:225,pia:false},
+  {id:'mob-1line',name:'Mobile 1 Line',cat:'Mobile',wire:100,pia:false},
+  {id:'mob-2line',name:'Mobile 2 Lines',cat:'Mobile',wire:175,pia:false},
+  {id:'homephone',name:'Home Phone',cat:'Phone',wire:75,pia:false},
+];
+
+// DEFAULT TERRITORY
+var TERRITORY=[];
+
+// DEFAULT TERMINOLOGY
+var TERMS={
+  'Tab':'Tab','Bell':'Bell','Wire':'Wire','Stops':'Stops',
+  'Presentations':'Presentations','AE':'AE','LT':'Lead Trainer',
+  'JPM':'JPM','PM':'PM','Atmosphere':'Atmosphere','Meridian':'Meridian',
+  'Day Breakdown':'Day Breakdown'
+};
+
+// DEFAULT RECIPIENTS
+var RECIPIENTS=[
+  {email:'atonwilli@gmail.com',name:'Aton Williams',type:'both'},
+];
+
+// DEFAULT CANDIDATES
+var CANDIDATES=[];
+var ANNOUNCEMENTS=[];
+
+function loadLocal(){
+  try{
+    const c=localStorage.getItem('fpa_cfg');if(c)Object.assign(CFG,JSON.parse(c));
+    const s=localStorage.getItem('fpa_svc');if(s)SERVICES=JSON.parse(s);
+    const t=localStorage.getItem('fpa_ter');if(t)TERRITORY=JSON.parse(t);
+    const tm=localStorage.getItem('fpa_terms');if(tm)Object.assign(TERMS,JSON.parse(tm));
+    const r=localStorage.getItem('fpa_rec');if(r)RECIPIENTS=JSON.parse(r);
+    const ca=localStorage.getItem('fpa_cands');if(ca)CANDIDATES=JSON.parse(ca);
+    const an=localStorage.getItem('fpa_ann');if(an)ANNOUNCEMENTS=JSON.parse(an);
+    const td=localStorage.getItem('fpa_today_'+today());if(td){const d=JSON.parse(td);todaySales=d.sales||[];todayWire=d.wire||0;todayCloses=d.closes||0;todayBells=d.bells||0;}
+  }catch(e){}
+}
+function saveLocal(){
+  localStorage.setItem('fpa_cfg',JSON.stringify(CFG));
+  localStorage.setItem('fpa_svc',JSON.stringify(SERVICES));
+  localStorage.setItem('fpa_ter',JSON.stringify(TERRITORY));
+  localStorage.setItem('fpa_terms',JSON.stringify(TERMS));
+  localStorage.setItem('fpa_rec',JSON.stringify(RECIPIENTS));
+  localStorage.setItem('fpa_cands',JSON.stringify(CANDIDATES));
+  localStorage.setItem('fpa_ann',JSON.stringify(ANNOUNCEMENTS));
+  localStorage.setItem('fpa_today_'+today(),JSON.stringify({sales:todaySales,wire:todayWire,closes:todayCloses,bells:todayBells}));
+}
+function today(){return new Date().toISOString().slice(0,10);}
+
+// BOOT
 async function boot(){
+  loadLocal();
   const {data:{session}}=await sb.auth.getSession();
-  if(session){await loadProfile(session.user);}
-  else{showAuth();}
-  sb.auth.onAuthStateChange(async(event,session)=>{
-    if(event==='SIGNED_IN'&&session){await loadProfile(session.user);}
-    else if(event==='SIGNED_OUT'){showAuth();}
+  if(session)await loadProfile(session.user);
+  else showAuth();
+  sb.auth.onAuthStateChange(async(e,s)=>{
+    if(e==='SIGNED_IN'&&s)await loadProfile(s.user);
+    else if(e==='SIGNED_OUT')showAuth();
   });
 }
 
 async function loadProfile(user){
-  currentUser=user;
-  // ALWAYS fresh fetch — role must come from DB every time
-  let {data:p}=await sb.from('profiles').select('*').eq('id',user.id).single();
+  U=user;
+  let{data:p}=await sb.from('profiles').select('*').eq('id',user.id).single();
   if(!p){
     const role=user.user_metadata?.role||'ae';
     const name=user.user_metadata?.full_name||user.email.split('@')[0];
-    const np={id:user.id,email:user.email,full_name:name,role:role,office:'FPA DFW',day_number:1};
-    const {data:created}=await sb.from('profiles').insert(np).select().single();
-    p=created||np;
+    const np={id:user.id,email:user.email,full_name:name,role,office:'FPA DFW',day_number:1};
+    const{data:c}=await sb.from('profiles').insert(np).select().single();
+    p=c||np;
   }
-  currentProfile=p;
-  await loadSettings();
+  P=p;
   showApp();
 }
 
-async function loadSettings(){
-  // Try to load org settings from DB (settings table if exists, else defaults)
-  // For now use defaults — settings page lets owner change them
-  const stored=localStorage.getItem('fpa_cfg');
-  if(stored){try{Object.assign(CFG,JSON.parse(stored));}catch(e){}}
-}
-
 function showAuth(){
-  document.getElementById('loading-screen').style.display='none';
-  document.getElementById('auth-screen').style.display='flex';
-  document.getElementById('app-shell').style.display='none';
+  document.getElementById('loading').style.display='none';
+  document.getElementById('auth-wrap').style.display='flex';
+  document.getElementById('app').style.display='none';
 }
 
 function showApp(){
-  document.getElementById('loading-screen').style.display='none';
-  document.getElementById('auth-screen').style.display='none';
-  document.getElementById('app-shell').style.display='grid';
-  const p=currentProfile;
-  const role=p?.role||'ae';
-  const name=p?.full_name||currentUser?.email||'Rep';
+  document.getElementById('loading').style.display='none';
+  document.getElementById('auth-wrap').style.display='none';
+  document.getElementById('app').style.display='grid';
+  const role=P?.role||'ae';
+  const name=P?.full_name||U?.email||'Rep';
   const first=name.split(' ')[0];
   const initials=name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  const day=p?.day_number||1;
-  const office=p?.office||'FPA DFW';
+  const day=P?.day_number||1;
+  const office=P?.office||'FPA DFW';
   const hr=new Date().getHours();
   const greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
-  const dateStr=new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
-
-  document.getElementById('home-greeting').textContent=greet+', '+first+' 👋';
-  document.getElementById('home-sub').textContent=dateStr+' · Day '+day+' of 90 · Spectrum · '+office;
-  document.getElementById('tbar-ctx').innerHTML='Welcome back, <strong>'+first+'</strong>';
-
-  // Avatar + badge — use role from DB
-  const av=document.getElementById('uav');
+  const ds=new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
+  document.getElementById('hg').textContent=greet+', '+first+' 👋';
+  document.getElementById('hs').textContent=ds+' · Day '+day+' of 90 · Spectrum · '+office;
+  document.getElementById('tctx').innerHTML='Welcome back, <strong>'+first+'</strong>';
+  const av=document.getElementById('u-av');
   av.textContent=initials;
   const avC={owner:'#FFE033',ae:'#4F8EF7',lt:'#00C9A7',jpm:'#F59E0B',pm:'#EF4444'};
   av.style.background=avC[role]||'#4F8EF7';
   if(role==='owner')av.style.color='#0A0A0A';
-  document.getElementById('uname').textContent=first+(name.split(' ')[1]?' '+name.split(' ')[1][0]+'.':'');
+  document.getElementById('u-name').textContent=first+(name.split(' ')[1]?' '+name.split(' ')[1][0]+'.':'');
   const rl={owner:'Owner',ae:'AE',lt:'Lead Trainer',jpm:'JPM',pm:'PM'};
-  const rb=document.getElementById('urole');
+  const rb=document.getElementById('u-role');
   rb.textContent=rl[role]||role.toUpperCase();
-  rb.className='role-badge rb-'+role;
-
-  // Phase
+  rb.className='rb rb-'+role;
   const pct=Math.min(100,Math.round(day/90*100));
-  const phaseName=day<=30?'Phase 1 — Learn the floor':day<=60?'Phase 2 — Build your system':'Phase 3 — Lead & recruit';
-  document.getElementById('phase-lbl').textContent=phaseName;
+  const pn=day<=30?'Phase 1 — Learn the floor':day<=60?'Phase 2 — Build your system':'Phase 3 — Lead & recruit';
+  document.getElementById('phase-lbl').textContent=pn;
   document.getElementById('phase-fill').style.width=pct+'%';
   document.getElementById('phase-pct').textContent='Day '+day+' · '+pct+'%';
-
-  // Wire target label
-  const wt=document.getElementById('wire-target-lbl');
-  if(wt)wt.textContent=CFG.wireTgt.toLocaleString();
-
-  // Update promo path labels with real config
-  updatePromoLabels();
-  updateProgressPage();
+  // Apply config labels
+  applyConfig();
   buildSidebar(role);
   buildQA(role);
   buildDayDots(day);
-  if(['owner','pm'].includes(role))loadRepsTable();
-  loadSettings_UI();
+  renderServicesList();
+  renderTerritoryList();
+  renderTerminologyList();
+  renderAnnouncementSettings();
+  renderRecipients();
+  renderFieldStoreSelect();
+  renderBulletin('office');
+  if(['owner','pm'].includes(role)){loadRepsTable();buildOrgChart();renderActiveAnnouncements();}
+  if(todayCloses>0)renderTodaySales();
+  // Show announcement
+  if(ANNOUNCEMENTS.length>0){
+    const a=ANNOUNCEMENTS[0];
+    document.getElementById('ann-t').textContent=a.title;
+    document.getElementById('ann-b').textContent=a.body;
+  }
 }
 
-function updatePromoLabels(){
-  const w=CFG.wireTgt;
-  const paT=document.getElementById('pa-target');if(paT)paT.textContent=w.toLocaleString();
-  document.getElementById('prog-wire-tgt').textContent=w.toLocaleString();
-}
-
-function updateProgressPage(){
-  document.getElementById('prog-stops-tgt').textContent='Target: '+CFG.stops+'/day';
-  document.getElementById('prog-tabs-tgt').textContent='Target: '+CFG.tabs+'/day';
-  document.getElementById('prog-pres-tgt').textContent='Target: '+CFG.pres+'/day';
-  document.getElementById('prog-closes-tgt').textContent='Target: '+CFG.closes+'/day';
+function applyConfig(){
+  const w=CFG.wireTgt.toLocaleString();
+  document.querySelectorAll('[id^="pa-tgt"],[id^="pa-tgt2"],[id^="prpa-tgt"]').forEach(el=>el.textContent=w);
+  document.querySelectorAll('[id^="pb-tgt"],[id^="pb-tgt2"],[id^="prpb-tgt"]').forEach(el=>el.textContent=CFG.piaTgt);
+  document.querySelectorAll('[id^="pc-tgt"],[id^="pc-tgt2"],[id^="prpc-tgt"]').forEach(el=>el.textContent=CFG.custTgt);
+  const wl=document.getElementById('wire-tgt-lbl');if(wl)wl.textContent=CFG.wireTgt.toLocaleString();
+  const bd=CFG.bellCust+' customers + '+CFG.bellSvc+' collective services';
+  document.querySelectorAll('[id^="bell-def"]').forEach(el=>el.textContent=bd);
+  const bprog=document.getElementById('bell-def-prog');if(bprog)bprog.textContent=bd;
   document.getElementById('bm-stops').textContent=CFG.stops;
   document.getElementById('bm-tabs').textContent=CFG.tabs;
   document.getElementById('bm-pres').textContent=CFG.pres;
   document.getElementById('bm-checks').textContent=CFG.checks;
   document.getElementById('bm-closes').textContent=CFG.closes;
+  document.getElementById('pr-stops-t').textContent='Target: '+CFG.stops+'/day';
+  document.getElementById('pr-tabs-t').textContent='Target: '+CFG.tabs+'/day';
+  document.getElementById('pr-pres-t').textContent='Target: '+CFG.pres+'/day';
+  document.getElementById('pr-closes-t').textContent='Target: '+CFG.closes+'/day';
+  const ts=document.getElementById('tgt-s');if(ts)ts.textContent=CFG.stops;
+  const tt=document.getElementById('tgt-t');if(tt)tt.textContent=CFG.tabs;
+  const tp=document.getElementById('tgt-p');if(tp)tp.textContent=CFG.pres;
+  const tc2=document.getElementById('tgt-c');if(tc2)tc2.textContent=CFG.checks;
+  const ri=document.getElementById('rec-int-tgt');if(ri)ri.textContent=CFG.intTgt;
+  // Load into settings fields
+  if(document.getElementById('cfg-wire'))document.getElementById('cfg-wire').value=CFG.wireTgt;
+  if(document.getElementById('cfg-pia'))document.getElementById('cfg-pia').value=CFG.piaTgt;
+  if(document.getElementById('cfg-cust'))document.getElementById('cfg-cust').value=CFG.custTgt;
+  if(document.getElementById('cfg-bell-cust'))document.getElementById('cfg-bell-cust').value=CFG.bellCust;
+  if(document.getElementById('cfg-bell-svc'))document.getElementById('cfg-bell-svc').value=CFG.bellSvc;
+  if(document.getElementById('cfg-stops'))document.getElementById('cfg-stops').value=CFG.stops;
+  if(document.getElementById('cfg-tabs'))document.getElementById('cfg-tabs').value=CFG.tabs;
+  if(document.getElementById('cfg-pres'))document.getElementById('cfg-pres').value=CFG.pres;
+  if(document.getElementById('cfg-checks'))document.getElementById('cfg-checks').value=CFG.checks;
+  if(document.getElementById('cfg-closes'))document.getElementById('cfg-closes').value=CFG.closes;
+  updateBellPreview();
 }
 
-function loadSettings_UI(){
-  const s=['stops','tabs','pres','checks','closes'];
-  s.forEach(k=>{const el=document.getElementById('cfg-'+k);if(el)el.value=CFG[k];});
-  const wEl=document.getElementById('cfg-wire-tgt');if(wEl)wEl.value=CFG.wireTgt;
-  const pEl=document.getElementById('cfg-pia-tgt');if(pEl)pEl.value=CFG.piaTgt;
-  const cEl=document.getElementById('cfg-cust-tgt');if(cEl)cEl.value=CFG.custTgt;
-  const bEl=document.getElementById('cfg-bell');if(bEl)bEl.value=CFG.bell;
-}
-
-function saveSettings(showMsg){
-  CFG.stops=parseInt(document.getElementById('cfg-stops')?.value)||100;
-  CFG.tabs=parseInt(document.getElementById('cfg-tabs')?.value)||30;
-  CFG.pres=parseInt(document.getElementById('cfg-pres')?.value)||15;
-  CFG.checks=parseInt(document.getElementById('cfg-checks')?.value)||7;
-  CFG.closes=parseInt(document.getElementById('cfg-closes')?.value)||3;
-  CFG.wireTgt=parseInt(document.getElementById('cfg-wire-tgt')?.value)||2100;
-  CFG.piaTgt=parseInt(document.getElementById('cfg-pia-tgt')?.value)||6;
-  CFG.custTgt=parseInt(document.getElementById('cfg-cust-tgt')?.value)||8;
-  CFG.bell=parseInt(document.getElementById('cfg-bell')?.value)||2;
-  localStorage.setItem('fpa_cfg',JSON.stringify(CFG));
-  updatePromoLabels();
-  updateProgressPage();
-  if(showMsg===true){
-    const msg=document.getElementById('settings-msg');
-    if(msg){msg.style.display='block';msg.textContent='✓ Settings saved — all reps will see updated targets on next login.';
-    setTimeout(()=>{msg.style.display='none';},3000);}
-  }
+function updateBellPreview(){
+  const c=document.getElementById('cfg-bell-cust')?.value||CFG.bellCust;
+  const s=document.getElementById('cfg-bell-svc')?.value||CFG.bellSvc;
+  const pc=document.getElementById('bell-prev-c');if(pc)pc.textContent=c;
+  const ps=document.getElementById('bell-prev-s');if(ps)ps.textContent=s;
 }
 
 function buildSidebar(role){
@@ -683,7 +1020,7 @@ function buildSidebar(role){
     <div class="sbi" onclick="nav('progress',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 10.5l3-3.5 2.5 2.5 4.5-5.5"/></svg>My progress</div>
     <div class="sbi" onclick="nav('training',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4.5h10M4 7.5h6M5.5 10.5h3"/></svg>Training vault</div>
     <div class="sbi" onclick="nav('goals',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="5.5"/><circle cx="7" cy="7" r="2.5"/></svg>Weekly goals</div>
-    ${!isLeader?'<div class="sbi lk"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5.5" cy="5" r="2"/><path d="M1 12c0-2.5 2-4.5 4.5-4.5"/><circle cx="10.5" cy="7" r="1.8"/><path d="M8.5 12c0-2 1.6-3.5 3.5-3.5"/></svg>Recruitment<span class="sbt">LT+</span></div>':''}
+    ${isLeader?`<div class="sbi" onclick="nav('recruit',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5" cy="5" r="2.5"/><path d="M1 12.5c0-2.5 1.8-4.5 4-4.5"/><circle cx="10" cy="8" r="2"/><path d="M8 13c0-1.6 1-3 2-3"/></svg>Recruitment</div>`:'<div class="sbi lk"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5" cy="5" r="2"/><path d="M1 12c0-2.5 2-4.5 4.5-4.5"/><circle cx="10.5" cy="7" r="1.8"/></svg>Recruitment<span class="sbt">LT+</span></div>'}
   </div>
   <div class="sbg">
     <div class="sbg-lbl">Recognition</div>
@@ -693,54 +1030,254 @@ function buildSidebar(role){
   <div class="sbg">
     <div class="sbg-lbl">Owner</div>
     <div class="sbi" onclick="nav('scorecard',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M5 9V7M7 9V5M9 9V7"/></svg>Scorecard</div>
+    <div class="sbi" onclick="nav('org',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="3" r="2"/><circle cx="2.5" cy="10" r="2"/><circle cx="11.5" cy="10" r="2"/><path d="M7 5v3M7 8l-4.5 2M7 8l4.5 2"/></svg>Org chart</div>
     <div class="sbi" onclick="nav('bulletin',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M4.5 5.5h5M4.5 7.5h5M4.5 9.5h3"/></svg>Weekly bulletin</div>
     <div class="sbi" onclick="nav('admin',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5.5" cy="4.5" r="2"/><path d="M1 12c0-2.8 2-5 4.5-5s4.5 2.2 4.5 5"/><path d="M10 7l1.5 1.5L14 6"/></svg>Rep management</div>
-    <div class="sbi" onclick="nav('settings',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="2.5"/><path d="M7 1.5v1M7 11.5v1M1.5 7h1M11.5 7h1M3.2 3.2l.7.7M10.1 10.1l.7.7M10.8 3.2l-.7.7M3.9 10.1l-.7.7"/></svg>Settings</div>
+    <div class="sbi" onclick="nav('settings',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="2.5"/><path d="M7 1.5v1M7 11.5v1M1.5 7h1M11.5 7h1M3.2 3.2l.7.7M10.1 10.1l.7.7"/></svg>Settings</div>
   </div>`:''}
   <div class="sbfoot">
-    <div class="sbfoot-chip"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="5" r="4"/><path d="M5 3v2l1.5 1"/></svg>Day ${currentProfile?.day_number||1} · ${currentProfile?.office||'FPA DFW'}</div>
+    <div class="sbfoot-chip"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="5" r="4"/><path d="M5 3v2l1.5 1"/></svg>Day ${P?.day_number||1} · ${P?.office||'FPA DFW'}</div>
   </div>`;
 }
 
 function buildQA(role){
+  const isOwner=['owner','pm'].includes(role);
   const qa=[
-    {label:'Field tally',page:'field',icon:'<circle cx="9" cy="9" r="7"/><path d="M9 5.5v3.5l2.5 2"/>'},
-    {label:'Set goals',page:'goals',icon:'<circle cx="9" cy="9" r="7"/><circle cx="9" cy="9" r="3"/>'},
-    {label:'Training',page:'training',icon:'<path d="M3 5.5h12M5 9h8M6.5 12.5h5"/>'},
-    {label:'Progress',page:'progress',icon:'<path d="M3 13l4-5 3 3.5 5-7"/>'},
-    {label:'High rollers',page:'highroller',icon:'<path d="M9 2.5l1.7 4H15l-3.5 3 1.2 4.3L9 11.5l-3.7 2.3 1.2-4.3L3 6.5h4.3z"/>'},
-    {label:'Scorecard',page:'scorecard',icon:'<rect x="3" y="3" width="12" height="12" rx="1.5"/><path d="M6 12V9M9 12V6M12 12V9"/>'},
+    {l:'Field tally',p:'field',icon:'<circle cx="9" cy="9" r="7"/><path d="M9 5.5v3.5l2.5 2"/>'},
+    {l:'Set goals',p:'goals',icon:'<circle cx="9" cy="9" r="7"/><circle cx="9" cy="9" r="3"/>'},
+    {l:'Training',p:'training',icon:'<path d="M3 5.5h12M5 9h8M6.5 12.5h5"/>'},
+    {l:'Progress',p:'progress',icon:'<path d="M3 13l4-5 3 3.5 5-7"/>'},
+    {l:'High rollers',p:'highroller',icon:'<path d="M9 2.5l1.7 4H15l-3.5 3 1.2 4.3L9 11.5l-3.7 2.3 1.2-4.3L3 6.5h4.3z"/>'},
+    isOwner?{l:'Scorecard',p:'scorecard',icon:'<rect x="3" y="3" width="12" height="12" rx="1.5"/><path d="M6 12V9M9 12V6M12 12V9"/>'}:{l:'Recruits',p:'recruit',icon:'<circle cx="7" cy="6" r="3"/><path d="M2 15c0-3 2.5-5 5-5s5 2 5 5"/>'},
   ];
-  const grid=document.getElementById('qa-grid');if(!grid)return;
-  grid.innerHTML=qa.map(q=>`
-    <div style="background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 10px;text-align:center;cursor:pointer;transition:all .14s;" onclick="nav('${q.page}',null)" onmouseover="this.style.borderColor='rgba(255,224,51,.2)';this.querySelector('svg').style.stroke='var(--y)'" onmouseout="this.style.borderColor='var(--b1)';this.querySelector('svg').style.stroke='var(--t3)'">
-      <svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="var(--t3)" stroke-width="1.4" style="margin-bottom:5px;display:block;margin-left:auto;margin-right:auto;">${q.icon}</svg>
-      <div style="font-size:11px;font-weight:500;color:var(--t2);">${q.label}</div>
-    </div>`).join('');
+  const g=document.getElementById('qa-grid');if(!g)return;
+  g.innerHTML=qa.map(q=>`<div style="background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 10px;text-align:center;cursor:pointer;" onclick="nav('${q.p}',null)" onmouseover="this.style.borderColor='rgba(255,224,51,.2)'" onmouseout="this.style.borderColor='var(--b1)'"><svg width="17" height="17" viewBox="0 0 18 18" fill="none" stroke="var(--t3)" stroke-width="1.4" style="margin-bottom:5px;display:block;margin:0 auto 5px;">${q.icon}</svg><div style="font-size:11px;font-weight:500;color:var(--t2);">${q.l}</div></div>`).join('');
 }
 
-function buildDayDots(currentDay){
+function buildDayDots(day){
   const c=document.getElementById('day-dots');if(!c)return;c.innerHTML='';
   for(let i=1;i<=30;i++){
     const d=document.createElement('div');
     d.style.cssText='width:19px;height:19px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;';
     d.textContent=i;
-    if(i===currentDay){d.style.background='var(--y)';d.style.color='var(--k)';}
-    else if(i<currentDay){d.style.background='var(--s4)';d.style.color='var(--t3)';}
+    if(i===day){d.style.background='var(--y)';d.style.color='var(--k)';}
+    else if(i<day){d.style.background='var(--s4)';d.style.color='var(--t3)';}
     else{d.style.background='transparent';d.style.color='var(--b2)';}
     c.appendChild(d);
   }
 }
 
+// TALLY
+var tallyCols={s:'var(--blue)',t:'var(--teal)',p:'var(--amber)',c:'var(--t3)'};
+function tap(k){
+  tc[k]++;
+  const el=document.getElementById('tc-'+k);
+  if(el){el.textContent=tc[k];el.classList.remove('pulse');void el.offsetWidth;el.classList.add('pulse');}
+  updateTallyBars();
+}
+function undo(k){if(tc[k]>0){tc[k]--;const el=document.getElementById('tc-'+k);if(el)el.textContent=tc[k];updateTallyBars();}}
+function updateTallyBars(){
+  const tgts={s:CFG.stops,t:CFG.tabs,p:CFG.pres,c:CFG.checks};
+  ['s','t','p','c'].forEach(k=>{
+    const pct=Math.min(100,Math.round(tc[k]/tgts[k]*100));
+    const f=document.getElementById('tf-'+k);
+    if(f){f.style.width=pct+'%';f.style.background=pct>=100?'var(--green)':tallyCols[k];}
+  });
+  const tr=document.getElementById('f-tr');
+  if(tr)tr.textContent=tc.s>0?Math.round(tc.t/tc.s*100)+'%':'—';
+}
+
+// TERRITORY
+function renderTerritoryList(){
+  const el=document.getElementById('territory-list');if(!el)return;
+  if(TERRITORY.length===0){el.innerHTML='<div style="font-size:12px;color:var(--t3);padding:10px 0;">No locations yet — add your first store above or bulk import below.</div>';return;}
+  el.innerHTML=TERRITORY.map((t,i)=>`
+    <div class="ter-row">
+      <div style="flex:1;"><div style="font-weight:500;">${t.name}</div><div style="font-size:10px;color:var(--t3);">${t.city} · ${t.type}</div></div>
+      <button onclick="removeTer(${i})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;">✕</button>
+    </div>`).join('');
+}
+function addTerritory(){
+  const n=document.getElementById('new-ter-name').value.trim();
+  const c=document.getElementById('new-ter-city').value.trim();
+  const t=document.getElementById('new-ter-type').value;
+  if(!n)return;
+  TERRITORY.push({name:n,city:c,type:t});
+  saveLocal();renderTerritoryList();renderFieldStoreSelect();
+  document.getElementById('new-ter-name').value='';
+  document.getElementById('new-ter-city').value='';
+}
+function bulkAddTerritory(){
+  const lines=document.getElementById('bulk-ter').value.trim().split('\n');
+  lines.forEach(line=>{
+    const parts=line.split(',');
+    if(parts.length>=1&&parts[0].trim()){
+      TERRITORY.push({name:parts[0].trim(),city:(parts[1]||'').trim(),type:'Walmart'});
+    }
+  });
+  saveLocal();renderTerritoryList();renderFieldStoreSelect();
+  document.getElementById('bulk-ter').value='';
+}
+function removeTer(i){TERRITORY.splice(i,1);saveLocal();renderTerritoryList();renderFieldStoreSelect();}
+function renderFieldStoreSelect(){
+  const sel=document.getElementById('field-store-sel');if(!sel)return;
+  sel.innerHTML='<option value="">Select store...</option>'+TERRITORY.map(t=>`<option value="${t.name}">${t.name}${t.city?', '+t.city:''}</option>`).join('');
+}
+function setFieldStore(){
+  const sel=document.getElementById('field-store-sel');
+  const lbl=document.getElementById('field-store-lbl');
+  if(sel&&sel.value&&lbl)lbl.textContent='Store: '+sel.value+' · '+new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+}
+
+// SERVICES
+function renderServicesList(){
+  const el=document.getElementById('services-list');if(!el)return;
+  const cats=[...new Set(SERVICES.map(s=>s.cat))];
+  el.innerHTML=cats.map(cat=>`
+    <div style="margin-bottom:14px;">
+      <div class="slbl" style="margin-bottom:7px;">${cat}</div>
+      ${SERVICES.filter(s=>s.cat===cat).map((s,idx)=>{
+        const i=SERVICES.indexOf(s);
+        return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--b1);">
+          <div style="flex:1;"><div style="font-size:12px;font-weight:500;">${s.name}${s.pia?' <span class="bd bd-b" style="font-size:8px;">PIA</span>':''}</div></div>
+          <div style="display:flex;align-items:center;gap:4px;">
+            <span style="font-size:12px;color:var(--t3);">$</span>
+            <input type="number" value="${s.wire}" style="width:70px;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:4px 7px;font-size:12px;color:var(--y);outline:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-align:right;" onchange="updateSvcWire(${i},this.value)"/>
+          </div>
+          <button onclick="removeService(${i})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;">✕</button>
+        </div>`;
+      }).join('')}
+    </div>`).join('');
+}
+function updateSvcWire(i,v){SERVICES[i].wire=parseInt(v)||0;saveLocal();}
+function removeService(i){SERVICES.splice(i,1);saveLocal();renderServicesList();buildSaleModal();}
+function addService(){
+  const n=document.getElementById('new-svc-name').value.trim();
+  const c=document.getElementById('new-svc-cat').value.trim()||'Other';
+  const w=parseInt(document.getElementById('new-svc-wire').value)||0;
+  if(!n)return;
+  SERVICES.push({id:'custom-'+Date.now(),name:n,cat:c,wire:w,pia:false});
+  saveLocal();renderServicesList();
+  document.getElementById('new-svc-name').value='';
+  document.getElementById('new-svc-wire').value='';
+}
+
+// SALE MODAL
+var selectedSvcs={};
+function openSaleModal(){
+  selectedSvcs={};
+  buildSaleModal();
+  document.getElementById('sale-customer').value='';
+  document.getElementById('sale-address').value='';
+  document.getElementById('sale-modal').classList.add('show');
+}
+function closeSaleModal(){document.getElementById('sale-modal').classList.remove('show');}
+function buildSaleModal(){
+  const el=document.getElementById('svc-list-modal');if(!el)return;
+  const cats=[...new Set(SERVICES.map(s=>s.cat))];
+  el.innerHTML=cats.map(cat=>`
+    <div style="margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);margin-bottom:6px;">${cat}</div>
+      ${SERVICES.filter(s=>s.cat===cat).map(s=>`
+        <div class="svc-chk" onclick="toggleSvc('${s.id}',this)">
+          <div class="chk-box" id="chk-${s.id}"></div>
+          <div style="flex:1;"><div class="svc-lbl">${s.name}${s.pia?' <span class="bd bd-b" style="font-size:8px;">PIA</span>':''}</div></div>
+          <div class="svc-wire">$${s.wire}</div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+function toggleSvc(id,row){
+  const svc=SERVICES.find(s=>s.id===id);if(!svc)return;
+  const chk=document.getElementById('chk-'+id);
+  if(selectedSvcs[id]){delete selectedSvcs[id];chk.classList.remove('on');}
+  else{selectedSvcs[id]=svc;chk.classList.add('on');}
+  updateSaleTotals();
+}
+function updateSaleTotals(){
+  const svcs=Object.values(selectedSvcs);
+  const wire=svcs.reduce((a,s)=>a+s.wire,0);
+  const cnt=svcs.length;
+  document.getElementById('sale-wire-total').textContent='$'+wire.toLocaleString();
+  document.getElementById('sale-svc-count').textContent=cnt;
+  document.getElementById('sale-running').textContent='$'+(todayWire+wire).toLocaleString();
+  // Bell check
+  const isBell=checkBell(svcs,wire);
+  const bi=document.getElementById('sale-bell-ind');
+  if(bi)bi.classList.toggle('show',isBell);
+}
+function checkBell(svcs,wire){
+  if(wire>=400)return true;
+  const custCount=svcs.length>0?1:0;
+  return custCount>=CFG.bellCust&&svcs.length>=CFG.bellSvc;
+}
+function submitSale(){
+  const svcs=Object.values(selectedSvcs);
+  if(svcs.length===0){alert('Select at least one service.');return;}
+  const wire=svcs.reduce((a,s)=>a+s.wire,0);
+  const piaCount=svcs.filter(s=>s.pia).length;
+  const isBell=checkBell(svcs,wire);
+  const sale={
+    id:Date.now(),
+    customer:document.getElementById('sale-customer').value||'Customer',
+    address:document.getElementById('sale-address').value||'',
+    services:svcs.map(s=>s.name),
+    wire,pia:piaCount,bell:isBell,
+    time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})
+  };
+  todaySales.push(sale);
+  todayWire+=wire;
+  todayCloses++;
+  if(isBell)todayBells++;
+  saveLocal();
+  // Update field page stats
+  document.getElementById('f-cl').textContent=todayCloses;
+  document.getElementById('f-w').textContent='$'+todayWire.toLocaleString();
+  const fb=document.getElementById('f-bell-stat');
+  if(fb)fb.textContent=todayBells>0?'🔔 '+todayBells+' bell'+(todayBells>1?'s':''):'No bell yet';
+  if(isBell)fb.style.color='var(--y)';
+  // Update home stats
+  document.getElementById('h-closes').textContent=todayCloses;
+  document.getElementById('h-wire').textContent='$'+todayWire.toLocaleString();
+  document.getElementById('h-bells').textContent=todayBells;
+  renderTodaySales();
+  closeSaleModal();
+  if(isBell){
+    setTimeout(()=>{
+      const b=document.createElement('div');
+      b.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--y);color:var(--k);font-family:"Barlow Condensed",sans-serif;font-weight:900;font-size:20px;padding:10px 24px;border-radius:50px;z-index:300;box-shadow:0 4px 20px rgba(255,224,51,.5);';
+      b.textContent='🔔 BELL RUNG!';
+      document.body.appendChild(b);
+      setTimeout(()=>b.remove(),2500);
+    },200);
+  }
+}
+function renderTodaySales(){
+  const el=document.getElementById('sales-today-list');if(!el)return;
+  if(todaySales.length===0){el.innerHTML='';return;}
+  el.innerHTML='<div class="slbl" style="margin-bottom:8px;">Today\'s sales ('+todaySales.length+')</div>'+todaySales.map((s,i)=>`
+    <div style="background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:10px;">
+      <div style="flex:1;">
+        <div style="font-size:12px;font-weight:500;">${s.customer}${s.address?' · '+s.address:''}</div>
+        <div style="font-size:11px;color:var(--t2);margin-top:2px;">${s.services.join(', ')}</div>
+        <div style="font-size:10px;color:var(--t3);margin-top:2px;">${s.time}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;color:var(--y);">$${s.wire.toLocaleString()}</div>
+        ${s.bell?'<div style="font-size:10px;color:var(--y);">🔔 Bell</div>':''}
+      </div>
+    </div>`).join('');
+}
+
+// REP MANAGEMENT
 async function loadRepsTable(){
   const tbody=document.getElementById('reps-tbody');if(!tbody)return;
-  const {data}=await sb.from('profiles').select('*').order('created_at',{ascending:true});
-  const sc=document.getElementById('sc-reps');
+  const{data}=await sb.from('profiles').select('*').order('created_at',{ascending:true});
+  const sc=document.getElementById('sc-reps');const sc2=document.getElementById('sc-reps2');
   if(!data||data.length===0){
-    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--t3);padding:24px;">No reps yet — add your first rep above or share invite code FPA2025.</td></tr>';
-    if(sc)sc.textContent='1';return;
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--t3);padding:24px;">No reps yet. Add your first rep above or share invite code FPA2025.</td></tr>';
+    if(sc)sc.textContent='1';if(sc2)sc2.textContent='1';return;
   }
-  if(sc)sc.textContent=data.length;
+  if(sc)sc.textContent=data.length;if(sc2)sc2.textContent=data.length;
   const rC={owner:'var(--y)',ae:'var(--blue)',lt:'var(--teal)',jpm:'var(--amber)',pm:'var(--red)'};
   const rL={owner:'Owner',ae:'AE',lt:'Lead Trainer',jpm:'JPM',pm:'PM'};
   tbody.innerHTML=data.map(p=>`
@@ -761,65 +1298,269 @@ async function inviteRep(){
   const msg=document.getElementById('inv-msg');
   if(!name||!email){msg.style.display='block';msg.style.color='#FCA5A5';msg.textContent='Enter a name and email.';return;}
   msg.style.display='block';msg.style.color='var(--teal)';msg.textContent='Sending invite...';
-  const {error}=await sb.auth.signInWithOtp({email,options:{data:{full_name:name,role},shouldCreateUser:true}});
+  const{error}=await sb.auth.signInWithOtp({email,options:{data:{full_name:name,role},shouldCreateUser:true}});
   if(error){msg.style.color='#FCA5A5';msg.textContent='Error: '+error.message;}
   else{
     msg.style.color='#86EFAC';
-    msg.textContent='✓ Magic link sent to '+email+'. They can also use invite code FPA2025 to sign up directly.';
-    document.getElementById('inv-name').value='';
-    document.getElementById('inv-email').value='';
+    msg.textContent='✓ Magic link sent to '+email+'. They can also self-signup with code FPA2025.';
+    document.getElementById('inv-name').value='';document.getElementById('inv-email').value='';
     setTimeout(loadRepsTable,1500);
   }
 }
 
-async function doLogin(){
-  const email=document.getElementById('login-email').value.trim();
-  const pass=document.getElementById('login-pass').value;
-  const btn=document.getElementById('login-btn');
-  const err=document.getElementById('login-err');
-  err.classList.remove('show');
-  if(!email||!pass){showErr(err,'Enter your email and password.');return;}
-  btn.disabled=true;btn.textContent='Signing in...';
-  const {error}=await sb.auth.signInWithPassword({email,password:pass});
-  if(error){showErr(err,error.message==='Invalid login credentials'?'Wrong email or password.':error.message);btn.disabled=false;btn.textContent='Sign in';}
+// ORG CHART
+var orgNodes=[];var orgDragging=null;
+function buildOrgChart(){
+  const canvas=document.getElementById('org-canvas');
+  const nodesDiv=document.getElementById('org-nodes');
+  const svg=document.getElementById('org-svg');
+  if(!canvas||!nodesDiv||!svg)return;
+  // Build from profiles if available — for now show owner node + placeholder
+  const w=canvas.offsetWidth||600;
+  const h=canvas.offsetHeight||500;
+  nodesDiv.innerHTML='';svg.innerHTML='';
+  orgNodes=[{id:'owner',name:P?.full_name||'You (Owner)',role:'owner',x:w/2,y:80,color:'#FFE033',initials:(P?.full_name||'AW').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}];
+  orgNodes.forEach(n=>createOrgNode(n));
+  drawOrgLines();
+}
+function createOrgNode(n){
+  const div=document.createElement('div');
+  div.className='onode';
+  div.id='onode-'+n.id;
+  div.style.left=n.x+'px';div.style.top=n.y+'px';
+  const sz=n.role==='owner'?72:n.role==='pm'||n.role==='jpm'?60:50;
+  div.innerHTML=`<div class="obub" style="width:${sz}px;height:${sz}px;background:${n.color}22;border-color:${n.color};"><span class="oi" style="color:${n.color};">${n.initials}</span><span class="on2" style="color:${n.color};">${n.name.split(' ')[0]}</span></div>`;
+  div.addEventListener('contextmenu',e=>{e.preventDefault();openCtxMenu(e,n);});
+  let holdTimer;
+  div.addEventListener('touchstart',e=>{holdTimer=setTimeout(()=>openCtxMenu(e.touches[0],n),700);});
+  div.addEventListener('touchend',()=>clearTimeout(holdTimer));
+  div.addEventListener('mousedown',e=>{if(e.button!==2)startDragNode(e,div,n);});
+  document.getElementById('org-nodes').appendChild(div);
+}
+function startDragNode(e,div,n){
+  const ox=e.clientX-n.x,oy=e.clientY-n.y;
+  function onMove(e){n.x=e.clientX-ox;n.y=e.clientY-oy;div.style.left=n.x+'px';div.style.top=n.y+'px';drawOrgLines();}
+  function onUp(){document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);}
+  document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);
+}
+function drawOrgLines(){
+  const svg=document.getElementById('org-svg');if(!svg)return;svg.innerHTML='';
+}
+function openCtxMenu(e,n){
+  CTX_NODE=n;
+  const m=document.getElementById('ctx-menu');
+  const p=document.getElementById('ctx-pname');
+  if(p)p.textContent=n.name+' · '+n.role.toUpperCase();
+  m.style.top=e.clientY+'px';m.style.left=e.clientX+'px';
+  m.classList.add('show');
+  setTimeout(()=>document.addEventListener('click',()=>m.classList.remove('show'),{once:true}),50);
+}
+function ctxAction(a){
+  document.getElementById('ctx-menu').classList.remove('show');
+  if(!CTX_NODE)return;
+  if(a==='stats')alert('Stats for '+CTX_NODE.name+' — sales log integration coming next build.');
+  if(a==='reassign')alert('Drag '+CTX_NODE.name+' onto their new leader on the chart.');
+  if(a==='promote')alert('Promote '+CTX_NODE.name+' — update their role in Rep Management.');
+  if(a==='deactivate')alert('Deactivate '+CTX_NODE.name+' — go to Rep Management to remove access.');
+  if(a==='alumni')alert('Moving '+CTX_NODE.name+' to alumni — Rep Management alumni feature coming next build.');
 }
 
-async function doSignup(){
-  const name=document.getElementById('su-name').value.trim();
-  const email=document.getElementById('su-email').value.trim();
-  const pass=document.getElementById('su-pass').value;
-  const code=document.getElementById('su-code').value.trim().toUpperCase();
-  const btn=document.getElementById('signup-btn');
-  const err=document.getElementById('signup-err');
-  const ok=document.getElementById('signup-ok');
-  err.classList.remove('show');ok.classList.remove('show');
-  if(!name||!email||!pass){showErr(err,'Fill in all fields.');return;}
-  if(pass.length<8){showErr(err,'Password must be at least 8 characters.');return;}
-  if(code!==INVITE_CODE){showErr(err,'Invalid invite code. Ask your owner.');return;}
-  btn.disabled=true;btn.textContent='Creating...';
-  const {error}=await sb.auth.signUp({email,password:pass,options:{data:{full_name:name,role:'ae'}}});
-  if(error){showErr(err,error.message);btn.disabled=false;btn.textContent='Create account';}
-  else{ok.classList.add('show');ok.textContent='✓ Check your email to confirm, then sign in.';}
+// RECRUITMENT
+function addCandidate(){
+  const name=document.getElementById('c-name').value.trim();
+  const date=document.getElementById('c-date').value;
+  const phone=document.getElementById('c-phone').value.trim();
+  const source=document.getElementById('c-source').value;
+  const notes=document.getElementById('c-notes').value.trim();
+  if(!name)return;
+  CANDIDATES.push({id:Date.now(),name,date,phone,source,notes,stage:'Added',steps:{added:true,interviewed:false,offered:false,video:false,orientation:false,account:false},denied:false,cold:false});
+  saveLocal();renderCandidates();clearCandForm();
+}
+function clearCandForm(){
+  ['c-name','c-date','c-phone','c-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderCandidates(){
+  const el=document.getElementById('cand-list');if(!el)return;
+  const active=CANDIDATES.filter(c=>!c.denied&&!c.alumni);
+  if(active.length===0){el.innerHTML='<div class="empty"><div class="icon">👥</div><div class="title">No candidates yet</div><div class="sub">Add your first candidate above.</div></div>';return;}
+  // Update stats
+  document.getElementById('rec-ints').textContent=active.filter(c=>c.steps.interviewed).length;
+  document.getElementById('rec-offers').textContent=active.filter(c=>c.steps.offered).length;
+  document.getElementById('rec-starts').textContent=active.filter(c=>c.steps.account).length;
+  document.getElementById('rec-denied').textContent=CANDIDATES.filter(c=>c.denied).length;
+  const STAGE_COLORS=['#4F8EF7','#00C9A7','#F59E0B','#8B5CF6','#22C55E','#FFE033'];
+  el.innerHTML=active.map((c,i)=>{
+    const steps=[{k:'added',l:'Added to pipeline'},{k:'interviewed',l:'Interviewed'},{k:'offered',l:'Offer extended'},{k:'video',l:'Video sent & watched'},{k:'orientation',l:'Attended orientation'},{k:'account',l:'Account created'}];
+    return `<div class="pipe-card" id="pipe-${c.id}">
+      <div class="pipe-hd" onclick="togglePipe('${c.id}')">
+        <div class="pipe-av" style="background:${STAGE_COLORS[i%6]}22;color:${STAGE_COLORS[i%6]};">${c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}</div>
+        <div style="flex:1;"><div class="pipe-name">${c.name}</div><div class="pipe-meta">${c.source}${c.date?' · '+new Date(c.date+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):''}${c.phone?' · '+c.phone:''}</div></div>
+        <span class="bd bd-b" style="font-size:10px;">${Object.values(c.steps).filter(Boolean).length}/6</span>
+      </div>
+      <div class="pipe-det" id="pdet-${c.id}">
+        ${steps.map(s=>`<div class="ps-row"><div class="ps-chk${c.steps[s.k]?' on':''}" onclick="toggleStep('${c.id}','${s.k}',this)"></div><div class="ps-lbl${c.steps[s.k]?' done':''}">${s.l}</div></div>`).join('')}
+        ${c.notes?`<div style="background:var(--s4);border-radius:var(--r1);padding:8px 10px;font-size:11px;color:var(--t2);margin-top:8px;">📝 ${c.notes}</div>`:''}
+        <div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap;">
+          <button class="btn btn-r" style="font-size:10px;padding:4px 10px;" onclick="denyCandidate('${c.id}')">Denied</button>
+          <button class="btn btn-g" style="font-size:10px;padding:4px 10px;" onclick="coldFlag('${c.id}')">Cold flag</button>
+        </div>
+        ${c.cold?'<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--r1);padding:6px 10px;font-size:11px;color:#FCD34D;margin-top:7px;">⚠️ Cold flag — no response in 3+ days. Escalate or move on.</div>':''}
+      </div>
+    </div>`;
+  }).join('');
+}
+function togglePipe(id){const el=document.getElementById('pipe-'+id);if(el)el.classList.toggle('open');}
+function toggleStep(cid,k,el){
+  const c=CANDIDATES.find(c=>c.id==cid);if(!c)return;
+  c.steps[k]=!c.steps[k];
+  el.classList.toggle('on',c.steps[k]);
+  el.nextElementSibling?.classList.toggle('done',c.steps[k]);
+  saveLocal();
+}
+function denyCandidate(id){const c=CANDIDATES.find(c=>c.id==id);if(c){c.denied=true;saveLocal();renderCandidates();}}
+function coldFlag(id){const c=CANDIDATES.find(c=>c.id==id);if(c){c.cold=!c.cold;saveLocal();renderCandidates();}}
+
+// GOALS
+function submitGoal(){
+  const closes=document.getElementById('g-closes').value;
+  const wire=document.getElementById('g-wire').value;
+  const focus=document.getElementById('g-focus').value;
+  const commit=document.getElementById('g-commit').value;
+  const out=document.getElementById('goal-out');
+  if(!closes||!wire||!focus||!commit){if(out){out.style.display='block';out.style.color='#FCA5A5';out.textContent='Fill in all fields.';}return;}
+  const wk=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric'});
+  const goal=`This week of ${wk}, I commit to closing ${closes} sales and generating $${parseInt(wire).toLocaleString()} in wire. My primary focus is: "${focus}." If I fall behind pace by Wednesday, I will: "${commit}." I am writing this because I am serious about my promotion and the success of my team.`;
+  out.style.display='block';out.style.color='var(--t2)';out.textContent=goal;
 }
 
-async function doReset(){
-  const email=document.getElementById('reset-email').value.trim();
-  const err=document.getElementById('reset-err');const ok=document.getElementById('reset-ok');
-  if(!email){showErr(err,'Enter your email.');return;}
-  document.getElementById('reset-btn').disabled=true;
-  const {error}=await sb.auth.resetPasswordForEmail(email);
-  if(error)showErr(err,error.message);
-  else{ok.classList.add('show');ok.textContent='✓ Reset link sent — check your email.';}
+// SETTINGS
+function setStab(name,btn){
+  document.querySelectorAll('[id^="stab-"]').forEach(el=>el.style.display='none');
+  document.getElementById('stab-'+name).style.display='block';
+  document.querySelectorAll('.stab-btn').forEach(b=>{b.classList.remove('active-tab');b.style.background='var(--s3)';b.style.color='var(--t2)';});
+  btn.classList.add('active-tab');btn.style.background='var(--y)';btn.style.color='var(--k)';
+}
+function saveAllSettings(){
+  CFG.wireTgt=parseInt(document.getElementById('cfg-wire')?.value)||2100;
+  CFG.piaTgt=parseInt(document.getElementById('cfg-pia')?.value)||6;
+  CFG.custTgt=parseInt(document.getElementById('cfg-cust')?.value)||8;
+  CFG.bellCust=parseInt(document.getElementById('cfg-bell-cust')?.value)||2;
+  CFG.bellSvc=parseInt(document.getElementById('cfg-bell-svc')?.value)||3;
+  CFG.stops=parseInt(document.getElementById('cfg-stops')?.value)||100;
+  CFG.tabs=parseInt(document.getElementById('cfg-tabs')?.value)||30;
+  CFG.pres=parseInt(document.getElementById('cfg-pres')?.value)||15;
+  CFG.checks=parseInt(document.getElementById('cfg-checks')?.value)||7;
+  CFG.closes=parseInt(document.getElementById('cfg-closes')?.value)||3;
+  saveLocal();applyConfig();
+  const msg=document.getElementById('settings-msg');
+  if(msg){msg.style.display='block';msg.textContent='✓ Settings saved — reps see updated targets immediately.';setTimeout(()=>msg.style.display='none',3000);}
 }
 
-async function doLogout(){await sb.auth.signOut();}
-function showErr(el,msg){el.textContent=msg;el.classList.add('show');}
-function showForm(f){
-  ['login','signup','reset'].forEach(x=>document.getElementById(x+'-form').style.display='none');
-  document.getElementById(f+'-form').style.display='block';
-  document.querySelectorAll('.auth-error,.auth-success').forEach(el=>el.classList.remove('show'));
+// TERMINOLOGY
+function renderTerminologyList(){
+  const el=document.getElementById('terminology-list');if(!el)return;
+  el.innerHTML=Object.entries(TERMS).map(([k,v])=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--b1);">
+      <div style="flex:1;font-size:12px;color:var(--t2);">Default: <strong style="color:var(--t1);">${k}</strong></div>
+      <input type="text" value="${v}" style="width:140px;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:5px 8px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;" onchange="TERMS['${k}']=this.value"/>
+    </div>`).join('');
+}
+function saveTerminology(){saveLocal();alert('Terminology saved ✓');}
+
+// ANNOUNCEMENTS
+function postAnnouncement(){
+  const t=document.getElementById('ann-title-inp')?.value.trim();
+  const b=document.getElementById('ann-body-inp')?.value.trim();
+  if(!t||!b){alert('Enter a title and message.');return;}
+  ANNOUNCEMENTS.unshift({id:Date.now(),title:t,body:b,date:new Date().toLocaleDateString()});
+  if(ANNOUNCEMENTS.length>5)ANNOUNCEMENTS.pop();
+  saveLocal();
+  document.getElementById('ann-t').textContent=t;
+  document.getElementById('ann-b').textContent=b;
+  const msg=document.getElementById('ann-msg');
+  if(msg){msg.style.display='block';msg.textContent='✓ Announcement posted — visible to all reps now.';setTimeout(()=>msg.style.display='none',3000);}
+  document.getElementById('ann-title-inp').value='';
+  document.getElementById('ann-body-inp').value='';
+  renderActiveAnnouncements();
+}
+function renderActiveAnnouncements(){
+  const el=document.getElementById('ann-active-list');if(!el)return;
+  if(ANNOUNCEMENTS.length===0){el.innerHTML='<div class="empty"><div class="icon">📢</div><div class="title">No announcements</div><div class="sub">Post above to update all reps instantly.</div></div>';return;}
+  el.innerHTML=ANNOUNCEMENTS.map((a,i)=>`
+    <div style="background:rgba(255,224,51,.04);border:1px solid rgba(255,224,51,.12);border-radius:var(--r2);padding:11px 13px;margin-bottom:8px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">
+        <div><div style="font-size:12px;font-weight:600;color:var(--y);">${a.title}</div><div style="font-size:11px;color:var(--t2);margin-top:3px;line-height:1.5;">${a.body}</div><div style="font-size:10px;color:var(--t3);margin-top:4px;">${a.date}</div></div>
+        <button onclick="deleteAnn(${i})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;flex-shrink:0;">✕</button>
+      </div>
+    </div>`).join('');
+}
+function deleteAnn(i){ANNOUNCEMENTS.splice(i,1);saveLocal();renderActiveAnnouncements();}
+
+// BULLETIN
+function renderBulletin(type){
+  const el=document.getElementById('bulletin-preview');if(!el)return;
+  const wk=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const isOrg=type==='org';
+  el.innerHTML=`
+    <div class="card" style="padding:0;overflow:hidden;background:var(--s2);">
+      <div class="bp-band">
+        <div class="bp-logo">FPA <span>${isOrg?'Org':'Office'}</span></div>
+        <div style="text-align:right;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;color:#fff;">${isOrg?'ORG':'OFFICE'} BULLETIN</div><div style="font-size:10px;color:#666;">Week of ${wk}</div></div>
+      </div>
+      <div style="padding:16px 20px;">
+        <div class="bp-sec">📊 Week in numbers</div>
+        <div class="bp-stat-grid">
+          <div class="bp-stat"><div class="bp-stat-v" style="color:var(--y);">$0</div><div class="bp-stat-l">Total wire</div></div>
+          <div class="bp-stat"><div class="bp-stat-v" style="color:var(--green);">0</div><div class="bp-stat-l">Closes</div></div>
+          <div class="bp-stat"><div class="bp-stat-v" style="color:var(--teal);">0</div><div class="bp-stat-l">Bells</div></div>
+          <div class="bp-stat"><div class="bp-stat-v" style="color:var(--blue);">${isOrg?'3':'+1'}</div><div class="bp-stat-l">${isOrg?'Offices':'New starts'}</div></div>
+        </div>
+        <div class="bp-sec">🏆 Top performers</div>
+        <div class="bp-shout"><div class="bp-name">Be the first on the board 🏆</div><div class="bp-text">Log your sales this week to appear in the bulletin. The top 5 reps by wire get named here every Monday morning.</div></div>
+        <div class="bp-sec" style="margin-top:14px;">🔔 Shoutouts</div>
+        <div style="font-size:12px;color:var(--t3);font-style:italic;">Owner shoutouts will appear here. Add them from the High Roller Board page.</div>
+        <div style="border-top:2px solid var(--b1);padding-top:12px;margin-top:14px;display:flex;justify-content:space-between;align-items:flex-end;">
+          <div><div class="bp-logo" style="font-size:16px;">FPA <span style="color:var(--t1);">OS</span></div><div style="font-size:10px;color:var(--t3);">Growth Operating System</div></div>
+          <div style="font-size:10px;color:var(--t3);text-align:right;">Front Page Agency · FPA DFW<br>Celebrates wins only</div>
+        </div>
+      </div>
+    </div>`;
+}
+function setBulView(type,btn){
+  document.querySelectorAll('.stab-btn').forEach(b=>{b.classList.remove('active-tab');b.style.background='var(--s3)';b.style.color='var(--t2)';});
+  btn.classList.add('active-tab');btn.style.background='var(--y)';btn.style.color='var(--k)';
+  renderBulletin(type);
 }
 
+// RECIPIENTS
+function renderRecipients(){
+  const el=document.getElementById('recipients-list');if(!el)return;
+  if(RECIPIENTS.length===0){el.innerHTML='<div style="font-size:12px;color:var(--t3);">No recipients yet.</div>';return;}
+  el.innerHTML=RECIPIENTS.map((r,i)=>`
+    <div class="rec-row">
+      <div><div style="font-size:12px;font-weight:500;">${r.name}</div><div style="font-size:11px;color:var(--t3);">${r.email}</div></div>
+      <div style="font-size:11px;color:var(--t2);">${r.type}</div>
+      <div><span class="bd bd-g">Active</span></div>
+      <button onclick="removeRecipient(${i})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;">✕</button>
+    </div>`).join('');
+}
+function addRecipient(){
+  const e=document.getElementById('rec-email')?.value.trim();
+  const n=document.getElementById('rec-name')?.value.trim();
+  const t=document.getElementById('rec-type')?.value||'both';
+  if(!e||!n)return;
+  RECIPIENTS.push({email:e,name:n,type:t});
+  saveLocal();renderRecipients();
+}
+function removeRecipient(i){RECIPIENTS.splice(i,1);saveLocal();renderRecipients();}
+
+// HIGH ROLLER
+function setHRView(type,btn){
+  document.querySelectorAll('.stab-btn').forEach(b=>{b.classList.remove('active-tab');b.style.background='var(--s3)';b.style.color='var(--t2)';});
+  btn.classList.add('active-tab');btn.style.background='var(--y)';btn.style.color='var(--k)';
+}
+
+// NAV
 function nav(id,btn){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
   const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');
@@ -827,37 +1568,64 @@ function nav(id,btn){
   if(btn&&!btn.classList.contains('lk'))btn.classList.add('active');
   else document.querySelectorAll('.sbi').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');});
   if(id==='admin')loadRepsTable();
+  if(id==='settings'){setStab('criteria',document.querySelector('.stab-btn'));}
+  if(id==='recruit')renderCandidates();
 }
 
-function toggleTheme(){isLight=!isLight;document.body.classList.toggle('light',isLight);document.getElementById('tt').classList.toggle('on',isLight);}
-
-var tallyCols={s:'var(--blue)',t:'var(--teal)',p:'var(--amber)',c:'var(--t3)'};
-var tallyTgts={s:100,t:30,p:15,c:7};
-function tap(k){
-  tc[k]++;
-  const el=document.getElementById('tc-'+k);
-  if(el){el.textContent=tc[k];el.classList.remove('pulse');void el.offsetWidth;el.classList.add('pulse');}
-  const pct=Math.min(100,Math.round(tc[k]/tallyTgts[k]*100));
-  const f=document.getElementById('tf-'+k);
-  if(f){f.style.width=pct+'%';f.style.background=pct>=100?'var(--green)':tallyCols[k];}
-  if(tc.s>0){const tr=document.getElementById('f-tr');if(tr)tr.textContent=Math.round(tc.t/tc.s*100)+'%';}
+// AUTH
+async function doLogin(){
+  const email=document.getElementById('l-email').value.trim();
+  const pass=document.getElementById('l-pass').value;
+  const btn=document.getElementById('login-btn');
+  const err=document.getElementById('login-err');
+  err.classList.remove('show');
+  if(!email||!pass){showErr(err,'Enter your email and password.');return;}
+  btn.disabled=true;btn.textContent='Signing in...';
+  const{error}=await sb.auth.signInWithPassword({email,password:pass});
+  if(error){showErr(err,error.message==='Invalid login credentials'?'Wrong email or password.':error.message);btn.disabled=false;btn.textContent='Sign in';}
 }
-function undo(k){
-  if(tc[k]>0){tc[k]--;const el=document.getElementById('tc-'+k);if(el)el.textContent=tc[k];
-  const pct=Math.min(100,Math.round(tc[k]/tallyTgts[k]*100));
-  const f=document.getElementById('tf-'+k);if(f){f.style.width=pct+'%';}}
+async function doSignup(){
+  const name=document.getElementById('su-name').value.trim();
+  const email=document.getElementById('su-email').value.trim();
+  const pass=document.getElementById('su-pass').value;
+  const code=document.getElementById('su-code').value.trim().toUpperCase();
+  const btn=document.getElementById('su-btn');
+  const err=document.getElementById('su-err');
+  const ok=document.getElementById('su-ok');
+  err.classList.remove('show');ok.classList.remove('show');
+  if(!name||!email||!pass){showErr(err,'Fill in all fields.');return;}
+  if(pass.length<8){showErr(err,'Password must be at least 8 characters.');return;}
+  if(code!==INVITE){showErr(err,'Invalid invite code. Ask your owner.');return;}
+  btn.disabled=true;btn.textContent='Creating...';
+  const{error}=await sb.auth.signUp({email,password:pass,options:{data:{full_name:name,role:'ae'}}});
+  if(error){showErr(err,error.message);btn.disabled=false;btn.textContent='Create account';}
+  else{ok.classList.add('show');ok.textContent='✓ Check your email to confirm, then sign in.';}
 }
-
-function submitGoal(){
-  const closes=document.getElementById('goal-closes').value;
-  const wire=document.getElementById('goal-wire').value;
-  const focus=document.getElementById('goal-focus').value;
-  const msg=document.getElementById('goal-msg');
-  if(!closes||!wire||!focus){msg.style.display='block';msg.style.color='#FCA5A5';msg.textContent='Fill in all fields.';return;}
-  msg.style.display='block';msg.style.color='#86EFAC';
-  msg.textContent='✓ Goal submitted for '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'})+'! Your owner can see it. Now go execute.';
+async function doReset(){
+  const email=document.getElementById('rs-email').value.trim();
+  const err=document.getElementById('rs-err');const ok=document.getElementById('rs-ok');
+  if(!email){showErr(err,'Enter your email.');return;}
+  document.getElementById('rs-btn').disabled=true;
+  const{error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:'https://fpa-os.vercel.app'});
+  if(error)showErr(err,error.message);
+  else{ok.classList.add('show');ok.textContent='✓ Reset link sent — check your email.';}
 }
+async function doLogout(){await sb.auth.signOut();}
+function showErr(el,msg){el.textContent=msg;el.classList.add('show');}
+function showForm(f){
+  ['login','signup','reset'].forEach(x=>document.getElementById('f-'+x).style.display='none');
+  document.getElementById('f-'+f).style.display='block';
+  document.querySelectorAll('.ae,.ao').forEach(el=>el.classList.remove('show'));
+}
+function toggleTheme(){isLight=!isLight;document.body.classList.toggle('light',isLight);document.getElementById('thm-tt').classList.toggle('on',isLight);}
 
+// CLOSE ctx menu on outside click
+document.addEventListener('click',e=>{
+  const m=document.getElementById('ctx-menu');
+  if(m&&!m.contains(e.target))m.classList.remove('show');
+});
+
+// BOOT
 boot();
 </script>
 </body>

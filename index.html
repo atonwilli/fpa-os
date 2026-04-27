@@ -291,7 +291,6 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 <div id="page-home" class="pg active">
   <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px;flex-wrap:wrap;gap:9px;">
     <div><div class="pgt" id="hg">Good morning 👋</div><div class="pgs" id="hs">Loading...</div></div>
-    <button class="btn btn-p" onclick="nav('field',null)"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v2.5l2 1.5"/></svg>Start field day</button>
   </div>
   <div style="margin-bottom:14px;">
     <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-bottom:3px;cursor:pointer;" onclick="openRoadmapModal()">
@@ -350,14 +349,6 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
   <div class="pgt">Field day</div>
   <div class="pgs">Tap to count · sales auto-calculate wire and bells</div>
 
-  <!-- ATTENDANCE CHECK-IN -->
-  <div id="att-checkin-bar" style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
-    <div id="att-status-display">
-      <div style="font-size:13px;font-weight:600;color:var(--t1);" id="att-status-label">Not checked in today</div>
-      <div style="font-size:11px;color:var(--t3);" id="att-status-sub">Check in when you arrive at the office</div>
-    </div>
-    <button class="btn btn-p" id="att-checkin-btn" style="padding:9px 18px;font-size:12px;font-weight:600;" onclick="doCheckIn()">📍 Check in</button>
-  </div>
   <div style="background:rgba(255,224,51,.05);border:1px solid rgba(255,224,51,.13);border-radius:var(--r2);padding:10px 13px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
     <span style="font-size:11px;color:var(--y);" id="field-store-lbl">No store selected — choose from your territory</span>
     <div style="display:flex;gap:8px;align-items:center;">

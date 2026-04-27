@@ -544,7 +544,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
     <div style="font-size:13px;font-weight:600;color:var(--y);margin-bottom:4px;">How it works</div>
     <div style="font-size:12px;color:var(--t2);line-height:1.7;">
       Add training items below with a title, description, link (Google Doc, YouTube, PDF, anything), role tier, and content type.
-      AEs see AE content only. LTs see AE + LT content. Asst. Owners see all below + Asst. Owner. PMs see everything.
+      AEs see AE content only. LTs see AE + LT content. Asst. Owners see all below + Asst. Owner. Owners see everything.
       Paste a Google Doc share link, YouTube link, or any URL — reps tap Open and it launches in a new tab.
     </div>
   </div>
@@ -1107,7 +1107,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
     <div style="display:grid;grid-template-columns:1fr 1fr 110px 90px;gap:10px;align-items:end;">
       <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Full name</div><input type="text" id="inv-name" placeholder="First and last name" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
       <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Email</div><input type="email" id="inv-email" placeholder="rep@email.com" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
-      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Role</div><select id="inv-role" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"><option value="ae">AE</option><option value="lt">Lead Trainer</option><option value="jpm">Asst. Owner</option><option value="pm">PM</option></select></div>
+      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Role</div><select id="inv-role" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"><option value="ae">AE</option><option value="lt">Lead Trainer</option><option value="jpm">Asst. Owner</option><option value="pm">Owner</option></select></div>
       <div><div style="font-size:10px;margin-bottom:4px;">&nbsp;</div><button class="btn btn-p" style="width:100%;justify-content:center;" onclick="inviteRep()">Add rep</button></div>
     </div>
     <div id="inv-msg" style="display:none;font-size:11px;margin-top:8px;"></div>
@@ -1590,7 +1590,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 <div class="modal-bg" id="roadmap-modal">
   <div class="modal" style="max-width:600px;">
     <div class="modal-hd"><div class="modal-title">Your path to PM 🚀</div><button class="modal-x" onclick="document.getElementById('roadmap-modal').classList.remove('show')">✕</button></div>
-    <div style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.6;">This is your full career roadmap from Day 1 AE all the way to Project Manager. Every milestone is a checkpoint — your leader will confirm each one with you.</div>
+    <div style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.6;">This is your full career roadmap from Day 1 AE all the way to Owner. Every milestone is a checkpoint — your leader will confirm each one with you.</div>
 
     <!-- Phase 1: AE -->
     <div style="background:rgba(79,142,247,.06);border:1px solid rgba(79,142,247,.2);border-radius:var(--r2);padding:14px;margin-bottom:10px;">
@@ -1614,8 +1614,8 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
     <!-- Phase 3: Asst. Owner -->
     <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:var(--r2);padding:14px;margin-bottom:10px;">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-        <div style="width:32px;height:32px;border-radius:50%;background:var(--amber);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">Asst. Owner</div>
-        <div><div style="font-size:13px;font-weight:600;">Junior Project Manager</div><div style="font-size:11px;color:var(--t3);">Expand your organization · mentor your LTs</div></div>
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--amber);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;color:#fff;flex-shrink:0;">AO</div>
+        <div><div style="font-size:13px;font-weight:600;">Asst. Owner</div><div style="font-size:11px;color:var(--t3);">Expand your organization · mentor your LTs</div></div>
       </div>
       <div id="roadmap-jpm-checks"></div>
     </div>
@@ -1623,8 +1623,8 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
     <!-- Phase 4: PM -->
     <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:var(--r2);padding:14px;margin-bottom:16px;">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-        <div style="width:32px;height:32px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">PM</div>
-        <div><div style="font-size:13px;font-weight:600;">Project Manager</div><div style="font-size:11px;color:var(--t3);">Run your own office · build your empire</div></div>
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">OWN</div>
+        <div><div style="font-size:13px;font-weight:600;">Owner</div><div style="font-size:11px;color:var(--t3);">Run your own office · build your empire</div></div>
       </div>
       <div id="roadmap-pm-checks"></div>
     </div>
@@ -2807,7 +2807,7 @@ const ALL_BADGES=[
   {id:'rank_legend',cat:'promo',emoji:'👑',name:'FPA Legend',desc:'100 PSUs — you are the standard everyone chases',req:'100 sales',check:s=>s.closes>=100},
   {id:'promo_lt',cat:'promo',emoji:'🌟',name:'Promoted: Lead Trainer',desc:'Hit any one of the 3 LT paths',req:'LT promotion',check:s=>['lt','jpm','pm'].includes(s.role)},
   {id:'promo_jpm',cat:'promo',emoji:'⬆',name:'Promoted: JPM',desc:'Built your first organization',req:'JPM promotion',check:s=>['jpm','pm'].includes(s.role)},
-  {id:'promo_pm',cat:'promo',emoji:'🏢',name:'Project Manager',desc:'You run your own office now',req:'PM promotion',check:s=>s.role==='pm'},
+  {id:'promo_pm',cat:'promo',emoji:'🏢',name:'Owner',desc:'You run your own office now',req:'PM promotion',check:s=>s.role==='pm'},
   {id:'path_a',cat:'promo',emoji:'💰',name:'Path A Cleared',desc:'Hit wire threshold for LT in one week',req:'$2,100+ wire week',check:s=>s.bestWireWeek>=2100},
   {id:'path_b',cat:'promo',emoji:'📡',name:'Path B Cleared',desc:'6 PIA internet sales in one week',req:'6 PIA in one week',check:s=>s.bestPIAWeek>=6},
   {id:'path_c',cat:'promo',emoji:'👨‍👩‍👧',name:'Path C Cleared',desc:'8 customers in one week',req:'8 customers in one week',check:s=>s.bestWeek>=8},
@@ -3552,7 +3552,7 @@ function renderTrainingVault(){
   // Locked tiers — show what's coming
   if(lockedTiers.length>0&&!isOwner){
     lockedTiers.forEach(tier=>{
-      const tierLabel=tier==='lt'?'Lead Trainer':tier==='jpm'?'Asst. Owner':tier==='pm'?'Project Manager':'Upper tier';
+      const tierLabel=tier==='lt'?'Lead Trainer':tier==='jpm'?'Asst. Owner':tier==='pm'?'Owner':'Upper tier';
       const items=TRAINING_ITEMS.filter(i=>i.role===tier);
       if(items.length>0){
         html+=`<div class="card" style="opacity:.3;margin-bottom:12px;">

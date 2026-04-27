@@ -1732,21 +1732,20 @@ function renderTrainingVault(){
         <span class="bd bd-g">✓ Access granted</span>
       </div>`;
     if(items.length===0){
-      html+=`<div style="text-align:center;padding:20px;color:var(--t3);font-size:12px;">${isOwner?`No content yet for ${tierLabel}. <a onclick="nav('training-mgr',null)" style="color:var(--y);cursor:pointer;">Add content →</a>`:'No content in this section yet — check back soon.'}</div>`;
+      const emptyMsg=isOwner?'No content yet for '+tierLabel+'. <a onclick="nav(\'training-mgr\',null)" style="color:var(--y);cursor:pointer;">Add content →</a>':'No content in this section yet — check back soon.';
+      html+='<div style="text-align:center;padding:20px;color:var(--t3);font-size:12px;">'+emptyMsg+'</div>';
     } else {
       items.forEach((item,idx)=>{
         const isLast=idx===items.length-1;
-        html+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;${isLast?'':'border-bottom:1px solid var(--b1);}">
-          <div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">${item.emoji||TR_ICONS[item.type]||'📄'}</div>
-          <div style="flex:1;">
-            <div style="font-size:12px;font-weight:500;">${item.title}</div>
-            ${item.desc?`<div style="font-size:11px;color:var(--t2);margin-top:1px;">${item.desc}</div>`:''}
-          </div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            ${item.url?`<a href="${item.url}" target="_blank" rel="noopener" style="text-decoration:none;"><span class="bd bd-g" style="cursor:pointer;">Open ↗</span></a>`:'<span class="bd" style="background:var(--s4);color:var(--t3);">No link</span>'}
-            ${isOwner?`<button onclick="deleteTrainingItem(${TRAINING_ITEMS.indexOf(item)})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:2px;">✕</button>`:''}
-          </div>
-        </div>`;
+        const border=isLast?'':'border-bottom:1px solid var(--b1);';
+        const linkHtml=item.url?'<a href="'+item.url+'" target="_blank" rel="noopener" style="text-decoration:none;"><span class="bd bd-g" style="cursor:pointer;">Open ↗</span></a>':'<span class="bd" style="background:var(--s4);color:var(--t3);">No link</span>';
+        const deleteBtn=isOwner?'<button onclick="deleteTrainingItem('+TRAINING_ITEMS.indexOf(item)+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:2px;">✕</button>':'';
+        const descHtml=item.desc?'<div style="font-size:11px;color:var(--t2);margin-top:1px;">'+item.desc+'</div>':'';
+        html+='<div style="display:flex;align-items:center;gap:10px;padding:9px 0;'+border+'">'
+          +'<div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">'+(item.emoji||TR_ICONS[item.type]||'📄')+'</div>'
+          +'<div style="flex:1;"><div style="font-size:12px;font-weight:500;">'+item.title+'</div>'+descHtml+'</div>'
+          +'<div style="display:flex;gap:6px;align-items:center;">'+linkHtml+deleteBtn+'</div>'
+          +'</div>';
       });
     }
     html+='</div>';

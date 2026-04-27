@@ -1110,6 +1110,85 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
   </div>
 </div>
 
+<!-- CAR RIDES -->
+<div id="page-carrides" class="pg">
+  <div class="pgt">Car rides 🚗</div>
+  <div class="pgs" id="cr-sub">Daily assignment board · auto-pulled from attendance</div>
+
+  <!-- Date selector + action bar -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <input type="date" id="cr-date" style="background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 10px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/>
+      <button class="btn btn-g" onclick="loadCarRidesForDate()">Load</button>
+    </div>
+    <button class="btn btn-p" onclick="openAddRideModal()">＋ Add ride</button>
+  </div>
+
+  <!-- Attendance summary bar -->
+  <div id="cr-att-bar" style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <div style="font-size:12px;color:var(--t2);">👥 Present today:</div>
+    <div id="cr-present-chips" style="display:flex;flex-wrap:wrap;gap:5px;flex:1;"><span style="font-size:11px;color:var(--t3);">Loading attendance...</span></div>
+    <div id="cr-absent-chips" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+  </div>
+
+  <!-- Ride cards board -->
+  <div id="cr-board" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:16px;">
+    <div style="border:2px dashed var(--b2);border-radius:var(--r2);padding:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t3);font-size:12px;min-height:140px;" onclick="openAddRideModal()">
+      ＋ Add first ride
+    </div>
+  </div>
+
+  <!-- Unassigned reps bar -->
+  <div id="cr-unassigned-bar" style="display:none;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--r2);padding:10px 14px;margin-bottom:14px;">
+    <div style="font-size:11px;font-weight:600;color:var(--amber);margin-bottom:6px;">⚠ Not yet assigned:</div>
+    <div id="cr-unassigned-list" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+  </div>
+
+  <!-- Save button -->
+  <div style="display:flex;gap:10px;align-items:center;">
+    <button class="btn btn-p" style="padding:10px 24px;font-size:13px;font-weight:600;" onclick="saveCarRides()">💾 Save today's rides</button>
+    <div id="cr-save-msg" style="font-size:11px;color:#86EFAC;display:none;"></div>
+  </div>
+</div>
+
+<!-- ADD RIDE MODAL -->
+<div class="modal-bg" id="add-ride-modal">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-hd">
+      <div class="modal-title">New ride assignment</div>
+      <button class="modal-x" onclick="closeAddRideModal()">✕</button>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Location</div>
+      <select id="arm-location" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:8px 10px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
+        <option value="">Select a store...</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Assign reps (1–3)</div>
+      <div id="arm-rep-list" style="display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto;"></div>
+    </div>
+
+    <div style="margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Driver</div>
+      <select id="arm-driver" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:8px 10px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
+        <option value="">Select driver (optional)...</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Drop-off reps <span style="font-weight:400;text-transform:none;">(needs a ride to this location)</span></div>
+      <div id="arm-dropoff-list" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+    </div>
+
+    <div id="arm-route-info" style="display:none;background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.15);border-radius:var(--r1);padding:8px 10px;font-size:11px;color:var(--blue);margin-bottom:12px;"></div>
+
+    <button class="btn btn-p" style="width:100%;justify-content:center;padding:10px;" onclick="confirmAddRide()">Add to board</button>
+  </div>
+</div>
+
 <!-- ORG CHART -->
 <!-- TEAM TAB -->
 <div id="page-org" class="pg">
@@ -1908,6 +1987,7 @@ function buildSidebar(role){
   <div class="sbg">
     <div class="sbg-lbl">Owner</div>
     <div class="sbi" onclick="nav('org',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="3" r="2"/><circle cx="2.5" cy="10" r="2"/><circle cx="11.5" cy="10" r="2"/><path d="M7 5v3M7 8l-4.5 2M7 8l4.5 2"/></svg>My team</div>
+    <div class="sbi" onclick="nav('carrides',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="5" width="12" height="6" rx="1.5"/><path d="M3 5l1.5-2.5h5L11 5"/><circle cx="4" cy="11" r="1.2"/><circle cx="10" cy="11" r="1.2"/></svg>Car rides</div>
     <div class="sbi" onclick="nav('bulletin',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M4.5 5.5h5M4.5 7.5h5M4.5 9.5h3"/></svg>Weekly bulletin</div>
     <div class="sbi" onclick="nav('admin',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5.5" cy="4.5" r="2"/><path d="M1 12c0-2.8 2-5 4.5-5s4.5 2.2 4.5 5"/><path d="M10 7l1.5 1.5L14 6"/></svg>Rep management</div>
     <div class="sbi" onclick="nav('training-mgr',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4.5h10M4 7.5h6M5.5 10.5h3"/><circle cx="11" cy="3" r="1.5"/></svg>Training vault mgr</div>
@@ -3488,6 +3568,7 @@ function nav(id,btn){
   if(id==='scorecard')_safe('renderScorecard',renderScorecard);
   if(id==='recruit'){_safe('renderCandidates',renderCandidates);_safe('updateDropoffIntel',updateDropoffIntel);}
   if(id==='org')_safe('buildOrgChart',buildOrgChart);
+  if(id==='carrides')_safe('initCarRides',initCarRides);
   if(id==='bulletin')_safe('renderBulletin',()=>renderBulletin('office'));
   console.log('[FPI OS] nav:',id,'complete');
 }
@@ -4398,6 +4479,276 @@ function demoReset(){
     msg.style.display='block';
     msg.style.color='#86EFAC';
     msg.textContent='✓ Demo reset complete — localStorage and Supabase cleared. Fresh start!';
+  }
+}
+
+// CAR RIDES
+var CR_RIDES = [];
+var CR_EDITING = null;
+var CR_DATE = null;
+
+function initCarRides(){
+  const todayStr = new Date().toISOString().slice(0,10);
+  const dateEl = document.getElementById('cr-date');
+  if(dateEl && !dateEl.value) dateEl.value = todayStr;
+  CR_DATE = dateEl?.value || todayStr;
+  loadCarRidesForDate();
+}
+
+async function loadCarRidesForDate(){
+  const dateEl = document.getElementById('cr-date');
+  CR_DATE = dateEl?.value || new Date().toISOString().slice(0,10);
+  renderPresentReps(CR_DATE);
+  try {
+    const {data,error} = await sb.from('car_rides').select('*').eq('owner_id',U.id).eq('ride_date',CR_DATE).order('created_at',{ascending:true});
+    if(error) throw error;
+    CR_RIDES = (data||[]).map(function(r){
+      return {id:r.id,location:r.location_name,address:r.location_address||'',reps:r.rep_names||[],driver:r.driver_name||'',dropoffs:r.dropoff_reps||[],status:r.status||'planned'};
+    });
+  } catch(e){ console.warn('[CR] load error:',e.message); CR_RIDES=[]; }
+  renderCarBoard();
+}
+
+function renderPresentReps(dateStr){
+  const presentEl=document.getElementById('cr-present-chips');
+  if(!presentEl) return;
+  const present=ATT_LOG.filter(function(l){return l.date===dateStr&&l.type==='in';});
+  const names=[...new Set(present.map(function(l){return l.name;}))];
+  if(names.length===0){presentEl.innerHTML='<span style="font-size:11px;color:var(--t3);">No check-ins for this date</span>';return;}
+  presentEl.innerHTML=names.map(function(name){
+    const e=present.find(function(l){return l.name===name;});
+    const col=e?.late?'var(--amber)':'var(--green)';
+    const bg=e?.late?'rgba(245,158,11,.1)':'rgba(34,197,94,.1)';
+    return '<span style="font-size:11px;padding:3px 8px;border-radius:20px;background:'+bg+';color:'+col+';font-weight:500;">'+name+(e?.late?' ⚠':'')+'</span>';
+  }).join('');
+  const sub=document.getElementById('cr-sub');
+  if(sub) sub.textContent=names.length+' reps present · assign to locations below';
+}
+
+function getPresentRepsForDate(dateStr){
+  const p=ATT_LOG.filter(function(l){return l.date===dateStr&&l.type==='in';});
+  return [...new Set(p.map(function(l){return l.name;}))];
+}
+
+function renderCarBoard(){
+  const board=document.getElementById('cr-board');
+  if(!board) return;
+  if(CR_RIDES.length===0){
+    board.innerHTML='<div style="border:2px dashed var(--b2);border-radius:var(--r2);padding:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t3);font-size:12px;min-height:140px;" onclick="openAddRideModal()">＋ Add first ride</div>';
+    renderUnassigned();return;
+  }
+  board.innerHTML=CR_RIDES.map(function(ride,idx){
+    const repsHtml=ride.reps.map(function(rep){
+      const ini=rep.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+      const isDriver=rep===ride.driver;
+      const isDrop=ride.dropoffs&&ride.dropoffs.includes(rep);
+      return '<div style="display:flex;align-items:center;gap:6px;padding:6px 0;border-bottom:1px solid var(--b1);">'
+        +'<div style="width:24px;height:24px;border-radius:50%;background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--t2);">'+ini+'</div>'
+        +'<div style="flex:1;font-size:12px;font-weight:500;">'+rep+'</div>'
+        +(isDriver?'<span title="Driver" style="font-size:11px;">🚗</span>':'')
+        +(isDrop?'<span title="Needs drop-off" style="font-size:11px;">📍</span>':'')
+        +'</div>';
+    }).join('');
+    const sc=ride.status==='active'?'var(--green)':ride.status==='done'?'var(--t3)':'var(--blue)';
+    const sl=ride.status==='active'?'Active':ride.status==='done'?'Done':'Planned';
+    return '<div style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);padding:13px 14px;">'
+      +'<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:6px;">'
+      +'<div><div style="font-size:13px;font-weight:700;">📍 '+ride.location+'</div>'
+      +(ride.address?'<div style="font-size:10px;color:var(--t3);margin-top:2px;">'+ride.address+'</div>':'')
+      +'</div><span style="font-size:9px;padding:2px 7px;border-radius:20px;background:'+sc+'22;color:'+sc+';white-space:nowrap;">'+sl+'</span></div>'
+      +'<div style="margin-bottom:10px;">'+repsHtml+'</div>'
+      +'<div style="display:flex;gap:6px;">'
+      +'<button onclick="editRide('+idx+')" style="flex:1;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:5px;font-size:11px;color:var(--t2);cursor:pointer;">Edit</button>'
+      +'<button onclick="removeRide('+idx+')" style="background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:5px 10px;font-size:11px;color:#FCA5A5;cursor:pointer;">✕</button>'
+      +'</div></div>';
+  }).join('')
+  +'<div style="border:2px dashed var(--b2);border-radius:var(--r2);padding:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t3);font-size:12px;min-height:80px;" onclick="openAddRideModal()">＋ Add ride</div>';
+  renderUnassigned();
+}
+
+function renderUnassigned(){
+  const present=getPresentRepsForDate(CR_DATE);
+  const assigned=CR_RIDES.reduce(function(a,r){return a.concat(r.reps);},[]);
+  const unassigned=present.filter(function(n){return !assigned.includes(n);});
+  const bar=document.getElementById('cr-unassigned-bar');
+  const list=document.getElementById('cr-unassigned-list');
+  if(!bar||!list)return;
+  if(unassigned.length===0){bar.style.display='none';return;}
+  bar.style.display='block';
+  list.innerHTML=unassigned.map(function(n){return '<span style="font-size:11px;padding:3px 8px;border-radius:20px;background:rgba(245,158,11,.1);color:var(--amber);font-weight:500;">'+n+'</span>';}).join('');
+}
+
+function openAddRideModal(editIdx){
+  CR_EDITING=editIdx!==undefined?editIdx:null;
+  const modal=document.getElementById('add-ride-modal');
+  const title=modal?.querySelector('.modal-title');
+  if(title) title.textContent=CR_EDITING!==null?'Edit ride':'New ride assignment';
+
+  const locSel=document.getElementById('arm-location');
+  if(locSel) locSel.innerHTML='<option value="">Select a store...</option>'+TERRITORY.map(function(t){return '<option value="'+t.name+'" data-addr="'+(t.address||t.city||t.name)+'">'+t.name+(t.city?' — '+t.city:'')+'</option>';}).join('');
+
+  const present=getPresentRepsForDate(CR_DATE);
+  const repList=document.getElementById('arm-rep-list');
+  if(repList){
+    if(present.length===0){
+      repList.innerHTML='<div style="font-size:11px;color:var(--t3);">No check-ins yet. You can still assign reps manually.</div>'
+        +'<input type="text" id="arm-manual-rep" placeholder="Type rep name and press Enter" style="width:100%;margin-top:6px;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;" onkeydown="if(event.key===\'Enter\')addManualRep()"/>'
+        +'<div id="arm-manual-chips" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;"></div>';
+    } else {
+      repList.innerHTML=present.map(function(name){
+        return '<label style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:var(--r1);cursor:pointer;" onmouseover="this.style.background=\'var(--s3)\'" onmouseout="this.style.background=\'\'">'
+          +'<input type="checkbox" value="'+name+'" style="width:14px;height:14px;accent-color:var(--y);"><span style="font-size:12px;">'+name+'</span></label>';
+      }).join('');
+    }
+  }
+
+  if(CR_EDITING!==null){
+    const ride=CR_RIDES[CR_EDITING];
+    if(locSel) locSel.value=ride.location;
+    const cbs=repList?.querySelectorAll('input[type="checkbox"]');
+    cbs?.forEach(function(cb){if(ride.reps.includes(cb.value))cb.checked=true;});
+    updateDriverDropdown();
+    const ds=document.getElementById('arm-driver');
+    if(ds) ds.value=ride.driver||'';
+    updateDropoffList();
+  }
+
+  repList?.querySelectorAll('input[type="checkbox"]').forEach(function(cb){
+    cb.addEventListener('change',function(){updateDriverDropdown();updateDropoffList();});
+  });
+  if(locSel) locSel.addEventListener('change',checkRouteDistance);
+  if(modal) modal.classList.add('show');
+}
+
+function addManualRep(){
+  const inp=document.getElementById('arm-manual-rep');
+  const chips=document.getElementById('arm-manual-chips');
+  if(!inp||!chips||!inp.value.trim())return;
+  const name=inp.value.trim();
+  const chip=document.createElement('span');
+  chip.style.cssText='font-size:11px;padding:3px 8px;border-radius:20px;background:var(--s4);color:var(--t1);display:flex;align-items:center;gap:4px;cursor:pointer;';
+  chip.innerHTML=name+' <span onclick="this.parentElement.remove();updateDriverDropdown();updateDropoffList();">✕</span>';
+  chip.dataset.name=name;
+  chips.appendChild(chip);
+  inp.value='';
+  updateDriverDropdown();
+  updateDropoffList();
+}
+
+function closeAddRideModal(){
+  const modal=document.getElementById('add-ride-modal');
+  if(modal) modal.classList.remove('show');
+  CR_EDITING=null;
+  const locSel=document.getElementById('arm-location');
+  if(locSel) locSel.value='';
+  document.getElementById('arm-rep-list')?.querySelectorAll('input[type="checkbox"]').forEach(function(cb){cb.checked=false;});
+  const ri=document.getElementById('arm-route-info');
+  if(ri) ri.style.display='none';
+}
+
+function getCheckedReps(){
+  const cbs=document.getElementById('arm-rep-list')?.querySelectorAll('input[type="checkbox"]:checked');
+  const checked=cbs?Array.from(cbs).map(function(cb){return cb.value;}):[]; 
+  // Also get manual chips
+  const chips=document.getElementById('arm-manual-chips')?.querySelectorAll('span[data-name]');
+  const manual=chips?Array.from(chips).map(function(c){return c.dataset.name;}):[]; 
+  return [...new Set(checked.concat(manual))];
+}
+
+function getDropoffReps(){
+  const cbs=document.getElementById('arm-dropoff-list')?.querySelectorAll('input[type="checkbox"]:checked');
+  return cbs?Array.from(cbs).map(function(cb){return cb.value;}):[]; 
+}
+
+function updateDriverDropdown(){
+  const checked=getCheckedReps();
+  const ds=document.getElementById('arm-driver');
+  if(!ds) return;
+  const cur=ds.value;
+  ds.innerHTML='<option value="">No driver assigned</option>'+checked.map(function(n){return '<option value="'+n+'">'+n+'</option>';}).join('');
+  if(cur&&checked.includes(cur)) ds.value=cur;
+}
+
+function updateDropoffList(){
+  const checked=getCheckedReps();
+  const el=document.getElementById('arm-dropoff-list');
+  if(!el) return;
+  if(checked.length<2){el.innerHTML='<span style="font-size:11px;color:var(--t3);">Assign 2+ reps to enable drop-offs</span>';return;}
+  el.innerHTML=checked.map(function(n){
+    return '<label style="display:flex;align-items:center;gap:5px;font-size:11px;padding:4px 8px;border-radius:20px;background:var(--s3);cursor:pointer;">'
+      +'<input type="checkbox" value="'+n+'" style="accent-color:var(--amber);"> '+n+' needs drop-off</label>';
+  }).join('');
+}
+
+async function checkRouteDistance(){
+  const locSel=document.getElementById('arm-location');
+  const ri=document.getElementById('arm-route-info');
+  if(!locSel||!ri) return;
+  const opt=locSel.options[locSel.selectedIndex];
+  const addr=opt?.dataset?.addr||'';
+  if(!addr){ri.style.display='none';return;}
+  const others=CR_RIDES.filter(function(r){return r.location!==locSel.value&&r.address;}).slice(0,3);
+  if(others.length===0){ri.style.display='none';return;}
+  try {
+    const ORS='5b3ce3597851110001cf62484a1c37aa3f1a4f8b96f3d7b3e3daa0f4';
+    const g1=await (await fetch('https://api.openrouteservice.org/geocode/search?api_key='+ORS+'&text='+encodeURIComponent(addr)+'&size=1')).json();
+    if(!g1.features?.length){ri.style.display='none';return;}
+    const [lng1,lat1]=g1.features[0].geometry.coordinates;
+    const results=[];
+    for(var i=0;i<others.length;i++){
+      const g2=await (await fetch('https://api.openrouteservice.org/geocode/search?api_key='+ORS+'&text='+encodeURIComponent(others[i].address)+'&size=1')).json();
+      if(!g2.features?.length) continue;
+      const [lng2,lat2]=g2.features[0].geometry.coordinates;
+      const dist=getDistanceMeters(lat1,lng1,lat2,lng2);
+      const mins=Math.round(dist/1000/50*60);
+      results.push(others[i].location+' ~'+mins+'min');
+    }
+    if(results.length>0){ri.style.display='block';ri.innerHTML='🗺 Distance to other rides today: '+results.join(' · ');}
+    else ri.style.display='none';
+  } catch(e){ri.style.display='none';}
+}
+
+function confirmAddRide(){
+  const locSel=document.getElementById('arm-location');
+  const opt=locSel?.options[locSel.selectedIndex];
+  const location=locSel?.value;
+  const address=opt?.dataset?.addr||'';
+  const reps=getCheckedReps();
+  const driver=document.getElementById('arm-driver')?.value||'';
+  const dropoffs=getDropoffReps();
+  if(!location){alert('Select a location.');return;}
+  if(reps.length===0){alert('Assign at least one rep.');return;}
+  if(reps.length>3){alert('Max 3 reps per ride.');return;}
+  const ride={location,address,reps,driver,dropoffs,status:'planned',id:null};
+  if(CR_EDITING!==null) CR_RIDES[CR_EDITING]={...CR_RIDES[CR_EDITING],...ride};
+  else CR_RIDES.push(ride);
+  closeAddRideModal();
+  renderCarBoard();
+}
+
+function editRide(idx){openAddRideModal(idx);}
+
+function removeRide(idx){
+  if(!confirm('Remove this ride?')) return;
+  CR_RIDES.splice(idx,1);
+  renderCarBoard();
+}
+
+async function saveCarRides(){
+  const msg=document.getElementById('cr-save-msg');
+  if(!U){if(msg){msg.style.display='block';msg.style.color='#FCA5A5';msg.textContent='Not logged in.';}return;}
+  try {
+    await sb.from('car_rides').delete().eq('owner_id',U.id).eq('ride_date',CR_DATE);
+    if(CR_RIDES.length>0){
+      const rows=CR_RIDES.map(function(r){
+        return {owner_id:U.id,ride_date:CR_DATE,location_name:r.location,location_address:r.address||'',rep_names:r.reps,driver_name:r.driver||'',dropoff_reps:r.dropoffs||[],status:r.status||'planned'};
+      });
+      const {error}=await sb.from('car_rides').insert(rows);
+      if(error) throw error;
+    }
+    if(msg){msg.style.display='block';msg.style.color='#86EFAC';msg.textContent='✓ Saved — '+CR_RIDES.length+' ride'+(CR_RIDES.length!==1?'s':'')+' for '+CR_DATE+'.';setTimeout(function(){msg.style.display='none';},3000);}
+  } catch(e){
+    if(msg){msg.style.display='block';msg.style.color='#FCA5A5';msg.textContent='Save error: '+e.message;}
   }
 }
 

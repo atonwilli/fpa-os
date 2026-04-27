@@ -402,18 +402,81 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 
 <!-- TRAINING -->
 <div id="page-training" class="pg">
-  <div class="pgt">Training vault</div><div class="pgs">AE modules active · expands as you promote</div>
-  <div class="card">
-    <div class="slbl">Account Executive — unlocked</div>
-    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);"><div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📋</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Sales fundamentals & pitch mastery</div><div style="font-size:11px;color:var(--t2);">Scripts, objection handling, store etiquette</div></div><span class="bd bd-g">Open</span></div>
-    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);"><div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🎯</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Daily drill sheets & practice routines</div><div style="font-size:11px;color:var(--t2);">Warm-up drills, roleplay guides</div></div><span class="bd bd-g">Open</span></div>
-    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);"><div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🗺️</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">First 30 days success roadmap</div><div style="font-size:11px;color:var(--t2);">Day-by-day expectations, milestones</div></div><span class="bd bd-g">Open</span></div>
-    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;"><div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">📱</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Product knowledge — Spectrum</div><div style="font-size:11px;color:var(--t2);">Internet, TV, Mobile tiers · wire values per service</div></div><span class="bd bd-g">Open</span></div>
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:9px;">
+    <div><div class="pgt">Training vault</div><div class="pgs">Role-gated content · you control what each level sees</div></div>
+    <div id="owner-training-btn" style="display:none;"><button class="btn btn-p" onclick="nav('training-mgr',null)">+ Manage content</button></div>
   </div>
-  <div class="card" style="opacity:.3;">
-    <div class="slbl">Lead Trainer — locked</div>
-    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);"><div style="width:32px;height:32px;border-radius:var(--r1);background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:14px;">🔒</div><div><div style="font-size:12px;font-weight:500;color:var(--t3);">Team management & leadership systems</div></div></div>
-    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;"><div style="width:32px;height:32px;border-radius:var(--r1);background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:14px;">🔒</div><div><div style="font-size:12px;font-weight:500;color:var(--t3);">Recruiting fundamentals</div></div></div>
+  <div id="training-content">
+    <!-- dynamically rendered based on role + TRAINING_ITEMS -->
+  </div>
+</div>
+
+<!-- TRAINING MANAGER (owner only) -->
+<div id="page-training-mgr" class="pg">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:9px;">
+    <div><div class="pgt">Training vault manager</div><div class="pgs">Add, edit, and organize content by role tier · reps only see what they've unlocked</div></div>
+    <button class="btn btn-g" onclick="nav('training',null)">← Back to vault</button>
+  </div>
+
+  <div class="card" style="background:rgba(255,224,51,.04);border-color:rgba(255,224,51,.13);">
+    <div style="font-size:13px;font-weight:600;color:var(--y);margin-bottom:4px;">How it works</div>
+    <div style="font-size:12px;color:var(--t2);line-height:1.7;">
+      Add training items below with a title, description, link (Google Doc, YouTube, PDF, anything), role tier, and content type.
+      AEs see AE content only. LTs see AE + LT content. JPMs see all below + JPM. PMs see everything.
+      Paste a Google Doc share link, YouTube link, or any URL — reps tap Open and it launches in a new tab.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="slbl" style="margin-bottom:12px;">Add new training item</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
+      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Title</div><input type="text" id="tr-title" placeholder="e.g. Sales fundamentals & pitch mastery" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Short description</div><input type="text" id="tr-desc" placeholder="e.g. Scripts, objection handling, etiquette" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+    </div>
+    <div style="margin-bottom:9px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Link (Google Doc, YouTube, PDF, any URL)</div><input type="url" id="tr-url" placeholder="https://docs.google.com/... or https://youtube.com/..." style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:12px;">
+      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Role tier (who sees this)</div>
+        <select id="tr-role" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
+          <option value="ae">AE (everyone)</option>
+          <option value="lt">Lead Trainer +</option>
+          <option value="jpm">JPM +</option>
+          <option value="pm">PM only</option>
+        </select>
+      </div>
+      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Content type</div>
+        <select id="tr-type" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
+          <option value="doc">📋 Document / Script</option>
+          <option value="video">🎬 Video</option>
+          <option value="drill">🎯 Drill sheet</option>
+          <option value="map">🗺️ Roadmap / Guide</option>
+          <option value="product">📱 Product knowledge</option>
+          <option value="pitch">💬 Pitch sheet</option>
+          <option value="objection">🛡️ Objection handling</option>
+          <option value="other">📄 Other</option>
+        </select>
+      </div>
+      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Emoji icon</div>
+        <input type="text" id="tr-emoji" placeholder="📋" maxlength="2" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:20px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;text-align:center;"/>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-p" onclick="addTrainingItem()">Add to vault</button>
+      <button class="btn btn-g" onclick="clearTrForm()">Clear</button>
+    </div>
+    <div id="tr-msg" style="display:none;font-size:11px;margin-top:8px;color:#86EFAC;"></div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <div class="slbl" style="margin-bottom:0;">All training content (<span id="tr-count">0</span> items)</div>
+      <div style="display:flex;gap:5px;">
+        <button class="btn btn-g stab-btn active-tab" style="font-size:10px;padding:4px 10px;" onclick="filterTr('all',this)">All</button>
+        <button class="btn btn-g stab-btn" style="font-size:10px;padding:4px 10px;" onclick="filterTr('ae',this)">AE</button>
+        <button class="btn btn-g stab-btn" style="font-size:10px;padding:4px 10px;" onclick="filterTr('lt',this)">LT</button>
+        <button class="btn btn-g stab-btn" style="font-size:10px;padding:4px 10px;" onclick="filterTr('jpm',this)">JPM</button>
+      </div>
+    </div>
+    <div id="tr-mgr-list"></div>
   </div>
 </div>
 
@@ -866,6 +929,7 @@ function loadLocal(){
     const ca=localStorage.getItem('fpa_cands');if(ca)CANDIDATES=JSON.parse(ca);
     const an=localStorage.getItem('fpa_ann');if(an)ANNOUNCEMENTS=JSON.parse(an);
     const td=localStorage.getItem('fpa_today_'+today());if(td){const d=JSON.parse(td);todaySales=d.sales||[];todayWire=d.wire||0;todayCloses=d.closes||0;todayBells=d.bells||0;}
+    const tr=localStorage.getItem('fpa_training');if(tr)TRAINING_ITEMS=JSON.parse(tr);
   }catch(e){}
 }
 function saveLocal(){
@@ -956,6 +1020,7 @@ function showApp(){
   renderFieldStoreSelect();
   renderBulletin('office');
   if(['owner','pm'].includes(role)){loadRepsTable();buildOrgChart();renderActiveAnnouncements();}
+  renderTrainingVault();
   if(todayCloses>0)renderTodaySales();
   // Show announcement
   if(ANNOUNCEMENTS.length>0){
@@ -1033,6 +1098,7 @@ function buildSidebar(role){
     <div class="sbi" onclick="nav('org',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="3" r="2"/><circle cx="2.5" cy="10" r="2"/><circle cx="11.5" cy="10" r="2"/><path d="M7 5v3M7 8l-4.5 2M7 8l4.5 2"/></svg>Org chart</div>
     <div class="sbi" onclick="nav('bulletin',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M4.5 5.5h5M4.5 7.5h5M4.5 9.5h3"/></svg>Weekly bulletin</div>
     <div class="sbi" onclick="nav('admin',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5.5" cy="4.5" r="2"/><path d="M1 12c0-2.8 2-5 4.5-5s4.5 2.2 4.5 5"/><path d="M10 7l1.5 1.5L14 6"/></svg>Rep management</div>
+    <div class="sbi" onclick="nav('training-mgr',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4.5h10M4 7.5h6M5.5 10.5h3"/><circle cx="11" cy="3" r="1.5"/></svg>Training vault mgr</div>
     <div class="sbi" onclick="nav('settings',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="2.5"/><path d="M7 1.5v1M7 11.5v1M1.5 7h1M11.5 7h1M3.2 3.2l.7.7M10.1 10.1l.7.7"/></svg>Settings</div>
   </div>`:''}
   <div class="sbfoot">
@@ -1568,7 +1634,9 @@ function nav(id,btn){
   if(btn&&!btn.classList.contains('lk'))btn.classList.add('active');
   else document.querySelectorAll('.sbi').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');});
   if(id==='admin')loadRepsTable();
-  if(id==='settings'){setStab('criteria',document.querySelector('.stab-btn'));}
+  if(id==='settings'){const firstBtn=document.querySelector('#stab-criteria')?.previousElementSibling;setStab('criteria',document.querySelector('.stab-btn'));}
+  if(id==='training')renderTrainingVault();
+  if(id==='training-mgr')renderTrainingMgrList();
   if(id==='recruit')renderCandidates();
 }
 
@@ -1624,6 +1692,161 @@ document.addEventListener('click',e=>{
   const m=document.getElementById('ctx-menu');
   if(m&&!m.contains(e.target))m.classList.remove('show');
 });
+
+// TRAINING VAULT
+var TRAINING_ITEMS=[];
+var TR_FILTER='all';
+const ROLE_ORDER={ae:0,lt:1,jpm:2,pm:3,owner:4};
+const TR_ICONS={doc:'📋',video:'🎬',drill:'🎯',map:'🗺️',product:'📱',pitch:'💬',objection:'🛡️',other:'📄'};
+const ROLE_LABELS={ae:'AE',lt:'Lead Trainer',jpm:'JPM',pm:'PM'};
+const ROLE_COLORS={ae:'var(--blue)',lt:'var(--teal)',jpm:'var(--amber)',pm:'var(--red)'};
+
+function loadTraining(){
+  try{const t=localStorage.getItem('fpa_training');if(t)TRAINING_ITEMS=JSON.parse(t);}catch(e){}
+}
+function saveTraining(){localStorage.setItem('fpa_training',JSON.stringify(TRAINING_ITEMS));}
+
+function renderTrainingVault(){
+  const role=P?.role||'ae';
+  const isOwner=['owner','pm'].includes(role);
+  // Show/hide owner button
+  const ownerBtn=document.getElementById('owner-training-btn');
+  if(ownerBtn)ownerBtn.style.display=isOwner?'block':'none';
+  const el=document.getElementById('training-content');if(!el)return;
+
+  // Role unlock levels — rep sees their tier and below
+  const myLevel=ROLE_ORDER[role]||0;
+  const tiers=['ae','lt','jpm','pm'];
+  const unlockedTiers=tiers.filter(t=>ROLE_ORDER[t]<=myLevel);
+  const lockedTiers=tiers.filter(t=>ROLE_ORDER[t]>myLevel&&ROLE_ORDER[t]<=3);
+
+  let html='';
+
+  // Unlocked tiers
+  unlockedTiers.forEach(tier=>{
+    const items=TRAINING_ITEMS.filter(i=>i.role===tier);
+    const tierLabel=tier==='ae'?'Account Executive':tier==='lt'?'Lead Trainer':tier==='jpm'?'JPM':tier==='pm'?'PM':'All roles';
+    html+=`<div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="slbl" style="margin-bottom:0;">${tierLabel} — unlocked</div>
+        <span class="bd bd-g">✓ Access granted</span>
+      </div>`;
+    if(items.length===0){
+      html+=`<div style="text-align:center;padding:20px;color:var(--t3);font-size:12px;">${isOwner?`No content yet for ${tierLabel}. <a onclick="nav('training-mgr',null)" style="color:var(--y);cursor:pointer;">Add content →</a>`:'No content in this section yet — check back soon.'}</div>`;
+    } else {
+      items.forEach((item,idx)=>{
+        const isLast=idx===items.length-1;
+        html+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;${isLast?'':'border-bottom:1px solid var(--b1);}">
+          <div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">${item.emoji||TR_ICONS[item.type]||'📄'}</div>
+          <div style="flex:1;">
+            <div style="font-size:12px;font-weight:500;">${item.title}</div>
+            ${item.desc?`<div style="font-size:11px;color:var(--t2);margin-top:1px;">${item.desc}</div>`:''}
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;">
+            ${item.url?`<a href="${item.url}" target="_blank" rel="noopener" style="text-decoration:none;"><span class="bd bd-g" style="cursor:pointer;">Open ↗</span></a>`:'<span class="bd" style="background:var(--s4);color:var(--t3);">No link</span>'}
+            ${isOwner?`<button onclick="deleteTrainingItem(${TRAINING_ITEMS.indexOf(item)})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:2px;">✕</button>`:''}
+          </div>
+        </div>`;
+      });
+    }
+    html+='</div>';
+  });
+
+  // Locked tiers — show what's coming
+  if(lockedTiers.length>0&&!isOwner){
+    lockedTiers.forEach(tier=>{
+      const tierLabel=tier==='lt'?'Lead Trainer':tier==='jpm'?'JPM':tier==='pm'?'Project Manager':'Upper tier';
+      const items=TRAINING_ITEMS.filter(i=>i.role===tier);
+      if(items.length>0){
+        html+=`<div class="card" style="opacity:.3;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <div class="slbl" style="margin-bottom:0;">${tierLabel} — locked</div>
+            <span class="bd bd-r">🔒 Locked</span>
+          </div>`;
+        items.forEach(item=>{
+          html+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--b1);">
+            <div style="width:32px;height:32px;border-radius:var(--r1);background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:14px;">🔒</div>
+            <div><div style="font-size:12px;font-weight:500;color:var(--t3);">${item.title}</div></div>
+          </div>`;
+        });
+        html+='</div>';
+      }
+    });
+  }
+
+  if(html===''){
+    html=`<div class="card"><div class="empty"><div class="icon">📚</div><div class="title">Training vault is empty</div><div class="sub">${isOwner?`<a onclick="nav('training-mgr',null)" style="color:var(--y);cursor:pointer;">Add your first training item →</a>`:'Your owner will add training content here. Check back soon.'}</div></div></div>`;
+  }
+  el.innerHTML=html;
+}
+
+function addTrainingItem(){
+  const title=document.getElementById('tr-title')?.value.trim();
+  const desc=document.getElementById('tr-desc')?.value.trim();
+  const url=document.getElementById('tr-url')?.value.trim();
+  const role=document.getElementById('tr-role')?.value||'ae';
+  const type=document.getElementById('tr-type')?.value||'doc';
+  const emoji=document.getElementById('tr-emoji')?.value.trim()||TR_ICONS[type]||'📄';
+  const msg=document.getElementById('tr-msg');
+  if(!title){if(msg){msg.style.display='block';msg.style.color='#FCA5A5';msg.textContent='Enter a title.';}return;}
+  TRAINING_ITEMS.push({id:Date.now(),title,desc,url,role,type,emoji,created:new Date().toLocaleDateString()});
+  saveTraining();
+  renderTrainingMgrList();
+  clearTrForm();
+  if(msg){msg.style.display='block';msg.style.color='#86EFAC';msg.textContent='✓ Added to vault. Reps with '+ROLE_LABELS[role]+' access can see it now.';setTimeout(()=>msg.style.display='none',3000);}
+}
+
+function deleteTrainingItem(i){
+  if(confirm('Remove "'+TRAINING_ITEMS[i].title+'" from the vault?')){
+    TRAINING_ITEMS.splice(i,1);
+    saveTraining();
+    renderTrainingVault();
+    renderTrainingMgrList();
+  }
+}
+
+function clearTrForm(){
+  ['tr-title','tr-desc','tr-url','tr-emoji'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+
+function filterTr(f,btn){
+  TR_FILTER=f;
+  document.querySelectorAll('#page-training-mgr .stab-btn').forEach(b=>{b.classList.remove('active-tab');b.style.background='var(--s3)';b.style.color='var(--t2)';});
+  if(btn){btn.classList.add('active-tab');btn.style.background='var(--y)';btn.style.color='var(--k)';}
+  renderTrainingMgrList();
+}
+
+function renderTrainingMgrList(){
+  const el=document.getElementById('tr-mgr-list');if(!el)return;
+  const cnt=document.getElementById('tr-count');if(cnt)cnt.textContent=TRAINING_ITEMS.length;
+  const items=TR_FILTER==='all'?TRAINING_ITEMS:TRAINING_ITEMS.filter(i=>i.role===TR_FILTER);
+  if(items.length===0){
+    el.innerHTML='<div style="text-align:center;padding:24px;color:var(--t3);font-size:12px;">No items'+(TR_FILTER!=='all'?' for this role tier':'')+'.</div>';
+    return;
+  }
+  const grouped={};
+  items.forEach(item=>{if(!grouped[item.role])grouped[item.role]=['ae','lt','jpm','pm'];});
+  el.innerHTML=items.map((item,idx)=>{
+    const realIdx=TRAINING_ITEMS.indexOf(item);
+    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b1);">
+      <div style="width:32px;height:32px;border-radius:var(--r1);background:rgba(79,142,247,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">${item.emoji||'📄'}</div>
+      <div style="flex:1;">
+        <div style="font-size:12px;font-weight:500;">${item.title}</div>
+        <div style="display:flex;gap:8px;margin-top:3px;flex-wrap:wrap;">
+          <span class="bd" style="background:${ROLE_COLORS[item.role]}22;color:${ROLE_COLORS[item.role]};border:1px solid ${ROLE_COLORS[item.role]}44;">${ROLE_LABELS[item.role]||item.role}</span>
+          <span style="font-size:10px;color:var(--t3);">${TR_ICONS[item.type]||'📄'} ${item.type}</span>
+          ${item.url?`<span style="font-size:10px;color:var(--teal);">🔗 Has link</span>`:'<span style="font-size:10px;color:var(--t3);">No link</span>'}
+          <span style="font-size:10px;color:var(--t3);">Added ${item.created||'—'}</span>
+        </div>
+        ${item.desc?`<div style="font-size:11px;color:var(--t3);margin-top:2px;">${item.desc}</div>`:''}
+      </div>
+      <div style="display:flex;gap:6px;">
+        ${item.url?`<a href="${item.url}" target="_blank" rel="noopener" style="text-decoration:none;"><button class="btn btn-g" style="padding:4px 10px;font-size:10px;">Open ↗</button></a>`:''}
+        <button onclick="deleteTrainingItem(${realIdx})" class="btn btn-r" style="padding:4px 10px;font-size:10px;">Remove</button>
+      </div>
+    </div>`;
+  }).join('');
+}
 
 // BOOT
 boot();

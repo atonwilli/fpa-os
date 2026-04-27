@@ -4356,6 +4356,13 @@ function demoReset(){
   todaySales=[];todayWire=0;todayCloses=0;todayBells=0;
   CANDIDATES=[];ANNOUNCEMENTS=[];ATT_LOG=[];
   tc={s:0,t:0,p:0,c:0};
+  _sbTallyCache=null;_sbTallyCacheDate=null;
+
+  // Clear Supabase data for this user only
+  if(U){
+    sb.from('daily_tally').delete().eq('user_id',U.id).then(function(){});
+    sb.from('sales_log').delete().eq('user_id',U.id).then(function(){});
+  }
 
   // Reset UI elements
   const resetEls={
@@ -4367,18 +4374,16 @@ function demoReset(){
   Object.entries(resetEls).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.textContent=val;});
 
   // Reset check-in bars
-  ['home-att-label','att-status-label'].forEach(id=>{
+  ['home-att-label'].forEach(id=>{
     const el=document.getElementById(id);
     if(el){el.textContent='Not checked in today';el.style.color='';}
   });
-  ['home-att-sub','att-status-sub'].forEach(id=>{
+  ['home-att-sub'].forEach(id=>{
     const el=document.getElementById(id);
     if(el)el.textContent='Tap to log your arrival at the office';
   });
-  ['home-att-btn','att-checkin-btn'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el){el.textContent='📍 Check in';el.disabled=false;el.style.background='';el.style.color='';}
-  });
+  const hab=document.getElementById('home-att-btn');
+  if(hab){hab.textContent='📍 Check in';hab.disabled=false;hab.style.background='';hab.style.color='';}
 
   // Reset tally bars
   ['s','t','p','c'].forEach(k=>{
@@ -4392,7 +4397,7 @@ function demoReset(){
   if(msg){
     msg.style.display='block';
     msg.style.color='#86EFAC';
-    msg.textContent='✓ Demo reset complete. Everything looks fresh. Go crush it!';
+    msg.textContent='✓ Demo reset complete — localStorage and Supabase cleared. Fresh start!';
   }
 }
 

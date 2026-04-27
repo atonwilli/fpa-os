@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FPA OS</title>
+<title>FPI OS</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -243,11 +243,11 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 </style>
 </head>
 <body>
-<div id="loading" class="loading"><div class="loading-logo">FPA <span>OS</span></div><div class="spinner"></div><div class="loading-sub">Loading your dashboard...</div></div>
+<div id="loading" class="loading"><div class="loading-logo">FPI <span>OS</span></div><div class="spinner"></div><div class="loading-sub">Loading your dashboard...</div></div>
 <div class="auth-wrap" id="auth-wrap">
   <div class="auth-card">
-    <div class="auth-logo"><div class="auth-pip"></div>FPA <span>OS</span></div>
-    <div class="auth-tag">Growth Operating System · Front Page Agency</div>
+    <div class="auth-logo"><div class="auth-pip"></div>FPI <span>OS</span></div>
+    <div class="auth-tag">Front Page Intelligence · Sales OS</div>
     <div id="f-login">
       <div class="auth-h">Welcome back</div><div class="auth-s">Sign in to your account</div>
       <div class="ae" id="login-err"></div>
@@ -277,7 +277,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 </div>
 <div class="app" id="app">
   <header class="topbar">
-    <div class="logo"><div class="logo-pip"></div>FPA <span>OS</span></div>
+    <div class="logo"><div class="logo-pip"></div>FPI <span>OS</span></div>
     <div class="tsep"></div><div class="tctx" id="tctx">Loading...</div>
     <div class="tright">
       <div class="thm"><span class="thm-lbl">Dark</span><div class="tt" id="thm-tt" onclick="toggleTheme()"><div class="tt-t"></div></div><span class="thm-lbl">Light</span></div>
@@ -294,10 +294,13 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
     <button class="btn btn-p" onclick="nav('field',null)"><svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v2.5l2 1.5"/></svg>Start field day</button>
   </div>
   <div style="margin-bottom:14px;">
-    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-bottom:3px;"><span style="color:var(--blue);font-weight:500;" id="phase-lbl">Phase 1</span><span id="phase-pct">Day 1</span></div>
-    <div class="phbar"><div class="phfill" id="phase-fill" style="width:1%;"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-bottom:3px;cursor:pointer;" onclick="openRoadmapModal()">
+      <span style="color:var(--blue);font-weight:500;" id="phase-lbl">Phase 1</span>
+      <span id="phase-pct" style="color:var(--y);">Day 1 · tap to see full roadmap →</span>
+    </div>
+    <div class="phbar" style="cursor:pointer;" onclick="openRoadmapModal()"><div class="phfill" id="phase-fill" style="width:1%;"></div></div>
   </div>
-  <div class="ann"><div class="ann-dot"></div><div><div class="ann-ttl" id="ann-t">Welcome to FPA OS 🎉</div><div class="ann-body" id="ann-b">Your owner posts announcements here before each shift — targets, shoutouts, updates.</div></div></div>
+  <div class="ann"><div class="ann-dot"></div><div><div class="ann-ttl" id="ann-t">Welcome to FPA 🎉</div><div class="ann-body" id="ann-b">Your journey begins here. Check this space before every shift for targets, shoutouts, and updates from your leader.</div></div></div>
   <div class="g4">
     <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);" id="h-closes">0</div><div class="sl">Closes this week</div><div class="sd" id="h-closes-d" style="color:var(--t3);">Log your first sale</div></div>
     <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);" id="h-wire">$0</div><div class="sl">Wire this week</div><div class="sd" style="color:var(--t3);">Target: $<span id="wire-tgt-lbl">2,100</span></div></div>
@@ -388,17 +391,35 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
       </div>
       <div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.14);border-radius:var(--r1);padding:8px 11px;font-size:11px;color:#93BBFF;margin-top:9px;">Bell = <span id="bell-def-prog">2 customers + 3 services</span> in one day OR single sale ≥$400 wire.</div>
     </div>
-    <div class="card">
-      <div class="slbl">Elite daily benchmarks</div>
-      <div class="set-row" style="padding:8px 0;"><div><div class="set-name">Stops</div><div class="set-sub">Walk past per shift</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--blue);" id="bm-stops">100</div></div>
-      <div class="set-row" style="padding:8px 0;"><div><div class="set-name">Tabs</div><div class="set-sub">30% conversion</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--teal);" id="bm-tabs">30</div></div>
-      <div class="set-row" style="padding:8px 0;"><div><div class="set-name">Presentations</div><div class="set-sub">Full pitch to DM</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--amber);" id="bm-pres">15</div></div>
-      <div class="set-row" style="padding:8px 0;"><div><div class="set-name">Credit checks</div><div class="set-sub">7-8 to get 3-4 closes</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--t2);" id="bm-checks">7</div></div>
-      <div class="set-row" style="padding:8px 0;border:none;"><div><div class="set-name">Closes</div><div class="set-sub">Minimum per day</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--green);" id="bm-closes">3</div></div>
-      <div style="font-size:10px;color:var(--t3);margin-top:4px;">Set by your owner in Settings</div>
+    <div>
+      <div class="card" style="margin-bottom:12px;">
+        <div class="slbl">Elite daily benchmarks</div>
+        <div class="set-row" style="padding:8px 0;"><div><div class="set-name">Stops</div><div class="set-sub">Walk past per shift</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--blue);" id="bm-stops">100</div></div>
+        <div class="set-row" style="padding:8px 0;"><div><div class="set-name">Tabs</div><div class="set-sub">30% conversion</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--teal);" id="bm-tabs">30</div></div>
+        <div class="set-row" style="padding:8px 0;"><div><div class="set-name">Presentations</div><div class="set-sub">Full pitch to DM</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--amber);" id="bm-pres">15</div></div>
+        <div class="set-row" style="padding:8px 0;"><div><div class="set-name">Credit checks</div><div class="set-sub">7-8 to get 3-4 closes</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--t2);" id="bm-checks">7</div></div>
+        <div class="set-row" style="padding:8px 0;border:none;"><div><div class="set-name">Closes</div><div class="set-sub">Minimum per day</div></div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:20px;color:var(--green);" id="bm-closes">3</div></div>
+      </div>
+      <div class="card" style="margin-bottom:12px;">
+        <div class="slbl">LT → JPM criteria</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.8;margin-bottom:8px;">Hit all four simultaneously:</div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--s3);border-radius:var(--r1);"><span style="font-size:13px;">👥</span><div style="flex:1;font-size:12px;">4 first-gen + 1 second-gen leaders on your team</div></div>
+          <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--s3);border-radius:var(--r1);"><span style="font-size:13px;">💰</span><div style="flex:1;font-size:12px;">Team hits $10K paid wire 2 consecutive weeks</div></div>
+          <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--s3);border-radius:var(--r1);"><span style="font-size:13px;">⭐</span><div style="flex:1;font-size:12px;">60% quality rate sustained</div></div>
+          <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--s3);border-radius:var(--r1);"><span style="font-size:13px;">✅</span><div style="flex:1;font-size:12px;">Proven COD knowledge · self-managed · dressed/suited</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="slbl">JPM → PM criteria</div>
+        <div style="display:flex;flex-direction:column;gap:5px;">
+          <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--s3);border-radius:var(--r1);"><span style="font-size:13px;">🏢</span><div style="flex:1;font-size:12px;">10+ strong team consistently performing</div></div>
+          <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--s3);border-radius:var(--r1);"><span style="font-size:13px;">💰</span><div style="flex:1;font-size:12px;">$10K+ weekly wire sustained</div></div>
+          <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--s3);border-radius:var(--r1);"><span style="font-size:13px;">📋</span><div style="flex:1;font-size:12px;">Incorporate C-Corp · legal contracts between entities</div></div>
+          <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--s3);border-radius:var(--r1);"><span style="font-size:13px;">🤝</span><div style="flex:1;font-size:12px;">Owner approval · full independence achieved</div></div>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
 <!-- TRAINING -->
 <div id="page-training" class="pg">
@@ -482,103 +503,467 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 
 <!-- GOALS -->
 <div id="page-goals" class="pg">
-  <div class="pgt">Weekly goals</div><div class="pgs">Commit before Monday · your owner sees every submission</div>
-  <div class="card" style="background:var(--s3);border:1px solid var(--b1);">
-    <div class="slbl">Last week recap</div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;">
-      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--blue);" id="lw-stops">0</div><div style="font-size:10px;color:var(--t3);">Stops</div></div>
-      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--teal);" id="lw-tabs">0</div><div style="font-size:10px;color:var(--t3);">Tabs</div></div>
-      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--green);" id="lw-closes">0</div><div style="font-size:10px;color:var(--t3);">Closes</div></div>
-      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--y);" id="lw-wire">$0</div><div style="font-size:10px;color:var(--t3);">Wire</div></div>
-      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--amber);" id="lw-bells">0</div><div style="font-size:10px;color:var(--t3);">Bells</div></div>
-      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--t2);" id="lw-recruits">0</div><div style="font-size:10px;color:var(--t3);">Recruits</div></div>
+  <div class="pgt">Submit Sunday</div>
+  <div class="pgs">Every Sunday · AI reads your week and builds your goal · your leader sees every submission</div>
+
+  <!-- LAST WEEK AUTO-PULLED -->
+  <div class="card" style="background:var(--s3);border:1px solid var(--b1);margin-bottom:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div class="slbl" style="margin-bottom:0;">Last week — auto-pulled from your logs</div>
+      <span class="bd bd-b" id="goals-week-lbl">This week</span>
     </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;">
+      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--blue);" id="lw-stops">0</div>
+        <div style="font-size:10px;color:var(--t3);">Stops</div>
+        <div style="font-size:9px;margin-top:2px;" id="lw-stops-vs"></div>
+      </div>
+      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--teal);" id="lw-tabs">0</div>
+        <div style="font-size:10px;color:var(--t3);">Tabs</div>
+        <div style="font-size:9px;margin-top:2px;" id="lw-tabs-vs"></div>
+      </div>
+      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--green);" id="lw-closes">0</div>
+        <div style="font-size:10px;color:var(--t3);">Closes</div>
+        <div style="font-size:9px;margin-top:2px;" id="lw-closes-vs"></div>
+      </div>
+      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--y);" id="lw-wire">$0</div>
+        <div style="font-size:10px;color:var(--t3);">Wire</div>
+        <div style="font-size:9px;margin-top:2px;" id="lw-wire-vs"></div>
+      </div>
+      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--amber);" id="lw-bells">0</div>
+        <div style="font-size:10px;color:var(--t3);">Bells</div>
+        <div style="font-size:9px;margin-top:2px;" id="lw-bells-vs"></div>
+      </div>
+      <div style="background:var(--s4);border-radius:var(--r1);padding:9px 11px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;color:var(--t2);" id="lw-recruits">0</div>
+        <div style="font-size:10px;color:var(--t3);">Recruits</div>
+        <div style="font-size:9px;margin-top:2px;" id="lw-recruits-vs"></div>
+      </div>
+    </div>
+    <!-- AI performance signal -->
+    <div id="goals-perf-signal" style="border-radius:var(--r1);padding:9px 12px;font-size:11px;line-height:1.5;"></div>
   </div>
-  <div class="card">
-    <div class="slbl">This week's commitment</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
-      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Closes target</div><input type="number" id="g-closes" placeholder="e.g. 20" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
-      <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Wire target ($)</div><input type="number" id="g-wire" placeholder="e.g. 2100" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+
+  <!-- AI ADAPTIVE QUESTIONS -->
+  <div class="card" id="goals-form-card">
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+      <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,224,51,.15);border:1px solid rgba(255,224,51,.3);display:flex;align-items:center;justify-content:center;font-size:13px;">✦</div>
+      <div>
+        <div style="font-size:13px;font-weight:600;">Your Sunday reflection</div>
+        <div style="font-size:11px;color:var(--t3);">Questions adapt based on how your week went</div>
+      </div>
     </div>
-    <div style="margin-bottom:9px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">My focus this week</div>
-      <select id="g-focus" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
-        <option value="">Select your focus</option>
-        <option>Push through to more presentations</option>
-        <option>Focus on bundles — going for bells</option>
-        <option>Control energy after early no's</option>
-        <option>Get more credit checks to close more</option>
-        <option>Be at store earlier and stay later</option>
-      </select>
+
+    <!-- Q1: Targets — pre-filled with 1% improvement suggestion -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:12px;font-weight:600;margin-bottom:3px;">1. What are your targets for next week?</div>
+      <div style="font-size:11px;color:var(--t3);margin-bottom:8px;" id="q1-context">We suggest a 1% improvement on your lowest metric.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:3px;">Closes</div><input type="number" id="g-closes" placeholder="e.g. 20" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:13px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:3px;">Wire ($)</div><input type="number" id="g-wire" placeholder="e.g. 2100" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:13px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:3px;">Stops / day</div><input type="number" id="g-stops" placeholder="e.g. 100" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:13px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:3px;">Interviews (if LT+)</div><input type="number" id="g-recruits" placeholder="e.g. 3" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:13px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+      </div>
     </div>
-    <div style="margin-bottom:9px;"><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">If behind Wednesday I will</div>
-      <select id="g-commit" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
-        <option value="">Select your commitment</option>
-        <option>Call leader immediately for coaching</option>
-        <option>Put in extra stops Wed to make up gap</option>
-        <option>Run 50+ extra role plays Thursday morning</option>
-        <option>Shadow a top performer for one full shift</option>
-      </select>
+
+    <!-- Q2: Weakest metric reflection — AI-selected -->
+    <div style="margin-bottom:14px;" id="q2-block">
+      <div style="font-size:12px;font-weight:600;margin-bottom:3px;" id="q2-label">2. Your tab conversion rate was your lowest metric. What's your honest reason?</div>
+      <textarea id="g-weakness" placeholder="Be honest — your leader reads this and it helps them coach you better." style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:8px 10px;font-family:'Inter',sans-serif;font-size:12px;color:var(--t1);outline:none;min-height:65px;resize:none;"></textarea>
     </div>
-    <button class="btn btn-p" style="width:100%;justify-content:center;" onclick="submitGoal()">Generate & submit my goal</button>
-    <div id="goal-out" style="display:none;background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:12px 14px;margin-top:12px;font-size:12px;color:var(--t2);line-height:1.6;"></div>
+
+    <!-- Q3: Specific action on weakness -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:12px;font-weight:600;margin-bottom:3px;" id="q3-label">3. One specific thing you will do differently this week to fix it:</div>
+      <textarea id="g-action" placeholder="Be specific — 'I will do 10 extra role plays Monday morning before hitting the floor'" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:8px 10px;font-family:'Inter',sans-serif;font-size:12px;color:var(--t1);outline:none;min-height:65px;resize:none;"></textarea>
+    </div>
+
+    <!-- Q4: Energy/mindset — always asked -->
+    <div style="margin-bottom:14px;">
+      <div style="font-size:12px;font-weight:600;margin-bottom:6px;">4. Rate your energy and confidence coming into next week</div>
+      <div style="display:flex;gap:7px;" id="energy-btns">
+        <button class="btn btn-g" style="flex:1;justify-content:center;flex-direction:column;padding:10px 6px;font-size:11px;gap:3px;" onclick="setEnergy(1,this)">😴<br>Low</button>
+        <button class="btn btn-g" style="flex:1;justify-content:center;flex-direction:column;padding:10px 6px;font-size:11px;gap:3px;" onclick="setEnergy(2,this)">😐<br>Average</button>
+        <button class="btn btn-g" style="flex:1;justify-content:center;flex-direction:column;padding:10px 6px;font-size:11px;gap:3px;" onclick="setEnergy(3,this)">😤<br>Focused</button>
+        <button class="btn btn-g" style="flex:1;justify-content:center;flex-direction:column;padding:10px 6px;font-size:11px;gap:3px;" onclick="setEnergy(4,this)">🔥<br>Locked in</button>
+      </div>
+    </div>
+
+    <!-- Q5: Accountability — only if missed targets -->
+    <div style="margin-bottom:14px;" id="q5-block" style="display:none;">
+      <div style="font-size:12px;font-weight:600;margin-bottom:3px;" id="q5-label">5. Who is holding you accountable this week?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;">
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:3px;">Accountability partner name</div><input type="text" id="g-partner" placeholder="Leader, teammate, or yourself" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:3px;">Check-in day</div>
+          <select id="g-checkin" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
+            <option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Every day</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q6: What are you most proud of? — only if had wins -->
+    <div style="margin-bottom:16px;" id="q6-block">
+      <div style="font-size:12px;font-weight:600;margin-bottom:3px;" id="q6-label">5. What's one thing from this week you're most proud of?</div>
+      <textarea id="g-proud" placeholder="Could be a specific close, a mindset shift, a bell, a tough day you pushed through..." style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:8px 10px;font-family:'Inter',sans-serif;font-size:12px;color:var(--t1);outline:none;min-height:55px;resize:none;"></textarea>
+    </div>
+
+    <button class="btn btn-p" style="width:100%;justify-content:center;padding:11px;font-size:13px;" onclick="submitGoalAI()" id="goals-submit-btn">
+      ✦ Generate my goal statement & submit
+    </button>
+    <div id="goals-loading" style="display:none;text-align:center;padding:14px;font-size:12px;color:var(--teal);">✦ AI is reading your week and writing your goal...</div>
   </div>
+
+  <!-- GENERATED GOAL OUTPUT -->
+  <div id="goal-out" style="display:none;" class="card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <div style="width:24px;height:24px;border-radius:50%;background:rgba(255,224,51,.15);border:1px solid rgba(255,224,51,.3);display:flex;align-items:center;justify-content:center;font-size:11px;">✦</div>
+      <div style="font-size:13px;font-weight:600;color:var(--y);">Your goal for this week</div>
+    </div>
+    <div id="goal-text" style="font-size:13px;color:var(--t1);line-height:1.8;white-space:pre-wrap;"></div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--b1);display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-p" onclick="saveGoalFinal()">✓ Submit to my leader</button>
+      <button class="btn btn-g" onclick="document.getElementById('goal-out').style.display='none';document.getElementById('goals-form-card').style.display='block';">Edit my answers</button>
+    </div>
+    <div id="goal-submitted-msg" style="display:none;font-size:11px;color:#86EFAC;margin-top:8px;">✓ Submitted. Your leader can see this now.</div>
+  </div>
+</div>
 </div>
 
 <!-- HIGH ROLLER BOARD -->
 <div id="page-highroller" class="pg">
-  <div class="pgt">High Roller Board 🏆</div>
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;flex-wrap:wrap;gap:8px;">
-    <div class="pgs" style="margin-bottom:0;">FPA DFW · Live rankings · Resets Monday midnight</div>
-    <div id="owner-lb-tools" style="display:none;gap:6px;flex-wrap:wrap;" class="brow" style="margin-bottom:0;">
-      <button class="btn btn-g" style="padding:5px 10px;font-size:10px;" onclick="openShoutoutModal()">+ Shoutout</button>
-      <button class="btn btn-g" style="padding:5px 10px;font-size:10px;" onclick="openBadgeModal()">+ Award badge</button>
+  <!-- Header -->
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+    <div>
+      <div class="pgt">High Roller Board 🏆</div>
+      <div style="font-size:11px;color:var(--t3);" id="hr-updated">Updated just now · Resets Monday midnight</div>
+    </div>
+    <div id="owner-lb-tools" style="display:none;gap:6px;flex-wrap:wrap;">
+      <button class="btn btn-g" style="padding:5px 10px;font-size:10px;" onclick="nav('highroller-shoutout',null)">📣 Post shoutout</button>
     </div>
   </div>
-  <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px;">
-    <div id="podium-wrap" style="padding:20px;text-align:center;color:var(--t3);font-size:12px;">Board empty — log a sale to claim the #1 spot 🏆</div>
+
+  <!-- DATE FILTER -->
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+    <span style="font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;">Date</span>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;" id="hr-date-btns">
+      <button class="btn btn-g stab-btn" style="font-size:11px;padding:4px 10px;" onclick="setHRDate('daily',this)">Daily</button>
+      <button class="btn btn-g stab-btn active-tab" style="font-size:11px;padding:4px 10px;" onclick="setHRDate('weekly',this)">Weekly</button>
+      <button class="btn btn-g stab-btn" style="font-size:11px;padding:4px 10px;" onclick="setHRDate('lifetime',this)">Lifetime</button>
+    </div>
+    <div style="width:1px;height:18px;background:var(--b2);margin:0 4px;"></div>
+    <span style="font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;">Sort by</span>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;" id="hr-sort-btns">
+      <button class="btn btn-g stab-btn" style="font-size:11px;padding:4px 10px;" onclick="setHRSort('closes',this)">Sales</button>
+      <button class="btn btn-g stab-btn active-tab" style="font-size:11px;padding:4px 10px;" onclick="setHRSort('wire',this)">Wire</button>
+      <button class="btn btn-g stab-btn" style="font-size:11px;padding:4px 10px;" onclick="setHRSort('bells',this)">Bells</button>
+      <button class="btn btn-g stab-btn" style="font-size:11px;padding:4px 10px;" onclick="setHRSort('crew',this)">Crew</button>
+    </div>
   </div>
-  <div class="card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:7px;">
-      <div class="slbl" style="margin-bottom:0;">Full leaderboard</div>
-      <div style="display:flex;gap:5px;">
-        <button class="btn btn-g stab-btn active-tab" id="hr-week-btn" onclick="setHRView('week',this)">This week</button>
-        <button class="btn btn-g stab-btn" onclick="setHRView('alltime',this)">All time</button>
-        <button class="btn btn-g stab-btn" onclick="setHRView('streaks',this)">Streaks</button>
+
+  <!-- CREW FILTER (leader+ only) -->
+  <div id="hr-crew-filter" style="display:none;margin-bottom:12px;">
+    <span style="font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-right:8px;">Crews</span>
+    <span style="font-size:11px;color:var(--t3);">Crew filters appear once crews are assigned in My Team</span>
+  </div>
+
+  <!-- TABS: Leaderboard / Crews / Ranks / Challenges -->
+  <div style="display:flex;gap:0;border-bottom:1px solid var(--b1);margin-bottom:14px;">
+    <button class="hr-tab active" id="hrtab-lb" onclick="setHRTab('lb',this)" style="background:none;border:none;border-bottom:2px solid var(--y);padding:8px 16px;font-size:12px;font-weight:600;color:var(--y);cursor:pointer;font-family:'Inter',sans-serif;">Leaderboard</button>
+    <button class="hr-tab" id="hrtab-crews" onclick="setHRTab('crews',this)" style="background:none;border:none;border-bottom:2px solid transparent;padding:8px 16px;font-size:12px;font-weight:600;color:var(--t3);cursor:pointer;font-family:'Inter',sans-serif;" id="hr-crews-tab">Crews</button>
+    <button class="hr-tab" id="hrtab-ranks" onclick="setHRTab('ranks',this)" style="background:none;border:none;border-bottom:2px solid transparent;padding:8px 16px;font-size:12px;font-weight:600;color:var(--t3);cursor:pointer;font-family:'Inter',sans-serif;">Ranks</button>
+    <button class="hr-tab" id="hrtab-challenges" onclick="setHRTab('challenges',this)" style="background:none;border:none;border-bottom:2px solid transparent;padding:8px 16px;font-size:12px;font-weight:600;color:var(--t3);cursor:pointer;font-family:'Inter',sans-serif;">🔥 Challenges</button>
+  </div>
+
+  <!-- LEADERBOARD TAB -->
+  <div id="hr-tab-lb">
+    <!-- Top stat cards -->
+    <div class="g4" style="margin-bottom:14px;" id="hr-top-stats">
+      <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);" id="hr-total-psus">0</div><div class="sl">Total PSUs</div></div>
+      <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);" id="hr-total-wire">$0</div><div class="sl">Total wire</div></div>
+      <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);" id="hr-total-sales">0</div><div class="sl">Total sales</div></div>
+      <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);" id="hr-active-reps">0</div><div class="sl">Active reps</div></div>
+    </div>
+
+    <!-- RANK KEY -->
+    <div style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--r2);padding:12px 14px;margin-bottom:14px;">
+      <div style="font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:10px;">Rank key</div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;" id="rank-key-grid">
+        <div style="display:flex;align-items:center;gap:7px;"><span style="font-size:18px;">👑</span><div><div style="font-size:11px;font-weight:700;color:#FFD700;">FPA Legend</div><div style="font-size:9px;color:var(--t3);">100+ PSUs</div></div></div>
+        <div style="display:flex;align-items:center;gap:7px;"><span style="font-size:18px;">⚡</span><div><div style="font-size:11px;font-weight:700;color:#60A5FA;">Assassin</div><div style="font-size:9px;color:var(--t3);">50+ PSUs</div></div></div>
+        <div style="display:flex;align-items:center;gap:7px;"><span style="font-size:18px;">🔥</span><div><div style="font-size:11px;font-weight:700;color:#F97316;">Closer</div><div style="font-size:9px;color:var(--t3);">25+ PSUs</div></div></div>
+        <div style="display:flex;align-items:center;gap:7px;"><span style="font-size:18px;">💪</span><div><div style="font-size:11px;font-weight:700;color:#4ADE80;">Grinder</div><div style="font-size:9px;color:var(--t3);">10+ PSUs</div></div></div>
+        <div style="display:flex;align-items:center;gap:7px;"><span style="font-size:18px;">🌱</span><div><div style="font-size:11px;font-weight:700;color:var(--teal);">Rookie</div><div style="font-size:9px;color:var(--t3);">1+ PSUs</div></div></div>
+        <div style="display:flex;align-items:center;gap:7px;"><span style="font-size:18px;">—</span><div><div style="font-size:11px;font-weight:700;color:var(--t3);">Unranked</div><div style="font-size:9px;color:var(--t3);">No sales yet</div></div></div>
       </div>
     </div>
-    <div class="lbhd"><span>#</span><span>Rep</span><span style="text-align:right;">Wire</span><span style="text-align:right;">Closes</span><span style="text-align:right;">Bells</span></div>
-    <div id="lb-rows"><div class="empty"><div class="icon">🏆</div><div class="title">No sales logged yet</div><div class="sub">Rankings appear as reps log sales.</div></div></div>
+
+    <!-- AE restricted notice -->
+    <div id="hr-ae-notice" style="display:none;background:rgba(255,224,51,.05);border:1px solid rgba(255,224,51,.12);border-radius:var(--r2);padding:10px 14px;font-size:11px;color:var(--t2);margin-bottom:12px;">
+      👆 Showing top 3 only. Full leaderboard access unlocks at Lead Trainer.
+    </div>
+
+    <!-- PODIUM -->
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px;">
+      <div id="podium-wrap" style="padding:20px;text-align:center;color:var(--t3);font-size:12px;">Board empty — log a sale to claim the #1 spot 🏆</div>
+    </div>
+
+    <!-- FULL TABLE (sorted by current sort) -->
+    <div class="card" id="hr-full-table">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);margin-bottom:4px;" id="hr-table-label">WEEKLY — SORTED BY WIRE</div>
+      <div style="display:grid;grid-template-columns:28px 1fr 110px 80px 60px 70px 60px 80px;gap:7px;padding:7px 10px 9px;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1);" id="hr-table-header">
+        <span>#</span><span>Rep</span><span>Tier</span><span>Crew</span><span style="text-align:right;">Sales</span><span style="text-align:right;">PSUs</span><span style="text-align:right;">Wire ▲</span><span>Volume</span>
+      </div>
+      <div id="lb-rows"></div>
+    </div>
+  </div>
+
+  <!-- CREWS TAB -->
+  <div id="hr-tab-crews" style="display:none;">
+    <div class="card">
+      <div class="slbl">Crew standings</div>
+      <div id="crews-lb"><div class="empty"><div class="icon">👥</div><div class="title">No crew data yet</div><div class="sub">Crews populate once reps are assigned to leaders in My Team.</div></div></div>
+    </div>
+  </div>
+
+  <!-- RANKS TAB -->
+  <div id="hr-tab-ranks" style="display:none;">
+    <div class="card">
+      <div class="slbl">Rank progression</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.2);border-radius:var(--r2);">
+          <span style="font-size:28px;">👑</span>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#FFD700;">FPA Legend</div><div style="font-size:11px;color:var(--t2);margin-top:2px;">100+ PSUs lifetime. You're in a different league. The org knows your name.</div></div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:#FFD700;">100+</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.2);border-radius:var(--r2);">
+          <span style="font-size:28px;">⚡</span>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#60A5FA;">Assassin</div><div style="font-size:11px;color:var(--t2);margin-top:2px;">50+ PSUs. Consistent, dangerous, impossible to stop. Leadership is watching.</div></div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:#60A5FA;">50+</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.2);border-radius:var(--r2);">
+          <span style="font-size:28px;">🔥</span>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#F97316;">Closer</div><div style="font-size:11px;color:var(--t2);margin-top:2px;">25+ PSUs. You've crossed the line. Sales isn't just something you do — it's who you are.</div></div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:#F97316;">25+</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:var(--r2);">
+          <span style="font-size:28px;">💪</span>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:#4ADE80;">Grinder</div><div style="font-size:11px;color:var(--t2);margin-top:2px;">10+ PSUs. You show up. Every day. Building something real.</div></div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:#4ADE80;">10+</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(0,201,167,.06);border:1px solid rgba(0,201,167,.2);border-radius:var(--r2);">
+          <span style="font-size:28px;">🌱</span>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:var(--teal);">Rookie</div><div style="font-size:11px;color:var(--t2);margin-top:2px;">1+ PSUs. You've made your first sale. Welcome to the game. Now go get 9 more.</div></div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--teal);">1+</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);opacity:.4;">
+          <span style="font-size:28px;">—</span>
+          <div style="flex:1;"><div style="font-size:14px;font-weight:700;color:var(--t3);">Unranked</div><div style="font-size:11px;color:var(--t3);margin-top:2px;">No sales logged yet. Your first sale changes everything.</div></div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--t3);">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHALLENGES TAB -->
+  <div id="hr-tab-challenges" style="display:none;">
+    <div class="card" style="background:rgba(239,68,68,.04);border-color:rgba(239,68,68,.15);">
+      <div style="font-size:13px;font-weight:600;color:#FCA5A5;margin-bottom:4px;">🔥 This week's challenges</div>
+      <div style="font-size:12px;color:var(--t2);">Challenges unlock weekly. Complete them to earn bonus badges and recognition on the board.</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;" id="challenges-list"></div>
+  </div>
+
+  <!-- Shoutout wall (all tabs) -->
+  <div class="card" style="margin-top:14px;" id="shoutout-wall-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div class="slbl" style="margin-bottom:0;">Shoutout wall 📣</div>
+      <div style="font-size:11px;color:var(--t3);">Posted by leaders · visible to all</div>
+    </div>
+    <div id="shoutout-wall"><div style="font-size:12px;color:var(--t3);padding:8px 0;">No shoutouts yet.</div></div>
+    <!-- Post form owner only -->
+    <div id="shoutout-form-card" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--b1);">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Rep name</div><input type="text" id="shout-name" placeholder="Who are you shouting out?" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+        <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Achievement</div>
+          <select id="shout-type" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
+            <option>🔔 Rang a bell</option><option>🏆 Top closer this week</option><option>💰 Highest wire this week</option>
+            <option>📈 Most improved</option><option>🌟 Promoted to Lead Trainer</option><option>⬆ Promoted to JPM</option>
+            <option>🎯 Hit LT promotion criteria</option><option>💪 Pushed through adversity</option>
+            <option>🔥 Personal best week</option><option>👑 FPA Legend status reached</option><option>Custom message</option>
+          </select>
+        </div>
+      </div>
+      <input type="text" id="shout-msg" placeholder="Add a personal note..." style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;margin-bottom:9px;"/>
+      <button class="btn btn-p" onclick="postShoutout()">Post to wall</button>
+      <div id="shout-confirm" style="display:none;font-size:11px;margin-top:8px;color:#86EFAC;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENTS TAB -->
+<div id="page-achievements" class="pg">
+  <div class="pgt">Achievements 🏅</div>
+  <div class="pgs">Earn badges by performing · some are secret until you're close · flex your collection</div>
+
+  <!-- My badge summary -->
+  <div class="g3" style="margin-bottom:14px;" id="ach-summary">
+    <div class="stat"><div class="sacc" style="background:var(--gold);"></div><div class="sv" style="color:var(--gold);" id="ach-earned-count">0</div><div class="sl">Badges earned</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--t3);"></div><div class="sv" style="color:var(--t3);" id="ach-locked-count">0</div><div class="sl">Still locked</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--amber);"></div><div class="sv" style="color:var(--amber);" id="ach-close-count">0</div><div class="sl">Close to unlocking</div></div>
+  </div>
+
+  <!-- Category filter -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;" id="ach-cat-btns">
+    <button class="btn btn-g stab-btn active-tab" style="font-size:10px;padding:4px 10px;" onclick="filterAch('all',this)">All</button>
+    <button class="btn btn-g stab-btn" style="font-size:10px;padding:4px 10px;" onclick="filterAch('sales',this)">💰 Sales</button>
+    <button class="btn btn-g stab-btn" style="font-size:10px;padding:4px 10px;" onclick="filterAch('wire',this)">📊 Wire</button>
+    <button class="btn btn-g stab-btn" style="font-size:10px;padding:4px 10px;" onclick="filterAch('bells',this)">🔔 Bells</button>
+    <button class="btn btn-g stab-btn" style="font-size:10px;padding:4px 10px;" onclick="filterAch('streaks',this)">🔥 Streaks</button>
+    <button class="btn btn-g stab-btn" style="font-size:10px;padding:4px 10px;" onclick="filterAch('recruit',this)">👥 Recruit</button>
+    <button class="btn btn-g stab-btn" style="font-size:10px;padding:4px 10px;" onclick="filterAch('promo',this)">⬆ Promo</button>
+    <button class="btn btn-g stab-btn" style="font-size:10px;padding:4px 10px;" onclick="filterAch('training',this)">📚 Training</button>
+    <button class="btn btn-g stab-btn" style="font-size:10px;padding:4px 10px;" onclick="filterAch('elite',this)">👑 Elite</button>
+  </div>
+
+  <!-- Earned badges -->
+  <div class="card" style="margin-bottom:14px;">
+    <div class="slbl" style="margin-bottom:12px;">Earned — <span id="ach-earned-label">your collection</span></div>
+    <div id="ach-earned-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;"></div>
+    <div id="ach-earned-empty" style="display:none;" class="empty"><div class="icon">🏅</div><div class="title">No badges yet</div><div class="sub">Log your first sale to start earning.</div></div>
+  </div>
+
+  <!-- In progress (close to unlocking) -->
+  <div class="card" style="margin-bottom:14px;" id="ach-progress-card">
+    <div class="slbl" style="margin-bottom:12px;">In progress — next to unlock</div>
+    <div id="ach-progress-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+
+  <!-- Locked badges -->
+  <div class="card">
+    <div class="slbl" style="margin-bottom:12px;">Locked — <span id="ach-locked-label">keep grinding</span></div>
+    <div id="ach-locked-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;"></div>
   </div>
 </div>
 
 <!-- SCORECARD -->
 <div id="page-scorecard" class="pg">
-  <div class="pgt">Scorecard</div><div class="pgs">All modules · one source of truth · FPA DFW</div>
+  <div class="pgt">Scorecard</div>
+  <div class="pgs">Live org performance · all metrics in one view · FPA DFW</div>
+
+  <!-- Top stats -->
   <div class="g4">
-    <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);" id="sc-wire">$0</div><div class="sl">Org wire this week</div><div class="sd" style="color:var(--t3);">Onboarding team</div></div>
-    <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);" id="sc-closes">0</div><div class="sl">Total closes</div><div class="sd" style="color:var(--t3);">Onboarding team</div></div>
-    <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);" id="sc-bells">0</div><div class="sl">Bells rung</div><div class="sd" style="color:var(--t3);">Onboarding team</div></div>
-    <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);" id="sc-reps">1</div><div class="sl">Active reps</div><div class="sd" style="color:var(--t3);">Add team below</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);" id="sc-wire">$0</div><div class="sl">Org wire this week</div><div class="sd" id="sc-wire-d" style="color:var(--t3);">Onboarding team</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);" id="sc-closes">0</div><div class="sl">Total closes</div><div class="sd" id="sc-closes-d" style="color:var(--t3);">Onboarding team</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);" id="sc-bells">0</div><div class="sl">Bells rung</div><div class="sd" id="sc-bells-d" style="color:var(--t3);">Onboarding team</div></div>
+    <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);" id="sc-reps">1</div><div class="sl">Active reps</div><div class="sd" style="color:var(--t3);">Add team in Rep Mgmt</div></div>
   </div>
+
+  <!-- Main two-col layout -->
   <div class="g2">
     <div>
-      <div class="sc-mod"><div class="sc-hd"><div class="sc-ico" style="background:rgba(79,142,247,.1);">📊</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Field OS</div><div style="font-size:9px;color:var(--t3);">Live tally</div></div><span class="bd bd-g">Live</span></div><div class="sc-row"><span class="sc-lbl">Team stops today</span><span class="sc-v" style="color:var(--blue);">0</span></div><div class="sc-row"><span class="sc-lbl">Tab conversion</span><span class="sc-v" style="color:var(--teal);">—</span></div><div class="sc-row"><span class="sc-lbl">Presentations</span><span class="sc-v" style="color:var(--amber);">0</span></div></div>
-      <div class="sc-mod"><div class="sc-hd"><div class="sc-ico" style="background:rgba(255,224,51,.08);">💰</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Sales log</div><div style="font-size:9px;color:var(--t3);">Auto wire calc</div></div><span class="bd bd-g">Live</span></div><div class="sc-row"><span class="sc-lbl">Wire today</span><span class="sc-v" style="color:var(--y);" id="sc-wire-today">$0</span></div><div class="sc-row"><span class="sc-lbl">Closes today</span><span class="sc-v" style="color:var(--green);" id="sc-closes-today">0</span></div><div class="sc-row"><span class="sc-lbl">Bells today</span><span class="sc-v" style="color:var(--amber);" id="sc-bells-today">0</span></div></div>
-      <div class="sc-mod"><div class="sc-hd"><div class="sc-ico" style="background:rgba(139,92,246,.1);">👥</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Recruitment</div><div style="font-size:9px;color:var(--t3);">Pipeline</div></div><span class="bd bd-b">Active</span></div><div class="sc-row"><span class="sc-lbl">Interviews this wk</span><span class="sc-v" style="color:var(--purple);" id="sc-interviews">0</span></div><div class="sc-row"><span class="sc-lbl">New starts</span><span class="sc-v" style="color:var(--green);" id="sc-starts">0</span></div><div class="sc-row"><span class="sc-lbl">Promo eligible</span><span class="sc-v" style="color:var(--y);">0</span></div></div>
-    </div>
-    <div>
-      <div class="card" style="margin-bottom:10px;">
-        <div class="slbl">Office wire</div>
-        <div class="prog"><div class="prog-hd"><span style="color:var(--y);">FPA DFW</span><span style="color:var(--y);" id="sc-dfw">$0</span></div><div class="prog-tr"><div class="prog-f" id="sc-dfw-bar" style="width:0%;background:var(--y);"></div></div></div>
-        <div class="prog"><div class="prog-hd"><span style="color:var(--teal);">Elevation Global (Sara A.)</span><span style="color:var(--teal);">—</span></div><div class="prog-tr"><div class="prog-f" style="width:0%;background:var(--teal);"></div></div></div>
-        <div class="prog" style="margin-bottom:0;"><div class="prog-hd"><span style="color:var(--blue);">MP Enterprises (Joseph M.)</span><span style="color:var(--blue);">—</span></div><div class="prog-tr"><div class="prog-f" style="width:0%;background:var(--blue);"></div></div></div>
+      <!-- Today's live numbers -->
+      <div class="card" style="margin-bottom:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div class="slbl" style="margin-bottom:0;">Today — live</div>
+          <span class="bd bd-g">● Live</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div style="text-align:center;background:var(--s3);border-radius:var(--r2);padding:10px 8px;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;color:var(--y);" id="sc-wire-today">$0</div>
+            <div style="font-size:10px;color:var(--t3);">Wire today</div>
+          </div>
+          <div style="text-align:center;background:var(--s3);border-radius:var(--r2);padding:10px 8px;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;color:var(--green);" id="sc-closes-today">0</div>
+            <div style="font-size:10px;color:var(--t3);">Closes today</div>
+          </div>
+          <div style="text-align:center;background:var(--s3);border-radius:var(--r2);padding:10px 8px;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;color:var(--amber);" id="sc-bells-today">0</div>
+            <div style="font-size:10px;color:var(--t3);">Bells today</div>
+          </div>
+        </div>
+        <!-- Rep-by-rep today table -->
+        <div class="slbl" style="margin-bottom:8px;">Rep performance today</div>
+        <div id="sc-rep-table">
+          <div style="display:grid;grid-template-columns:1fr 60px 60px 50px;gap:6px;padding:0 0 6px;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1);margin-bottom:4px;">
+            <span>Rep</span><span style="text-align:right;">Wire</span><span style="text-align:right;">Closes</span><span style="text-align:right;">Bells</span>
+          </div>
+          <div id="sc-rep-rows"><div style="font-size:12px;color:var(--t3);padding:12px 0;text-align:center;">Rep data populates as team logs sales</div></div>
+        </div>
       </div>
+
+      <!-- Field OS tally -->
+      <div class="sc-mod">
+        <div class="sc-hd"><div class="sc-ico" style="background:rgba(79,142,247,.1);">📊</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Field OS</div><div style="font-size:9px;color:var(--t3);">Tally aggregated across team</div></div><span class="bd bd-g">Live</span></div>
+        <div class="sc-row"><span class="sc-lbl">Team stops today</span><span class="sc-v" style="color:var(--blue);" id="sc-team-stops">0</span></div>
+        <div class="sc-row"><span class="sc-lbl">Team tab rate</span><span class="sc-v" style="color:var(--teal);" id="sc-team-tabrate">—</span></div>
+        <div class="sc-row"><span class="sc-lbl">Team presentations</span><span class="sc-v" style="color:var(--amber);" id="sc-team-pres">0</span></div>
+        <div class="sc-row"><span class="sc-lbl">Avg closes per rep</span><span class="sc-v" style="color:var(--green);" id="sc-avg-closes">—</span></div>
+      </div>
+    </div>
+
+    <div>
+      <!-- Weekly wire by office -->
+      <div class="card" style="margin-bottom:12px;">
+        <div class="slbl">Weekly wire by office</div>
+        <div class="prog" style="margin-bottom:10px;">
+          <div class="prog-hd"><span style="color:var(--y);font-weight:500;">FPA DFW</span><span style="color:var(--y);" id="sc-dfw">$0</span></div>
+          <div class="prog-tr" style="height:8px;"><div class="prog-f" id="sc-dfw-bar" style="width:0%;background:var(--y);"></div></div>
+        </div>
+        <div class="prog" style="margin-bottom:10px;">
+          <div class="prog-hd"><span style="color:var(--teal);">Elevation Global (Sara A.)</span><span style="color:var(--teal);">—</span></div>
+          <div class="prog-tr" style="height:8px;"><div class="prog-f" style="width:0%;background:var(--teal);"></div></div>
+        </div>
+        <div class="prog" style="margin-bottom:0;">
+          <div class="prog-hd"><span style="color:var(--blue);">MP Enterprises (Joseph M.)</span><span style="color:var(--blue);">—</span></div>
+          <div class="prog-tr" style="height:8px;"><div class="prog-f" style="width:0%;background:var(--blue);"></div></div>
+        </div>
+      </div>
+
+      <!-- Recruitment module -->
+      <div class="sc-mod" style="margin-bottom:12px;">
+        <div class="sc-hd"><div class="sc-ico" style="background:rgba(139,92,246,.1);">👥</div><div style="flex:1;"><div style="font-size:12px;font-weight:500;">Recruitment</div><div style="font-size:9px;color:var(--t3);">Pipeline summary</div></div><span class="bd bd-b">Active</span></div>
+        <div class="sc-row"><span class="sc-lbl">Interviews this week</span><span class="sc-v" style="color:var(--purple);" id="sc-interviews">0</span></div>
+        <div class="sc-row"><span class="sc-lbl">New starts</span><span class="sc-v" style="color:var(--green);" id="sc-starts">0</span></div>
+        <div class="sc-row"><span class="sc-lbl">Active in pipeline</span><span class="sc-v" id="sc-pipeline">0</span></div>
+        <div class="sc-row"><span class="sc-lbl">Denied / fell off</span><span class="sc-v" style="color:var(--red);" id="sc-denied-ct">0</span></div>
+      </div>
+
+      <!-- Promo pipeline -->
       <div class="card">
         <div class="slbl">Promo pipeline</div>
-        <div class="sc-row"><span class="sc-lbl">AE → LT eligible now</span><span class="sc-v" style="color:var(--green);">0</span></div>
-        <div class="sc-row"><span class="sc-lbl">Within 1 week</span><span class="sc-v" style="color:var(--amber);">0</span></div>
-        <div class="sc-row" style="border:none;"><span class="sc-lbl">Active reps total</span><span class="sc-v" id="sc-reps2">1</span></div>
+        <div class="sc-row">
+          <span class="sc-lbl">AE → LT path cleared</span>
+          <span class="sc-v" style="color:var(--green);" id="sc-promo-ready">0</span>
+        </div>
+        <div class="sc-row">
+          <span class="sc-lbl">Within 1 week of path</span>
+          <span class="sc-v" style="color:var(--amber);" id="sc-promo-close">0</span>
+        </div>
+        <div class="sc-row">
+          <span class="sc-lbl">Bell rate this week</span>
+          <span class="sc-v" style="color:var(--teal);" id="sc-bell-rate">—</span>
+        </div>
+        <div class="sc-row" style="border:none;">
+          <span class="sc-lbl">Active reps total</span>
+          <span class="sc-v" id="sc-reps2">1</span>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Wire pace vs target -->
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <div class="slbl" style="margin-bottom:0;">Weekly wire pace vs target ($<span id="sc-wire-target">2,100</span>/rep)</div>
+      <span style="font-size:11px;color:var(--t3);" id="sc-days-in">Day <span id="sc-weekday">1</span> of 5</span>
+    </div>
+    <div id="sc-pace-rows">
+      <div style="font-size:12px;color:var(--t3);text-align:center;padding:16px 0;">Wire pace will show here as reps log sales throughout the week.</div>
     </div>
   </div>
 </div>
@@ -604,63 +989,158 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 </div>
 
 <!-- ORG CHART -->
+<!-- TEAM TAB -->
 <div id="page-org" class="pg">
-  <div class="pgt">Org chart</div><div class="pgs">FPA DFW hierarchy · click for stats · right-click / hold for actions · drag to reposition</div>
-  <div style="background:rgba(255,224,51,.04);border:1px solid rgba(255,224,51,.13);border-radius:var(--r2);padding:10px 13px;margin-bottom:14px;">
-    <div style="font-size:11px;color:var(--y);font-weight:600;margin-bottom:6px;">⚡ Unassigned starts — drag onto a leader to assign crew</div>
+  <div class="pgt">My team</div>
+  <div class="pgs">Your crew · org hierarchy · click a bubble for stats · right-click or hold for actions</div>
+
+  <!-- 4+1 crew progress bar -->
+  <div class="card" style="background:rgba(255,224,51,.03);border-color:rgba(255,224,51,.13);margin-bottom:14px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:7px;">
+      <div><div style="font-size:13px;font-weight:500;">4+1 crew progress</div><div style="font-size:11px;color:var(--t3);">4 first-gen + 1 second-gen leaders = LT → JPM path</div></div>
+      <span class="bd bd-y" id="crew-status">Getting started</span>
+    </div>
+    <div class="g2">
+      <div>
+        <div style="font-size:10px;color:var(--t3);margin-bottom:5px;">First-gen leaders (need <span id="cfg-fg-lbl">4</span>)</div>
+        <div class="prog-tr" style="height:8px;"><div class="prog-f" id="fg-bar" style="width:0%;background:var(--blue);"></div></div>
+        <div style="font-size:11px;color:var(--t2);margin-top:4px;"><span id="fg-count">0</span>/<span id="fg-need">4</span></div>
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--t3);margin-bottom:5px;">Second-gen leader (need 1)</div>
+        <div class="prog-tr" style="height:8px;"><div class="prog-f" id="sg-bar" style="width:0%;background:var(--teal);"></div></div>
+        <div style="font-size:11px;color:var(--t2);margin-top:4px;"><span id="sg-count">0</span>/1</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unassigned shelf -->
+  <div id="ua-shelf-wrap" style="background:rgba(255,224,51,.04);border:1px solid rgba(255,224,51,.13);border-radius:var(--r2);padding:10px 13px;margin-bottom:14px;">
+    <div style="font-size:11px;color:var(--y);font-weight:600;margin-bottom:6px;">⚡ Unassigned starts — moved from Recruitment once account is created</div>
     <div id="ua-chips" style="display:flex;flex-wrap:wrap;gap:7px;"><span style="font-size:11px;color:var(--t3);">No unassigned starts.</span></div>
   </div>
+
+  <!-- Org chart canvas -->
   <div class="card" style="padding:0;overflow:hidden;">
-    <div class="org-wrap" id="org-canvas">
+    <div class="org-wrap" id="org-canvas" style="height:520px;">
       <svg class="org-svg" id="org-svg"></svg>
       <div id="org-nodes"></div>
     </div>
   </div>
-  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:10px;color:var(--t3);"><span>🖱 Right-click → actions</span><span>📱 Hold 1s → actions</span><span>👆 Click → sales stats</span></div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:10px;color:var(--t3);">
+    <span>🖱 Right-click → actions</span><span>📱 Hold 1s → actions</span><span>👆 Click → stats</span><span>↔ Drag → reposition</span>
+  </div>
+
+  <!-- Alumni section -->
+  <div class="card" style="margin-top:14px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div class="slbl" style="margin-bottom:0;">Alumni (<span id="alumni-count">0</span>)</div>
+      <span style="font-size:11px;color:var(--t3);">Reps who left or were deactivated</span>
+    </div>
+    <div id="alumni-list"><div style="font-size:12px;color:var(--t3);padding:10px 0;">No alumni yet.</div></div>
+  </div>
 </div>
+
 <div class="ctx-menu" id="ctx-menu">
   <div class="ctx-lbl" id="ctx-pname">Person</div>
-  <div class="ctx-item" onclick="ctxAction('stats')">📊 View stats</div>
-  <div class="ctx-item" onclick="ctxAction('reassign')">↔ Reassign crew</div>
+  <div class="ctx-item" onclick="ctxAction('stats')">📊 View sales stats</div>
+  <div class="ctx-item" onclick="ctxAction('reassign')">↔ Reassign to crew</div>
   <div class="ctx-item" onclick="ctxAction('promote')">⬆ Promote role</div>
   <div class="ctx-sep"></div>
   <div class="ctx-item danger" onclick="ctxAction('deactivate')">🚫 Deactivate access</div>
   <div class="ctx-item danger" onclick="ctxAction('alumni')">📁 Move to alumni</div>
 </div>
 
-<!-- RECRUITMENT -->
+<!-- RECRUITMENT — Full pipeline -->
 <div id="page-recruit" class="pg">
-  <div class="pgt">Recruitment</div><div class="pgs">Your pipeline · 4+1 crew progress · drop-off intelligence</div>
+  <div class="pgt">Recruitment</div>
+  <div class="pgs">Full candidate log · every stage · nothing disappears</div>
+
+  <!-- Stats row -->
   <div class="g4">
     <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);" id="rec-ints">0</div><div class="sl">Interviews this wk</div><div class="sd" style="color:var(--t3);">Target: <span id="rec-int-tgt">8</span>/wk</div></div>
     <div class="stat"><div class="sacc" style="background:var(--teal);"></div><div class="sv" style="color:var(--teal);" id="rec-offers">0</div><div class="sl">Offers made</div><div class="sd" style="color:var(--t3);">—</div></div>
     <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);" id="rec-starts">0</div><div class="sl">New starts</div><div class="sd" style="color:var(--t3);">—</div></div>
     <div class="stat"><div class="sacc" style="background:var(--red);"></div><div class="sv" style="color:var(--red);" id="rec-denied">0</div><div class="sl">Denied / fell off</div><div class="sd" style="color:var(--t3);">—</div></div>
   </div>
-  <div class="card" style="background:rgba(255,224,51,.03);border-color:rgba(255,224,51,.13);">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
-      <div><div style="font-size:13px;font-weight:500;">4+1 crew progress</div><div style="font-size:11px;color:var(--t3);">4 first-gen + 1 second-gen = LT → JPM path</div></div>
-      <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:11px;color:var(--t3);">Weekly interview target:</span><input type="number" id="int-tgt-inp" value="8" style="width:55px;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:5px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:18px;color:var(--y);outline:none;text-align:center;"/></div>
-    </div>
-    <div class="g2">
-      <div><div style="font-size:10px;color:var(--t3);margin-bottom:5px;">First-gen leaders (need 4)</div><div class="prog-tr" style="height:8px;"><div class="prog-f" id="fg-bar" style="width:0%;background:var(--blue);"></div></div><div style="font-size:11px;color:var(--t2);margin-top:4px;"><span id="fg-count">0</span>/4</div></div>
-      <div><div style="font-size:10px;color:var(--t3);margin-bottom:5px;">Second-gen leader (need 1)</div><div class="prog-tr" style="height:8px;"><div class="prog-f" id="sg-bar" style="width:0%;background:var(--teal);"></div></div><div style="font-size:11px;color:var(--t2);margin-top:4px;"><span id="sg-count">0</span>/1</div></div>
-    </div>
+
+  <!-- Drop-off intelligence -->
+  <div class="card" style="margin-bottom:14px;" id="dropoff-intel">
+    <div class="slbl">Drop-off intelligence</div>
+    <div id="dropoff-body" style="font-size:12px;color:var(--t3);">Add candidates to start seeing where your pipeline drops off.</div>
   </div>
+
+  <!-- Add candidate -->
   <div class="card">
     <div class="slbl" style="margin-bottom:12px;">Add a candidate</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
-      <div class="field"><label>Candidate name</label><input type="text" id="c-name" placeholder="Full name"/></div>
+      <div class="field"><label>Full name *</label><input type="text" id="c-name" placeholder="First and last name"/></div>
       <div class="field"><label>Interview date</label><input type="date" id="c-date"/></div>
-      <div class="field"><label>Phone</label><input type="text" id="c-phone" placeholder="(555) 000-0000"/></div>
-      <div class="field"><label>Source</label><select id="c-source"><option>Indeed</option><option>ZipRecruiter</option><option>LinkedIn</option><option>Referral — team member</option><option>Referral — personal</option><option>Walk-in</option></select></div>
+      <div class="field"><label>Phone number</label><input type="text" id="c-phone" placeholder="(555) 000-0000"/></div>
+      <div class="field"><label>Source</label>
+        <select id="c-source">
+          <option>Indeed</option><option>ZipRecruiter</option><option>LinkedIn</option>
+          <option>Referral — team member</option><option>Referral — personal</option><option>Walk-in</option><option>Social media</option><option>Career fair</option>
+        </select>
+      </div>
+      <div class="field"><label>Interviewer (who gets credit)</label><input type="text" id="c-interviewer" placeholder="Your name or team member's name"/></div>
+      <div class="field"><label>Crew credit (separate from interview)</label><input type="text" id="c-crew-credit" placeholder="Leader getting 4+1 crew credit"/></div>
     </div>
-    <div class="field"><label>Notes</label><textarea id="c-notes" placeholder="Energy, attitude, why they're a fit..."></textarea></div>
+    <div class="field"><label>First impression notes</label><textarea id="c-notes" placeholder="Energy, attitude, communication, body language, why they're a fit or not..."></textarea></div>
     <div style="display:flex;gap:8px;"><button class="btn btn-p" onclick="addCandidate()">Add to pipeline</button><button class="btn btn-g" onclick="clearCandForm()">Clear</button></div>
   </div>
+
+  <!-- Pipeline tabs -->
+  <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+    <button class="btn btn-g stab-btn active-tab" style="font-size:11px;" onclick="setRecView('active',this)">Active pipeline</button>
+    <button class="btn btn-g stab-btn" style="font-size:11px;" onclick="setRecView('started',this)">Started ✓</button>
+    <button class="btn btn-g stab-btn" style="font-size:11px;" onclick="setRecView('denied',this)">Denied / fell off</button>
+    <button class="btn btn-g stab-btn" style="font-size:11px;" onclick="setRecView('all',this)">All time</button>
+  </div>
+
   <div class="card">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;"><div class="slbl" style="margin-bottom:0;">Active pipeline</div></div>
     <div id="cand-list"><div class="empty"><div class="icon">👥</div><div class="title">No candidates yet</div><div class="sub">Add your first candidate above.</div></div></div>
+  </div>
+</div>
+
+<!-- DENY MODAL -->
+<div class="modal-bg" id="deny-modal">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-hd"><div class="modal-title">Log denial reason</div><button class="modal-x" onclick="closeDenyModal()">✕</button></div>
+    <div style="font-size:12px;color:var(--t2);margin-bottom:14px;" id="deny-cand-name">Candidate</div>
+    <div class="field"><label>Reason for denial / fell off</label>
+      <select id="deny-reason" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:8px 10px;font-size:13px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
+        <option value="">Select a reason</option>
+        <optgroup label="No-show / ghosted">
+          <option>No-showed interview — never responded</option>
+          <option>No-showed orientation</option>
+          <option>Ghosted after offer</option>
+        </optgroup>
+        <optgroup label="Not a fit">
+          <option>Poor attitude / energy in interview</option>
+          <option>Lack of coachability</option>
+          <option>Not aligned with the culture</option>
+          <option>Poor communication skills</option>
+          <option>Failed background expectations</option>
+        </optgroup>
+        <optgroup label="Candidate withdrew">
+          <option>Took another job</option>
+          <option>Personal circumstances</option>
+          <option>Not ready for full-time commitment</option>
+          <option>Transportation issues</option>
+        </optgroup>
+        <optgroup label="Performance">
+          <option>Failed training / couldn't learn the pitch</option>
+          <option>Did not meet sales standards in first week</option>
+          <option>Attitude issues once in the field</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="field"><label>Additional notes (optional)</label><textarea id="deny-notes" placeholder="What specifically happened? This helps your team learn..." style="min-height:60px;"></textarea></div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-r" style="flex:1;justify-content:center;" onclick="confirmDeny()">Confirm denial</button>
+      <button class="btn btn-g" onclick="closeDenyModal()">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -710,12 +1190,14 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 
 <!-- SETTINGS -->
 <div id="page-settings" class="pg">
-  <div class="pgt">Settings</div><div class="pgs">Criteria · benchmarks · services & wire · territory · terminology · announcements</div>
+  <div class="pgt">Settings</div><div class="pgs">Criteria · benchmarks · services & wire · territory · rank tiers · crews · terminology · announcements</div>
   <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;">
     <button class="btn btn-g stab-btn active-tab" onclick="setStab('criteria',this)">Promo criteria</button>
     <button class="btn btn-g stab-btn" onclick="setStab('benchmarks',this)">Benchmarks</button>
     <button class="btn btn-g stab-btn" onclick="setStab('services',this)">Services & wire</button>
     <button class="btn btn-g stab-btn" onclick="setStab('territory',this)">Territory</button>
+    <button class="btn btn-g stab-btn" onclick="setStab('ranks',this)">Rank tiers</button>
+    <button class="btn btn-g stab-btn" onclick="setStab('crews',this)">Crews</button>
     <button class="btn btn-g stab-btn" onclick="setStab('terminology',this)">Terminology</button>
     <button class="btn btn-g stab-btn" onclick="setStab('announce',this)">Announcements</button>
   </div>
@@ -838,17 +1320,126 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
       <div id="ann-active-list"><div class="empty"><div class="icon">📢</div><div class="title">No announcements posted</div><div class="sub">Post an announcement above and it shows immediately to all reps.</div></div></div>
     </div>
   </div>
+
+  <!-- RANK TIERS -->
+  <div id="stab-ranks" style="display:none;">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div class="slbl" style="margin-bottom:0;">Rank tiers — fully customizable</div>
+      </div>
+      <div style="font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6;">
+        These are the ranks your reps earn based on lifetime PSUs (closes). Edit the name, emoji, and PSU threshold to match your org's language. Add or remove tiers freely. Changes show instantly on the High Roller Board.
+      </div>
+      <div id="rank-tiers-list" style="margin-bottom:14px;"></div>
+      <div style="background:var(--s3);border:1px solid var(--b2);border-radius:var(--r2);padding:14px;">
+        <div class="slbl" style="margin-bottom:10px;">Add a new rank tier</div>
+        <div style="display:grid;grid-template-columns:50px 1fr 1fr 100px 90px;gap:9px;align-items:end;">
+          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Emoji</div><input type="text" id="new-tier-emoji" placeholder="👑" maxlength="2" style="width:100%;background:var(--s4);border:1px solid var(--b2);border-radius:var(--r1);padding:7px;font-size:18px;color:var(--t1);outline:none;text-align:center;"/></div>
+          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Tier name</div><input type="text" id="new-tier-name" placeholder="e.g. Vanguard Elite" style="width:100%;background:var(--s4);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Description</div><input type="text" id="new-tier-desc" placeholder="e.g. The best of the best" style="width:100%;background:var(--s4);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Min PSUs</div><input type="number" id="new-tier-threshold" placeholder="100" style="width:100%;background:var(--s4);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/></div>
+          <div><button class="btn btn-p" style="width:100%;justify-content:center;" onclick="addRankTier()">Add tier</button></div>
+        </div>
+      </div>
+      <div id="rank-tiers-msg" style="display:none;font-size:11px;margin-top:8px;color:#86EFAC;"></div>
+    </div>
+  </div>
+
+  <!-- CREWS -->
+  <div id="stab-crews" style="display:none;">
+    <div class="card">
+      <div class="slbl" style="margin-bottom:4px;">Crew management</div>
+      <div style="font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.6;">
+        Crews are internal teams named by the leader — like "Vanguards", "Arch", "MP Ent." Each rep belongs to one crew. Crew vs crew standings show on the High Roller Board. Leaders set their own crew name in their profile, or you assign it here.
+      </div>
+
+      <!-- Assign reps to crews -->
+      <div style="background:var(--s3);border:1px solid var(--b2);border-radius:var(--r2);padding:14px;margin-bottom:14px;">
+        <div class="slbl" style="margin-bottom:10px;">Assign rep to a crew</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 90px;gap:9px;align-items:end;">
+          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Rep</div>
+            <select id="crew-rep-sel" style="width:100%;background:var(--s4);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;">
+              <option value="">Select rep...</option>
+            </select>
+          </div>
+          <div><div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px;">Crew name</div>
+            <input type="text" id="crew-name-inp" placeholder="e.g. Vanguards" list="crew-datalist" style="width:100%;background:var(--s4);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/>
+            <datalist id="crew-datalist"></datalist>
+          </div>
+          <div><button class="btn btn-p" style="width:100%;justify-content:center;" onclick="assignCrew()">Assign</button></div>
+        </div>
+      </div>
+
+      <!-- Current crew assignments -->
+      <div class="slbl" style="margin-bottom:10px;">Current crew assignments</div>
+      <div id="crew-assignments-list"><div style="font-size:12px;color:var(--t3);">No crew assignments yet. Start by typing in a crew name above.</div></div>
+    </div>
+
+    <!-- Crew standings preview -->
+    <div class="card">
+      <div class="slbl" style="margin-bottom:10px;">Crew standings preview</div>
+      <div id="crew-standings-preview"><div style="font-size:12px;color:var(--t3);">Standings appear once reps are assigned to crews and have logged sales.</div></div>
+    </div>
+  </div>
+
 </div>
 
   </main><!-- end main -->
 </div><!-- end app -->
 
+<!-- ROADMAP MODAL -->
+<div class="modal-bg" id="roadmap-modal">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-hd"><div class="modal-title">Your path to PM 🚀</div><button class="modal-x" onclick="document.getElementById('roadmap-modal').classList.remove('show')">✕</button></div>
+    <div style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.6;">This is your full career roadmap from Day 1 AE all the way to Project Manager. Every milestone is a checkpoint — your leader will confirm each one with you.</div>
+
+    <!-- Phase 1: AE -->
+    <div style="background:rgba(79,142,247,.06);border:1px solid rgba(79,142,247,.2);border-radius:var(--r2);padding:14px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;color:#fff;flex-shrink:0;">AE</div>
+        <div><div style="font-size:13px;font-weight:600;">Account Executive — Days 1–30</div><div style="font-size:11px;color:var(--t3);">Learn the floor · build consistency · hit your first bell</div></div>
+      </div>
+      <div id="roadmap-ae-checks"></div>
+    </div>
+
+    <!-- Phase 2: LT -->
+    <div style="background:rgba(0,201,167,.06);border:1px solid rgba(0,201,167,.2);border-radius:var(--r2);padding:14px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">LT</div>
+        <div><div style="font-size:13px;font-weight:600;">Lead Trainer — Days 30–90</div><div style="font-size:11px;color:var(--t3);">Build your first crew · lead Atmosphere · develop leaders</div></div>
+      </div>
+      <div style="font-size:11px;color:var(--teal);margin-bottom:8px;">Promotion gate: hit ANY ONE of the 3 paths below in the same week</div>
+      <div id="roadmap-lt-checks"></div>
+    </div>
+
+    <!-- Phase 3: JPM -->
+    <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:var(--r2);padding:14px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--amber);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">JPM</div>
+        <div><div style="font-size:13px;font-weight:600;">Junior Project Manager</div><div style="font-size:11px;color:var(--t3);">Expand your organization · mentor your LTs</div></div>
+      </div>
+      <div id="roadmap-jpm-checks"></div>
+    </div>
+
+    <!-- Phase 4: PM -->
+    <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:var(--r2);padding:14px;margin-bottom:16px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;">PM</div>
+        <div><div style="font-size:13px;font-weight:600;">Project Manager</div><div style="font-size:11px;color:var(--t3);">Run your own office · build your empire</div></div>
+      </div>
+      <div id="roadmap-pm-checks"></div>
+    </div>
+
+    <button class="btn btn-p" style="width:100%;justify-content:center;" onclick="document.getElementById('roadmap-modal').classList.remove('show')">Got it — let's get to work</button>
+  </div>
+</div>
+
 <!-- SALE LOG MODAL -->
 <div class="modal-bg" id="sale-modal">
   <div class="modal">
     <div class="modal-hd"><div class="modal-title">Log a sale</div><button class="modal-x" onclick="closeSaleModal()">✕</button></div>
-    <div class="field"><label>Customer name (optional)</label><input type="text" id="sale-customer" placeholder="First name is fine"/></div>
-    <div class="field"><label>Address / apartment (optional)</label><input type="text" id="sale-address" placeholder="123 Main St #4B"/></div>
+    <div class="field"><label>Customer first & last name *</label><input type="text" id="sale-customer" placeholder="First and last name" required/></div>
+    <div class="field"><label>TPV confirmation number *</label><input type="text" id="sale-address" placeholder="TPV# required to validate this sale" required/></div>
     <div class="slbl" style="margin-bottom:8px;">Services sold — select all that apply</div>
     <div id="svc-list-modal"></div>
     <div class="sale-tot" id="sale-total-box">
@@ -930,6 +1521,8 @@ function loadLocal(){
     const an=localStorage.getItem('fpa_ann');if(an)ANNOUNCEMENTS=JSON.parse(an);
     const td=localStorage.getItem('fpa_today_'+today());if(td){const d=JSON.parse(td);todaySales=d.sales||[];todayWire=d.wire||0;todayCloses=d.closes||0;todayBells=d.bells||0;}
     const tr=localStorage.getItem('fpa_training');if(tr)TRAINING_ITEMS=JSON.parse(tr);
+    const rt=localStorage.getItem('fpa_rank_tiers');if(rt)RANK_TIERS=JSON.parse(rt);
+    const cr=localStorage.getItem('fpa_crews');if(cr)CREWS=JSON.parse(cr);
   }catch(e){}
 }
 function saveLocal(){
@@ -990,7 +1583,7 @@ function showApp(){
   const greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
   const ds=new Date().toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric'});
   document.getElementById('hg').textContent=greet+', '+first+' 👋';
-  document.getElementById('hs').textContent=ds+' · Day '+day+' of 90 · Spectrum · '+office;
+  document.getElementById('hs').textContent=ds+' · '+office+' · Day '+day;
   document.getElementById('tctx').innerHTML='Welcome back, <strong>'+first+'</strong>';
   const av=document.getElementById('u-av');
   av.textContent=initials;
@@ -1006,7 +1599,7 @@ function showApp(){
   const pn=day<=30?'Phase 1 — Learn the floor':day<=60?'Phase 2 — Build your system':'Phase 3 — Lead & recruit';
   document.getElementById('phase-lbl').textContent=pn;
   document.getElementById('phase-fill').style.width=pct+'%';
-  document.getElementById('phase-pct').textContent='Day '+day+' · '+pct+'%';
+  document.getElementById('phase-pct').textContent='Day '+day+' · tap to see full roadmap →';
   // Apply config labels
   applyConfig();
   buildSidebar(role);
@@ -1021,6 +1614,8 @@ function showApp(){
   renderBulletin('office');
   if(['owner','pm'].includes(role)){loadRepsTable();buildOrgChart();renderActiveAnnouncements();}
   renderTrainingVault();
+  initHighRoller();
+  renderScorecard();
   if(todayCloses>0)renderTodaySales();
   // Show announcement
   if(ANNOUNCEMENTS.length>0){
@@ -1084,18 +1679,19 @@ function buildSidebar(role){
     <div class="sbi" onclick="nav('field',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="5.5"/><path d="M7 4v3l2 2"/></svg>Field day<span class="sbt" style="color:var(--green);background:rgba(34,197,94,.1);">Live</span></div>
     <div class="sbi" onclick="nav('progress',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 10.5l3-3.5 2.5 2.5 4.5-5.5"/></svg>My progress</div>
     <div class="sbi" onclick="nav('training',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4.5h10M4 7.5h6M5.5 10.5h3"/></svg>Training vault</div>
-    <div class="sbi" onclick="nav('goals',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="5.5"/><circle cx="7" cy="7" r="2.5"/></svg>Weekly goals</div>
+    <div class="sbi" onclick="nav('goals',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="7" r="5.5"/><circle cx="7" cy="7" r="2.5"/></svg>Submit Sunday</div>
     ${isLeader?`<div class="sbi" onclick="nav('recruit',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5" cy="5" r="2.5"/><path d="M1 12.5c0-2.5 1.8-4.5 4-4.5"/><circle cx="10" cy="8" r="2"/><path d="M8 13c0-1.6 1-3 2-3"/></svg>Recruitment</div>`:'<div class="sbi lk"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5" cy="5" r="2"/><path d="M1 12c0-2.5 2-4.5 4.5-4.5"/><circle cx="10.5" cy="7" r="1.8"/></svg>Recruitment<span class="sbt">LT+</span></div>'}
   </div>
   <div class="sbg">
     <div class="sbg-lbl">Recognition</div>
     <div class="sbi" onclick="nav('highroller',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7 2l1.4 3.4H12l-2.8 2.4 1 3.6L7 9.5l-3.2 1.9 1-3.6L2 5.4h3.6z"/></svg>High roller board</div>
+    <div class="sbi" onclick="nav('achievements',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="5.5" r="3.5"/><path d="M4 8.5L3 12.5l4-2 4 2-1-4"/></svg>Achievements</div>
   </div>
   ${isOwner?`
   <div class="sbg">
     <div class="sbg-lbl">Owner</div>
     <div class="sbi" onclick="nav('scorecard',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M5 9V7M7 9V5M9 9V7"/></svg>Scorecard</div>
-    <div class="sbi" onclick="nav('org',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="3" r="2"/><circle cx="2.5" cy="10" r="2"/><circle cx="11.5" cy="10" r="2"/><path d="M7 5v3M7 8l-4.5 2M7 8l4.5 2"/></svg>Org chart</div>
+    <div class="sbi" onclick="nav('org',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7" cy="3" r="2"/><circle cx="2.5" cy="10" r="2"/><circle cx="11.5" cy="10" r="2"/><path d="M7 5v3M7 8l-4.5 2M7 8l4.5 2"/></svg>My team</div>
     <div class="sbi" onclick="nav('bulletin',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M4.5 5.5h5M4.5 7.5h5M4.5 9.5h3"/></svg>Weekly bulletin</div>
     <div class="sbi" onclick="nav('admin',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5.5" cy="4.5" r="2"/><path d="M1 12c0-2.8 2-5 4.5-5s4.5 2.2 4.5 5"/><path d="M10 7l1.5 1.5L14 6"/></svg>Rep management</div>
     <div class="sbi" onclick="nav('training-mgr',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4.5h10M4 7.5h6M5.5 10.5h3"/><circle cx="11" cy="3" r="1.5"/></svg>Training vault mgr</div>
@@ -1278,6 +1874,10 @@ function checkBell(svcs,wire){
 }
 function submitSale(){
   const svcs=Object.values(selectedSvcs);
+  const customer=document.getElementById('sale-customer').value.trim();
+  const tpv=document.getElementById('sale-address').value.trim();
+  if(!customer){alert('Enter customer first and last name.');return;}
+  if(!tpv){alert('TPV confirmation number is required to validate this sale.');return;}
   if(svcs.length===0){alert('Select at least one service.');return;}
   const wire=svcs.reduce((a,s)=>a+s.wire,0);
   const piaCount=svcs.filter(s=>s.pia).length;
@@ -1376,19 +1976,6 @@ async function inviteRep(){
 
 // ORG CHART
 var orgNodes=[];var orgDragging=null;
-function buildOrgChart(){
-  const canvas=document.getElementById('org-canvas');
-  const nodesDiv=document.getElementById('org-nodes');
-  const svg=document.getElementById('org-svg');
-  if(!canvas||!nodesDiv||!svg)return;
-  // Build from profiles if available — for now show owner node + placeholder
-  const w=canvas.offsetWidth||600;
-  const h=canvas.offsetHeight||500;
-  nodesDiv.innerHTML='';svg.innerHTML='';
-  orgNodes=[{id:'owner',name:P?.full_name||'You (Owner)',role:'owner',x:w/2,y:80,color:'#FFE033',initials:(P?.full_name||'AW').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}];
-  orgNodes.forEach(n=>createOrgNode(n));
-  drawOrgLines();
-}
 function createOrgNode(n){
   const div=document.createElement('div');
   div.className='onode';
@@ -1432,79 +2019,392 @@ function ctxAction(a){
 }
 
 // RECRUITMENT
+
+// RECRUITMENT — Full pipeline
+var REC_VIEW='active';
+var DENY_TARGET_ID=null;
+
+function setRecView(view,btn){
+  REC_VIEW=view;
+  document.querySelectorAll('#page-recruit .stab-btn').forEach(b=>{b.classList.remove('active-tab');b.style.background='var(--s3)';b.style.color='var(--t2)';});
+  if(btn){btn.classList.add('active-tab');btn.style.background='var(--y)';btn.style.color='var(--k)';}
+  renderCandidates();
+}
+
 function addCandidate(){
   const name=document.getElementById('c-name').value.trim();
   const date=document.getElementById('c-date').value;
   const phone=document.getElementById('c-phone').value.trim();
   const source=document.getElementById('c-source').value;
   const notes=document.getElementById('c-notes').value.trim();
-  if(!name)return;
-  CANDIDATES.push({id:Date.now(),name,date,phone,source,notes,stage:'Added',steps:{added:true,interviewed:false,offered:false,video:false,orientation:false,account:false},denied:false,cold:false});
-  saveLocal();renderCandidates();clearCandForm();
+  const interviewer=document.getElementById('c-interviewer')?.value.trim()||P?.full_name||'';
+  const crewCredit=document.getElementById('c-crew-credit')?.value.trim()||'';
+  if(!name){alert('Enter candidate name.');return;}
+  CANDIDATES.push({id:Date.now(),name,date,phone,source,notes,interviewer,crewCredit,
+    stage:'Added',steps:{added:true,interviewed:false,offered:false,video:false,orientation:false,account:false},
+    denied:false,deniedReason:'',deniedNotes:'',cold:false,started:false,addedDate:new Date().toLocaleDateString()});
+  saveLocal();renderCandidates();updateDropoffIntel();clearCandForm();
 }
+
 function clearCandForm(){
-  ['c-name','c-date','c-phone','c-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['c-name','c-date','c-phone','c-notes','c-interviewer','c-crew-credit'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
 }
+
 function renderCandidates(){
   const el=document.getElementById('cand-list');if(!el)return;
-  const active=CANDIDATES.filter(c=>!c.denied&&!c.alumni);
-  if(active.length===0){el.innerHTML='<div class="empty"><div class="icon">👥</div><div class="title">No candidates yet</div><div class="sub">Add your first candidate above.</div></div>';return;}
-  // Update stats
-  document.getElementById('rec-ints').textContent=active.filter(c=>c.steps.interviewed).length;
-  document.getElementById('rec-offers').textContent=active.filter(c=>c.steps.offered).length;
-  document.getElementById('rec-starts').textContent=active.filter(c=>c.steps.account).length;
-  document.getElementById('rec-denied').textContent=CANDIDATES.filter(c=>c.denied).length;
-  const STAGE_COLORS=['#4F8EF7','#00C9A7','#F59E0B','#8B5CF6','#22C55E','#FFE033'];
-  el.innerHTML=active.map((c,i)=>{
-    const steps=[{k:'added',l:'Added to pipeline'},{k:'interviewed',l:'Interviewed'},{k:'offered',l:'Offer extended'},{k:'video',l:'Video sent & watched'},{k:'orientation',l:'Attended orientation'},{k:'account',l:'Account created'}];
-    return `<div class="pipe-card" id="pipe-${c.id}">
-      <div class="pipe-hd" onclick="togglePipe('${c.id}')">
-        <div class="pipe-av" style="background:${STAGE_COLORS[i%6]}22;color:${STAGE_COLORS[i%6]};">${c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}</div>
-        <div style="flex:1;"><div class="pipe-name">${c.name}</div><div class="pipe-meta">${c.source}${c.date?' · '+new Date(c.date+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):''}${c.phone?' · '+c.phone:''}</div></div>
-        <span class="bd bd-b" style="font-size:10px;">${Object.values(c.steps).filter(Boolean).length}/6</span>
-      </div>
-      <div class="pipe-det" id="pdet-${c.id}">
-        ${steps.map(s=>`<div class="ps-row"><div class="ps-chk${c.steps[s.k]?' on':''}" onclick="toggleStep('${c.id}','${s.k}',this)"></div><div class="ps-lbl${c.steps[s.k]?' done':''}">${s.l}</div></div>`).join('')}
-        ${c.notes?`<div style="background:var(--s4);border-radius:var(--r1);padding:8px 10px;font-size:11px;color:var(--t2);margin-top:8px;">📝 ${c.notes}</div>`:''}
-        <div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap;">
-          <button class="btn btn-r" style="font-size:10px;padding:4px 10px;" onclick="denyCandidate('${c.id}')">Denied</button>
-          <button class="btn btn-g" style="font-size:10px;padding:4px 10px;" onclick="coldFlag('${c.id}')">Cold flag</button>
-        </div>
-        ${c.cold?'<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--r1);padding:6px 10px;font-size:11px;color:#FCD34D;margin-top:7px;">⚠️ Cold flag — no response in 3+ days. Escalate or move on.</div>':''}
-      </div>
-    </div>`;
+  const all=CANDIDATES;
+  const interviewed=all.filter(c=>c.steps.interviewed);
+  const started=all.filter(c=>c.started||c.steps.account);
+  const denied=all.filter(c=>c.denied);
+  const ri=document.getElementById('rec-ints');if(ri)ri.textContent=interviewed.length;
+  const ro=document.getElementById('rec-offers');if(ro)ro.textContent=all.filter(c=>c.steps.offered).length;
+  const rs=document.getElementById('rec-starts');if(rs)rs.textContent=started.length;
+  const rd=document.getElementById('rec-denied');if(rd)rd.textContent=denied.length;
+  let filtered;
+  if(REC_VIEW==='active')filtered=all.filter(c=>!c.denied&&!c.started&&!c.steps.account);
+  else if(REC_VIEW==='started')filtered=all.filter(c=>c.started||c.steps.account);
+  else if(REC_VIEW==='denied')filtered=all.filter(c=>c.denied);
+  else filtered=all;
+  const msgs={active:'No active candidates. Add one above.',started:'No started reps yet.',denied:'No denied candidates.',all:'No candidates yet.'};
+  if(filtered.length===0){el.innerHTML='<div class="empty"><div class="icon">👥</div><div class="title">'+msgs[REC_VIEW]+'</div></div>';return;}
+  const COLORS=['#4F8EF7','#00C9A7','#F59E0B','#8B5CF6','#22C55E','#FFE033','#EF4444'];
+  const steps=[{k:'added',l:'Added to pipeline'},{k:'interviewed',l:'Interview completed'},{k:'offered',l:'Offer extended'},{k:'video',l:'Company video watched'},{k:'orientation',l:'Attended orientation'},{k:'account',l:'Account created — on the team'}];
+  el.innerHTML=filtered.map((c,i)=>{
+    const color=COLORS[i%COLORS.length];
+    const initials=c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const done=Object.values(c.steps).filter(Boolean).length;
+    let badge=c.denied?'<span class="bd bd-r">Denied</span>':c.started||c.steps.account?'<span class="bd bd-g">Started ✓</span>':done>=4?'<span class="bd bd-t">Near start</span>':done>=2?'<span class="bd bd-a">In progress</span>':'<span class="bd bd-b">New</span>';
+    const stepHtml=steps.map(s=>'<div class="ps-row"><div class="ps-chk'+(c.steps[s.k]?' on':'')+'" onclick="toggleStep(\''+c.id+'\',\''+s.k+'\',this)"></div><div class="ps-lbl'+(c.steps[s.k]?' done':'')+'" id="psl-'+c.id+'-'+s.k+'">'+s.l+'</div></div>').join('');
+    if(c.denied){
+      return '<div class="pipe-card" id="pipe-'+c.id+'">'
+        +'<div class="pipe-hd" onclick="togglePipe(\''+c.id+'\')">'
+        +'<div class="pipe-av" style="background:'+color+'22;color:'+color+';">'+initials+'</div>'
+        +'<div style="flex:1;"><div style="font-size:13px;font-weight:500;display:flex;align-items:center;gap:7px;">'+c.name+' '+badge+'</div>'
+        +'<div style="font-size:10px;color:var(--t3);margin-top:2px;">'+c.source+(c.date?' · '+new Date(c.date+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'')+' · Denied: '+(c.deniedDate||'—')+'</div></div>'
+        +'<span style="font-size:10px;color:var(--t3);">'+done+'/6</span>'
+        +'</div>'
+        +'<div class="pipe-det" id="pdet-'+c.id+'">'
+        +'<div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--r1);padding:10px 12px;margin-bottom:10px;">'
+        +'<div style="font-size:11px;font-weight:600;color:#FCA5A5;margin-bottom:3px;">'+( c.deniedReason||'No reason logged')+'</div>'
+        +(c.deniedNotes?'<div style="font-size:11px;color:var(--t2);">'+c.deniedNotes+'</div>':'')
+        +(c.crewCredit?'<div style="font-size:10px;color:var(--t3);margin-top:3px;">Crew credit: '+c.crewCredit+'</div>':'')
+        +'</div>'
+        +(c.notes?'<div style="background:var(--s4);border-radius:var(--r1);padding:8px 10px;font-size:11px;color:var(--t2);margin-bottom:8px;">📝 '+c.notes+'</div>':'')
+        +'<button class="btn btn-g" style="font-size:10px;padding:4px 10px;" onclick="reinstateCandidate(\''+c.id+'\')">↩ Reinstate</button>'
+        +'</div></div>';
+    }
+    return '<div class="pipe-card" id="pipe-'+c.id+'">'
+      +'<div class="pipe-hd" onclick="togglePipe(\''+c.id+'\')">'
+      +'<div class="pipe-av" style="background:'+color+'22;color:'+color+';">'+initials+'</div>'
+      +'<div style="flex:1;"><div style="font-size:13px;font-weight:500;display:flex;align-items:center;gap:7px;flex-wrap:wrap;">'+c.name+' '+badge+(c.cold?' <span class="bd" style="background:rgba(245,158,11,.1);color:#FCD34D;border:1px solid rgba(245,158,11,.2);">⚠ Cold</span>':'')+'</div>'
+      +'<div style="font-size:10px;color:var(--t3);margin-top:2px;">'+c.source+(c.date?' · '+new Date(c.date+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):''+(c.phone?' · '+c.phone:''))+(c.interviewer?' · By: '+c.interviewer:'')+'</div>'
+      +'</div><span style="font-size:10px;color:var(--t3);">'+done+'/6</span>'
+      +'</div>'
+      +'<div class="pipe-det" id="pdet-'+c.id+'">'
+      +stepHtml
+      +(c.notes?'<div style="background:var(--s4);border-radius:var(--r1);padding:8px 10px;font-size:11px;color:var(--t2);margin-top:8px;line-height:1.5;">📝 '+c.notes+'</div>':'')
+      +(c.crewCredit?'<div style="font-size:10px;color:var(--t3);margin-top:6px;">👥 Crew credit → '+c.crewCredit+'</div>':'')
+      +(c.cold?'<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--r1);padding:7px 10px;font-size:11px;color:#FCD34D;margin-top:7px;">⚠️ Cold — no response 3+ days. Follow up or move on.</div>':'')
+      +'<div style="display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;">'
+      +'<button class="btn btn-r" style="font-size:10px;padding:5px 12px;" onclick="openDenyModal(\''+c.id+'\')">Denied / fell off</button>'
+      +'<button class="btn btn-g" style="font-size:10px;padding:5px 12px;" onclick="coldFlag(\''+c.id+'\')">'+(c.cold?'Remove cold flag':'⚠ Cold flag')+'</button>'
+      +(c.steps.account?'<button class="btn btn-t" style="font-size:10px;padding:5px 12px;" onclick="moveToTeam(\''+c.id+'\')">→ Move to team</button>':'')
+      +'</div>'
+      +'</div></div>';
   }).join('');
 }
+
 function togglePipe(id){const el=document.getElementById('pipe-'+id);if(el)el.classList.toggle('open');}
-function toggleStep(cid,k,el){
+function toggleStep(cid,k,chkEl){
   const c=CANDIDATES.find(c=>c.id==cid);if(!c)return;
   c.steps[k]=!c.steps[k];
-  el.classList.toggle('on',c.steps[k]);
-  el.nextElementSibling?.classList.toggle('done',c.steps[k]);
-  saveLocal();
+  chkEl.classList.toggle('on',c.steps[k]);
+  const lbl=document.getElementById('psl-'+cid+'-'+k);if(lbl)lbl.classList.toggle('done',c.steps[k]);
+  if(k==='account'&&c.steps[k])c.started=true;
+  saveLocal();renderCandidates();updateDropoffIntel();
 }
-function denyCandidate(id){const c=CANDIDATES.find(c=>c.id==id);if(c){c.denied=true;saveLocal();renderCandidates();}}
+function openDenyModal(id){
+  DENY_TARGET_ID=id;
+  const c=CANDIDATES.find(c=>c.id==id);if(!c)return;
+  const nm=document.getElementById('deny-cand-name');if(nm)nm.textContent='Logging denial for: '+c.name;
+  document.getElementById('deny-reason').value='';
+  document.getElementById('deny-notes').value='';
+  document.getElementById('deny-modal').classList.add('show');
+}
+function closeDenyModal(){document.getElementById('deny-modal').classList.remove('show');DENY_TARGET_ID=null;}
+function confirmDeny(){
+  const reason=document.getElementById('deny-reason').value;
+  const notes=document.getElementById('deny-notes').value.trim();
+  if(!reason){alert('Select a reason.');return;}
+  const c=CANDIDATES.find(c=>c.id==DENY_TARGET_ID);
+  if(c){c.denied=true;c.deniedReason=reason;c.deniedNotes=notes;c.deniedDate=new Date().toLocaleDateString();saveLocal();renderCandidates();updateDropoffIntel();}
+  closeDenyModal();
+}
+function reinstateCandidate(id){const c=CANDIDATES.find(c=>c.id==id);if(c){c.denied=false;c.deniedReason='';c.deniedNotes='';c.alumni=false;saveLocal();renderCandidates();}}
+function moveToTeam(id){const c=CANDIDATES.find(c=>c.id==id);if(c){c.started=true;saveLocal();renderCandidates();buildOrgChart();}}
 function coldFlag(id){const c=CANDIDATES.find(c=>c.id==id);if(c){c.cold=!c.cold;saveLocal();renderCandidates();}}
 
-// GOALS
-function submitGoal(){
+function updateDropoffIntel(){
+  const el=document.getElementById('dropoff-body');if(!el||CANDIDATES.length===0)return;
+  const all=CANDIDATES;const total=all.length;
+  const n={interviewed:all.filter(c=>c.steps.interviewed).length,offered:all.filter(c=>c.steps.offered).length,oriented:all.filter(c=>c.steps.orientation).length,started:all.filter(c=>c.started||c.steps.account).length,denied:all.filter(c=>c.denied).length};
+  const reasons={};all.filter(c=>c.denied&&c.deniedReason).forEach(c=>{const k=c.deniedReason.split('—')[0].trim();reasons[k]=(reasons[k]||0)+1;});
+  const top=Object.entries(reasons).sort((a,b)=>b[1]-a[1])[0];
+  let h='<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px;">';
+  [{l:'Added',n:total,c:'var(--blue)'},{l:'Interviewed',n:n.interviewed,c:'var(--teal)'},{l:'Offered',n:n.offered,c:'var(--amber)'},{l:'Oriented',n:n.oriented,c:'var(--purple)'},{l:'Started',n:n.started,c:'var(--green)'}].forEach((s,i)=>{
+    const pct=total>0?Math.round(s.n/total*100):0;
+    h+='<div style="text-align:center;"><div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:22px;color:'+s.c+';">'+s.n+'</div><div style="font-size:10px;color:var(--t3);">'+s.l+'</div><div style="font-size:9px;color:var(--t3);">'+pct+'%</div></div>';
+  });
+  h+='</div>';
+  if(top)h+='<div style="font-size:12px;color:var(--t2);">📊 Top denial reason: <strong style="color:var(--t1);">'+top[0]+'</strong> ('+top[1]+'x)</div>';
+  if(n.denied>0)h+='<div style="font-size:12px;color:var(--t3);margin-top:4px;">'+n.denied+' denied total · '+all.filter(c=>c.cold).length+' cold flagged</div>';
+  el.innerHTML=h;
+}
+
+function buildOrgChart(){
+  const canvas=document.getElementById('org-canvas');
+  const nodesDiv=document.getElementById('org-nodes');
+  const svgEl=document.getElementById('org-svg');
+  if(!canvas||!nodesDiv||!svgEl)return;
+  nodesDiv.innerHTML='';svgEl.innerHTML='';
+  const w=canvas.offsetWidth||580;
+  orgNodes=[{id:'owner',name:P?.full_name||'You (Owner)',role:P?.role||'owner',x:w/2,y:70,color:'#FFE033',initials:(P?.full_name||'AW').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}];
+  const started=CANDIDATES.filter(c=>c.started||c.steps.account);
+  const uaEl=document.getElementById('ua-chips');
+  if(uaEl){
+    if(started.length===0)uaEl.innerHTML='<span style="font-size:11px;color:var(--t3);">No unassigned starts. Move candidates from Recruitment after account is created.</span>';
+    else uaEl.innerHTML=started.map(c=>'<div style="background:var(--s4);border:1px solid var(--b2);border-radius:var(--r2);padding:6px 10px;font-size:12px;display:flex;align-items:center;gap:7px;cursor:pointer;"><div style="width:22px;height:22px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;">'+c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)+'</div><span>'+c.name.split(' ')[0]+'</span></div>').join('');
+  }
+  const alumni=CANDIDATES.filter(c=>c.alumni);
+  const alumniEl=document.getElementById('alumni-list');
+  const alumniCnt=document.getElementById('alumni-count');
+  if(alumniCnt)alumniCnt.textContent=alumni.length;
+  if(alumniEl)alumniEl.innerHTML=alumni.length===0?'<div style="font-size:12px;color:var(--t3);padding:10px 0;">No alumni yet.</div>':alumni.map(c=>'<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b1);"><div style="width:28px;height:28px;border-radius:50%;background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--t3);">'+c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)+'</div><div style="flex:1;"><div style="font-size:12px;color:var(--t2);">'+c.name+'</div><div style="font-size:10px;color:var(--t3);">'+(c.deniedReason||'')+'</div></div><button onclick="reinstateCandidate(\''+c.id+'\')" style="background:none;border:none;font-size:11px;color:var(--teal);cursor:pointer;">Reinstate</button></div>').join('');
+  orgNodes.forEach(n=>createOrgNode(n));
+  drawOrgLines();
+}
+
+// GOALS — AI ADAPTIVE SYSTEM
+var goalEnergyLevel=0;
+var goalsLastWeek={stops:0,tabs:0,closes:0,wire:0,bells:0,recruits:0};
+
+function setEnergy(level,btn){
+  goalEnergyLevel=level;
+  document.querySelectorAll('#energy-btns .btn').forEach(b=>{b.style.background='var(--s3)';b.style.color='var(--t2)';b.style.borderColor='var(--b2)';});
+  btn.style.background='rgba(255,224,51,.15)';btn.style.color='var(--y)';btn.style.borderColor='rgba(255,224,51,.3)';
+}
+
+function loadGoalsPage(){
+  // Pull last week data from localStorage
+  const lw=localStorage.getItem('fpa_lastweek');
+  if(lw){try{goalsLastWeek=JSON.parse(lw);}catch(e){}}
+  else{
+    // Use today's accumulated as proxy if it's Sunday
+    goalsLastWeek={stops:tc.s||0,tabs:tc.t||0,closes:todayCloses||0,wire:todayWire||0,bells:todayBells||0,recruits:0};
+  }
+
+  const lws=goalsLastWeek;
+  document.getElementById('lw-stops').textContent=lws.stops||0;
+  document.getElementById('lw-tabs').textContent=lws.tabs||0;
+  document.getElementById('lw-closes').textContent=lws.closes||0;
+  document.getElementById('lw-wire').textContent='$'+(lws.wire||0).toLocaleString();
+  document.getElementById('lw-bells').textContent=lws.bells||0;
+  document.getElementById('lw-recruits').textContent=lws.recruits||0;
+
+  // Compare vs targets and generate performance signal
+  const stopsTarget=CFG.stops*5;
+  const closeTarget=CFG.closes*5;
+  const wireTarget=CFG.wireTgt;
+
+  // Find weakest metric (furthest % from target)
+  const metrics=[
+    {name:'stops',actual:lws.stops,target:stopsTarget,label:'Stops',color:'var(--blue)'},
+    {name:'tabs',actual:lws.tabs,target:Math.round(stopsTarget*0.3),label:'Tabs',color:'var(--teal)'},
+    {name:'closes',actual:lws.closes,target:closeTarget,label:'Closes',color:'var(--green)'},
+    {name:'wire',actual:lws.wire,target:wireTarget,label:'Wire',color:'var(--y)'},
+  ];
+  metrics.forEach(m=>{
+    m.pct=m.target>0?Math.round(m.actual/m.target*100):0;
+    const el=document.getElementById('lw-'+m.name+'-vs');
+    if(el){
+      if(m.pct>=110)el.innerHTML='<span style="color:var(--green);">▲ Crushed it</span>';
+      else if(m.pct>=90)el.innerHTML='<span style="color:var(--green);">✓ On target</span>';
+      else if(m.pct>=70)el.innerHTML='<span style="color:var(--amber);">⚠ Slightly off</span>';
+      else if(m.target>0)el.innerHTML='<span style="color:var(--red);">▼ Below target</span>';
+    }
+  });
+  const weakest=metrics.sort((a,b)=>a.pct-b.pct)[0];
+  const strongest=metrics.sort((a,b)=>b.pct-a.pct)[0];
+  // Sort back
+  metrics.sort((a,b)=>['stops','tabs','closes','wire'].indexOf(a.name)-['stops','tabs','closes','wire'].indexOf(b.name));
+
+  // Performance signal banner
+  const sig=document.getElementById('goals-perf-signal');
+  const totalPct=metrics.reduce((a,m)=>a+m.pct,0)/metrics.length;
+  if(totalPct>=100){
+    sig.style.background='rgba(34,197,94,.08)';sig.style.border='1px solid rgba(34,197,94,.2)';
+    sig.innerHTML='🔥 <strong style="color:var(--green);">Strong week.</strong> <span style="color:var(--t2);">Your '+strongest.label.toLowerCase()+' were your best metric at '+strongest.pct+'% of target. Now raise the floor — find the metric you left on the table and lock it in this week.</span>';
+  } else if(totalPct>=75){
+    sig.style.background='rgba(245,158,11,.06)';sig.style.border='1px solid rgba(245,158,11,.18)';
+    sig.innerHTML='💡 <strong style="color:var(--amber);">Solid but room to grow.</strong> <span style="color:var(--t2);">Your '+weakest.label.toLowerCase()+' were your weakest area at '+weakest.pct+'% of target. One focused shift can close that gap. We\'ve pre-filled your targets with a 1% step up.</span>';
+  } else if(lws.closes===0&&lws.wire===0){
+    sig.style.background='rgba(79,142,247,.06)';sig.style.border='1px solid rgba(79,142,247,.18)';
+    sig.innerHTML='📋 <strong style="color:var(--blue);">First goal submission.</strong> <span style="color:var(--t2);">No data logged yet — that\'s okay. Set your targets below and commit to your first week. 1% better every day adds up fast.</span>';
+  } else {
+    sig.style.background='rgba(239,68,68,.06)';sig.style.border='1px solid rgba(239,68,68,.18)';
+    sig.innerHTML='⚡ <strong style="color:var(--red);">Targets missed this week.</strong> <span style="color:var(--t2);">Your '+weakest.label.toLowerCase()+' need the most attention. Be honest in your reflection below — your leader will coach you based on what you write.</span>';
+  }
+
+  // Pre-fill targets with 1% improvement suggestion
+  const suggestedCloses=Math.max(CFG.closes*5, Math.ceil((lws.closes||0)*1.05));
+  const suggestedWire=Math.max(CFG.wireTgt, Math.ceil((lws.wire||0)*1.05));
+  const suggestedStops=Math.max(CFG.stops*5, Math.ceil((lws.stops||0)*1.05));
+  document.getElementById('g-closes').value=suggestedCloses||'';
+  document.getElementById('g-wire').value=suggestedWire||'';
+  document.getElementById('g-stops').value=suggestedStops||'';
+
+  // Adapt Q2 to weakest metric
+  const q2=document.getElementById('q2-label');
+  const q3=document.getElementById('q3-label');
+  if(lws.closes===0&&lws.wire===0){
+    if(q2)q2.textContent='2. What is your biggest concern or hesitation going into your first week?';
+    if(q3)q3.textContent='3. What will you do before your first shift to prepare yourself mentally?';
+  } else if(weakest.name==='tabs'){
+    if(q2)q2.textContent='2. Your tab rate was your weakest metric. What\'s the honest reason you struggled to get people talking?';
+    if(q3)q3.textContent='3. One specific thing you\'ll do differently to improve your tab rate this week:';
+  } else if(weakest.name==='closes'){
+    if(q2)q2.textContent='2. Your closes were your weakest metric. Where in the pitch are you losing people?';
+    if(q3)q3.textContent='3. One specific closing technique you\'re committing to practice daily this week:';
+  } else if(weakest.name==='wire'){
+    if(q2)q2.textContent='2. Your wire was below target. Are you bundling enough services per customer?';
+    if(q3)q3.textContent='3. How will you push for more services per sale this week to increase your wire?';
+  } else {
+    if(q2)q2.textContent='2. Your stops were low. What was your biggest time waster or energy drain this week?';
+    if(q3)q3.textContent='3. What will you do to add more stops to your day this week?';
+  }
+
+  // Show accountability Q if missed targets
+  const q5=document.getElementById('q5-block');
+  if(q5)q5.style.display=totalPct<90?'block':'none';
+
+  // Week label
+  const wl=document.getElementById('goals-week-lbl');
+  if(wl)wl.textContent='Week of '+new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+
+async function submitGoalAI(){
   const closes=document.getElementById('g-closes').value;
   const wire=document.getElementById('g-wire').value;
-  const focus=document.getElementById('g-focus').value;
-  const commit=document.getElementById('g-commit').value;
-  const out=document.getElementById('goal-out');
-  if(!closes||!wire||!focus||!commit){if(out){out.style.display='block';out.style.color='#FCA5A5';out.textContent='Fill in all fields.';}return;}
-  const wk=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric'});
-  const goal=`This week of ${wk}, I commit to closing ${closes} sales and generating $${parseInt(wire).toLocaleString()} in wire. My primary focus is: "${focus}." If I fall behind pace by Wednesday, I will: "${commit}." I am writing this because I am serious about my promotion and the success of my team.`;
-  out.style.display='block';out.style.color='var(--t2)';out.textContent=goal;
+  const stops=document.getElementById('g-stops').value;
+  const weakness=document.getElementById('g-weakness').value.trim();
+  const action=document.getElementById('g-action').value.trim();
+  const proud=document.getElementById('g-proud')?.value.trim()||'';
+
+  if(!closes||!wire){
+    alert('Enter your closes and wire targets for next week.');return;
+  }
+  if(!weakness){alert('Answer question 2 — your leader needs this to coach you.');return;}
+  if(!action){alert('Answer question 3 — commit to a specific action.');return;}
+  if(goalEnergyLevel===0){alert('Rate your energy for next week (question 4).');return;}
+
+  const energyLabels={1:'Low — I need support',2:'Average — steady pace',3:'Focused — locked in',4:'On fire — nothing can stop me'};
+  const lws=goalsLastWeek;
+  const name=P?.full_name?.split(' ')[0]||'Rep';
+  const wk=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+
+  // Show loading
+  document.getElementById('goals-submit-btn').style.display='none';
+  document.getElementById('goals-loading').style.display='block';
+
+  // Build AI prompt
+  const prompt=`You are a direct sales coach writing a weekly goal statement for ${name}, an ${P?.role||'AE'} at Front Page Agency.
+
+Last week's stats:
+- Stops: ${lws.stops||0} (target: ${CFG.stops*5}/week)
+- Tabs: ${lws.tabs||0} (target: ${Math.round(CFG.stops*5*0.3)}/week)
+- Closes: ${lws.closes||0} (target: ${CFG.closes*5}/week)
+- Wire: $${(lws.wire||0).toLocaleString()} (target: $${CFG.wireTgt.toLocaleString()}/week)
+- Bells: ${lws.bells||0}
+
+This week's targets set by rep:
+- Closes: ${closes}
+- Wire: $${parseInt(wire||0).toLocaleString()}
+- Stops/day: ${stops||CFG.stops}
+
+Rep's reflection:
+- Weakness/reason: "${weakness}"
+- Specific action to fix it: "${action}"
+- Energy level: ${energyLabels[goalEnergyLevel]}
+${proud?`- Most proud of: "${proud}"`:''}
+
+Write a powerful, personal 3-paragraph goal statement in first person as ${name}. 
+Paragraph 1: Acknowledge what happened last week honestly (specific numbers, no sugarcoating).
+Paragraph 2: State the targets for this week with urgency and personal commitment.
+Paragraph 3: End with one strong accountability statement — what changes, what gets fixed, and why they're committed.
+
+Keep it under 200 words. Direct, no fluff, no corporate language. Write how a motivated sales rep talks. Do not use bullet points.`;
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:400,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data=await resp.json();
+    const text=data.content?.[0]?.text||'';
+
+    document.getElementById('goals-loading').style.display='none';
+    if(text){
+      document.getElementById('goal-text').textContent=text;
+      document.getElementById('goal-out').style.display='block';
+      document.getElementById('goals-form-card').style.display='none';
+    } else {
+      // Fallback if API fails
+      generateGoalFallback(name,closes,wire,stops,weakness,action,wk);
+    }
+  }catch(e){
+    document.getElementById('goals-loading').style.display='none';
+    generateGoalFallback(name,closes,wire,stops,weakness,action,wk);
+  }
 }
+
+function generateGoalFallback(name,closes,wire,stops,weakness,action,wk){
+  const lws=goalsLastWeek;
+  const text=`Week of ${wk} — ${name}'s commitment\n\nLast week I put up ${lws.closes||0} closes and $${(lws.wire||0).toLocaleString()} in wire. ${lws.closes>0?'I know I can do better.':'I\'m just getting started and I\'m committed to setting the standard from day one.'} My honest reflection: ${weakness}\n\nThis week I\'m committing to ${closes} closes, $${parseInt(wire||0).toLocaleString()} in wire, and ${stops||CFG.stops} stops per day. These aren\'t stretch goals — they\'re the floor.\n\nTo get there: ${action}. I\'m not leaving the floor until the numbers are in. One week, full effort, no excuses.`;
+  document.getElementById('goal-text').textContent=text;
+  document.getElementById('goal-out').style.display='block';
+  document.getElementById('goals-form-card').style.display='none';
+}
+
+function saveGoalFinal(){
+  const text=document.getElementById('goal-text').textContent;
+  // Save to localStorage with timestamp
+  const goals=JSON.parse(localStorage.getItem('fpa_goals')||'[]');
+  goals.unshift({text,date:new Date().toLocaleDateString(),week:new Date().toISOString().slice(0,10),name:P?.full_name});
+  if(goals.length>12)goals.pop();
+  localStorage.setItem('fpa_goals',JSON.stringify(goals));
+  document.getElementById('goal-submitted-msg').style.display='block';
+}
+
+// Keep old submitGoal as noop for safety
+function submitGoal(){submitGoalAI();}
 
 // SETTINGS
 function setStab(name,btn){
   document.querySelectorAll('[id^="stab-"]').forEach(el=>el.style.display='none');
-  document.getElementById('stab-'+name).style.display='block';
+  const tab=document.getElementById('stab-'+name);if(tab)tab.style.display='block';
   document.querySelectorAll('.stab-btn').forEach(b=>{b.classList.remove('active-tab');b.style.background='var(--s3)';b.style.color='var(--t2)';});
-  btn.classList.add('active-tab');btn.style.background='var(--y)';btn.style.color='var(--k)';
+  if(btn){btn.classList.add('active-tab');btn.style.background='var(--y)';btn.style.color='var(--k)';}
+  if(name==='ranks'){renderRankTiersList();}
+  if(name==='crews'){renderCrewSettings();}
+  if(name==='services')renderServicesList();
+  if(name==='territory')renderTerritoryList();
+  if(name==='terminology')renderTerminologyList();
+  if(name==='announce')renderActiveAnnouncements();
 }
 function saveAllSettings(){
   CFG.wireTgt=parseInt(document.getElementById('cfg-wire')?.value)||2100;
@@ -1570,7 +2470,7 @@ function renderBulletin(type){
   el.innerHTML=`
     <div class="card" style="padding:0;overflow:hidden;background:var(--s2);">
       <div class="bp-band">
-        <div class="bp-logo">FPA <span>${isOrg?'Org':'Office'}</span></div>
+        <div class="bp-logo">FPI <span>${isOrg?'Org':'Office'}</span></div>
         <div style="text-align:right;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;color:#fff;">${isOrg?'ORG':'OFFICE'} BULLETIN</div><div style="font-size:10px;color:#666;">Week of ${wk}</div></div>
       </div>
       <div style="padding:16px 20px;">
@@ -1620,10 +2520,634 @@ function addRecipient(){
 }
 function removeRecipient(i){RECIPIENTS.splice(i,1);saveLocal();renderRecipients();}
 
-// HIGH ROLLER
-function setHRView(type,btn){
-  document.querySelectorAll('.stab-btn').forEach(b=>{b.classList.remove('active-tab');b.style.background='var(--s3)';b.style.color='var(--t2)';});
+// HIGH ROLLER BOARD — Full FPA-style leaderboard
+var SHOUTOUTS=[];
+var HR_DATE='weekly';
+var HR_SORT='wire';
+var HR_TAB='lb';
+var ACH_FILTER='all';
+
+// ── ALL 100 BADGES ──
+const ALL_BADGES=[
+  // SALES MILESTONES
+  {id:'first_sale',cat:'sales',emoji:'🌱',name:'First Sale',desc:'Log your very first sale',req:'1 sale',check:s=>s.closes>=1},
+  {id:'sales_5',cat:'sales',emoji:'💼',name:'Getting Started',desc:'5 sales logged',req:'5 sales',check:s=>s.closes>=5},
+  {id:'sales_10',cat:'sales',emoji:'💪',name:'Grinder',desc:'10 sales logged',req:'10 sales',check:s=>s.closes>=10},
+  {id:'sales_25',cat:'sales',emoji:'🔥',name:'Closer',desc:'25 sales logged',req:'25 sales',check:s=>s.closes>=25},
+  {id:'sales_50',cat:'sales',emoji:'⚡',name:'Assassin',desc:'50 sales logged',req:'50 sales',check:s=>s.closes>=50},
+  {id:'sales_75',cat:'sales',emoji:'🎯',name:'Sharp Shooter',desc:'75 sales logged',req:'75 sales',check:s=>s.closes>=75},
+  {id:'sales_100',cat:'sales',emoji:'👑',name:'FPA Legend',desc:'100 sales — you are the standard',req:'100 sales',check:s=>s.closes>=100},
+  {id:'sales_150',cat:'sales',emoji:'💎',name:'Diamond Closer',desc:'150 total sales',req:'150 sales',check:s=>s.closes>=150},
+  {id:'sales_200',cat:'sales',emoji:'🏆',name:'Elite Status',desc:'200 sales — you\'ve built a career',req:'200 sales',check:s=>s.closes>=200},
+  {id:'sales_5_day',cat:'sales',emoji:'📅',name:'5 in a Day',desc:'5 closes in a single shift',req:'5 in one day',check:s=>s.bestDay>=5},
+  {id:'sales_7_day',cat:'sales',emoji:'🎰',name:'Lucky 7',desc:'7 closes in a single shift',req:'7 in one day',check:s=>s.bestDay>=7},
+  {id:'sales_10_day',cat:'sales',emoji:'💥',name:'Perfect Day',desc:'10 closes in one shift',req:'10 in one day',check:s=>s.bestDay>=10},
+  {id:'sales_week_20',cat:'sales',emoji:'📈',name:'20 in a Week',desc:'20 closes in a single week',req:'20 in one week',check:s=>s.bestWeek>=20},
+  {id:'sales_week_30',cat:'sales',emoji:'🚀',name:'30 in a Week',desc:'30 closes in a single week',req:'30 in one week',check:s=>s.bestWeek>=30},
+  // WIRE MILESTONES
+  {id:'wire_first',cat:'wire',emoji:'💵',name:'First Wire',desc:'Your first sale earns wire',req:'First sale',check:s=>s.wire>=1},
+  {id:'wire_500',cat:'wire',emoji:'💰',name:'$500 Wire',desc:'$500 in wire logged',req:'$500 wire',check:s=>s.wire>=500},
+  {id:'wire_1k',cat:'wire',emoji:'💴',name:'$1K Club',desc:'$1,000 in wire',req:'$1,000 wire',check:s=>s.wire>=1000},
+  {id:'wire_2100',cat:'wire',emoji:'🎯',name:'Path A Cleared',desc:'$2,100 wire in a single week',req:'$2,100 in one week',check:s=>s.bestWireWeek>=2100},
+  {id:'wire_5k',cat:'wire',emoji:'💸',name:'$5K Earner',desc:'$5,000 in total wire',req:'$5,000 wire',check:s=>s.wire>=5000},
+  {id:'wire_10k',cat:'wire',emoji:'🏦',name:'$10K Milestone',desc:'$10,000 in total wire',req:'$10,000 wire',check:s=>s.wire>=10000},
+  {id:'wire_25k',cat:'wire',emoji:'🤑',name:'$25K Producer',desc:'$25,000 in total wire',req:'$25,000 wire',check:s=>s.wire>=25000},
+  {id:'wire_50k',cat:'wire',emoji:'💎',name:'$50K Club',desc:'$50,000 in total wire',req:'$50,000 wire',check:s=>s.wire>=50000},
+  {id:'wire_monthly_top',cat:'wire',emoji:'👑',name:'Monthly King/Queen',desc:'Highest wire of all reps for the month',req:'#1 wire for the month',check:s=>s.monthlyTopWire===true},
+  {id:'wire_weekly_top',cat:'wire',emoji:'🔝',name:'Weekly High Roller',desc:'Highest wire in the office this week',req:'#1 wire this week',check:s=>s.weeklyTopWire===true},
+  {id:'wire_week_4k',cat:'wire',emoji:'🔥',name:'$4K Week',desc:'$4,000+ wire in a single week',req:'$4,000 in one week',check:s=>s.bestWireWeek>=4000},
+  // BELL BADGES
+  {id:'bell_first',cat:'bells',emoji:'🔔',name:'First Bell',desc:'Ring your first bell of the day',req:'First bell',check:s=>s.bells>=1},
+  {id:'bell_5',cat:'bells',emoji:'🔔',name:'Bell Ringer',desc:'5 total bells',req:'5 bells',check:s=>s.bells>=5},
+  {id:'bell_10',cat:'bells',emoji:'🔔',name:'Bell Machine',desc:'10 total bells',req:'10 bells',check:s=>s.bells>=10},
+  {id:'bell_25',cat:'bells',emoji:'🎖',name:'Bell Captain',desc:'25 total bells',req:'25 bells',check:s=>s.bells>=25},
+  {id:'bell_50',cat:'bells',emoji:'🏅',name:'Bell Legend',desc:'50 total bells — you close bundles',req:'50 bells',check:s=>s.bells>=50},
+  {id:'bell_3_days',cat:'bells',emoji:'📆',name:'3-Day Bell Streak',desc:'Bell 3 days in a row',req:'3 days straight',check:s=>s.bellStreak>=3},
+  {id:'bell_6_days',cat:'bells',emoji:'🔥',name:'6-Day Bell Streak',desc:'Bell 6 days in a row',req:'6 days straight',check:s=>s.bellStreak>=6},
+  {id:'bell_week',cat:'bells',emoji:'💪',name:'Full Week Bell',desc:'Bell every working day this week',req:'5 days straight',check:s=>s.bellStreak>=5},
+  {id:'bell_30_days',cat:'bells',emoji:'👑',name:'Bell Month',desc:'Bell 30 days straight — unstoppable',req:'30 days straight',check:s=>s.bellStreak>=30},
+  {id:'bell_2_day',cat:'bells',emoji:'🔔',name:'Double Bell Day',desc:'Ring 2 bells in a single shift',req:'2 bells in one day',check:s=>s.mostBellsDay>=2},
+  {id:'bell_3_day',cat:'bells',emoji:'🎪',name:'Triple Bell Day',desc:'Ring 3 bells in a single shift',req:'3 bells in one day',check:s=>s.mostBellsDay>=3},
+  // STREAK BADGES
+  {id:'streak_3',cat:'streaks',emoji:'🌤',name:'3-Day Closer',desc:'Sales 3 days in a row',req:'3 days with at least 1 close',check:s=>s.saleStreak>=3},
+  {id:'streak_5',cat:'streaks',emoji:'⛅',name:'Work Week Closer',desc:'Sales every day for a full week',req:'5 days straight with closes',check:s=>s.saleStreak>=5},
+  {id:'streak_10',cat:'streaks',emoji:'☀️',name:'10-Day Closer',desc:'Sales 10 days straight',req:'10 days straight',check:s=>s.saleStreak>=10},
+  {id:'streak_2weeks',cat:'streaks',emoji:'🔥',name:'2-Week Machine',desc:'Closed every day for 2 straight weeks',req:'10 working days straight',check:s=>s.saleStreak>=10},
+  {id:'streak_log5',cat:'streaks',emoji:'📓',name:'Consistent Logger',desc:'Logged field data 5 days straight',req:'5 days logged',check:s=>s.logStreak>=5},
+  {id:'streak_log30',cat:'streaks',emoji:'📚',name:'30-Day Logger',desc:'Logged every day for 30 days',req:'30 days logged',check:s=>s.logStreak>=30},
+  {id:'streak_goal_submit',cat:'streaks',emoji:'📝',name:'Goal Getter',desc:'Submitted Sunday goals 4 weeks in a row',req:'4 consecutive Sunday submissions',check:s=>s.goalStreak>=4},
+  {id:'streak_no_zero',cat:'streaks',emoji:'🚫',name:'Zero Zero',desc:'Went 2 weeks without a zero-close day',req:'10 days, no zeros',check:s=>s.saleStreak>=10},
+  // RANK ACHIEVEMENTS
+  {id:'rank_rookie',cat:'promo',emoji:'🌱',name:'Rookie Certified',desc:'Made your first sale — you\'re ranked now',req:'1 sale',check:s=>s.closes>=1},
+  {id:'rank_grinder',cat:'promo',emoji:'💪',name:'Grinder Status',desc:'10 PSUs — you\'ve proven you belong',req:'10 sales',check:s=>s.closes>=10},
+  {id:'rank_closer',cat:'promo',emoji:'🔥',name:'Closer Status',desc:'25 PSUs — sales is your identity now',req:'25 sales',check:s=>s.closes>=25},
+  {id:'rank_assassin',cat:'promo',emoji:'⚡',name:'Assassin Status',desc:'50 PSUs — dangerous and consistent',req:'50 sales',check:s=>s.closes>=50},
+  {id:'rank_legend',cat:'promo',emoji:'👑',name:'FPA Legend',desc:'100 PSUs — you are the standard everyone chases',req:'100 sales',check:s=>s.closes>=100},
+  {id:'promo_lt',cat:'promo',emoji:'🌟',name:'Promoted: Lead Trainer',desc:'Hit any one of the 3 LT paths',req:'LT promotion',check:s=>['lt','jpm','pm'].includes(s.role)},
+  {id:'promo_jpm',cat:'promo',emoji:'⬆',name:'Promoted: JPM',desc:'Built your first organization',req:'JPM promotion',check:s=>['jpm','pm'].includes(s.role)},
+  {id:'promo_pm',cat:'promo',emoji:'🏢',name:'Project Manager',desc:'You run your own office now',req:'PM promotion',check:s=>s.role==='pm'},
+  {id:'path_a',cat:'promo',emoji:'💰',name:'Path A Cleared',desc:'Hit wire threshold for LT in one week',req:'$2,100+ wire week',check:s=>s.bestWireWeek>=2100},
+  {id:'path_b',cat:'promo',emoji:'📡',name:'Path B Cleared',desc:'6 PIA internet sales in one week',req:'6 PIA in one week',check:s=>s.bestPIAWeek>=6},
+  {id:'path_c',cat:'promo',emoji:'👨‍👩‍👧',name:'Path C Cleared',desc:'8 customers in one week',req:'8 customers in one week',check:s=>s.bestWeek>=8},
+  // RECRUITMENT BADGES
+  {id:'rec_first',cat:'recruit',emoji:'🤝',name:'First Recruit',desc:'Added your first candidate to the pipeline',req:'1 candidate added',check:s=>s.candidatesAdded>=1},
+  {id:'rec_5',cat:'recruit',emoji:'👥',name:'Pipeline Builder',desc:'5 candidates in your pipeline',req:'5 candidates',check:s=>s.candidatesAdded>=5},
+  {id:'rec_10',cat:'recruit',emoji:'🏭',name:'Recruiting Machine',desc:'10 candidates interviewed',req:'10 interviewed',check:s=>s.candidatesInterviewed>=10},
+  {id:'rec_first_start',cat:'recruit',emoji:'🎉',name:'First Start',desc:'Your first recruit started working',req:'1 start',check:s=>s.started>=1},
+  {id:'rec_3_starts',cat:'recruit',emoji:'🌟',name:'Team Builder',desc:'3 reps you recruited started',req:'3 starts',check:s=>s.started>=3},
+  {id:'rec_first_gen',cat:'recruit',emoji:'👨‍💼',name:'First-Gen Leader',desc:'A rep you started became a leader',req:'1 first-gen leader',check:s=>s.firstGenLeaders>=1},
+  {id:'rec_4_1',cat:'recruit',emoji:'🏆',name:'4+1 Crew Complete',desc:'4 first-gen + 1 second-gen leaders',req:'4+1 crew built',check:s=>s.firstGenLeaders>=4&&s.secondGenLeaders>=1},
+  {id:'rec_week_3',cat:'recruit',emoji:'🎯',name:'3-Interview Week',desc:'Interviewed 3 candidates in one week',req:'3 in one week',check:s=>s.bestInterviewWeek>=3},
+  {id:'rec_week_8',cat:'recruit',emoji:'🔥',name:'8-Interview Week',desc:'Hit weekly interview target of 8',req:'8 in one week',check:s=>s.bestInterviewWeek>=8},
+  {id:'rec_zero_deny',cat:'recruit',emoji:'✅',name:'Zero Waste',desc:'No-showed/denial rate under 20%',req:'<20% denial rate',check:s=>s.candidatesAdded>=5&&(s.denied/s.candidatesAdded)<0.2},
+  // TRAINING BADGES
+  {id:'train_first',cat:'training',emoji:'📖',name:'First Lesson',desc:'Opened your first training module',req:'1 training item opened',check:s=>s.trainingOpened>=1},
+  {id:'train_all_ae',cat:'training',emoji:'🎓',name:'AE Graduate',desc:'Completed all AE training modules',req:'All AE modules opened',check:s=>s.trainingOpened>=4},
+  {id:'train_lt',cat:'training',emoji:'📚',name:'LT Training Complete',desc:'Completed Lead Trainer training',req:'All LT modules opened',check:s=>s.trainingOpened>=8},
+  {id:'train_perfect',cat:'training',emoji:'💯',name:'Perfect Student',desc:'Watched every single training video',req:'All modules opened',check:s=>s.trainingOpened>=12},
+  {id:'train_goal_4',cat:'training',emoji:'📝',name:'Committed',desc:'Submitted Sunday goals 4 weeks straight',req:'4 goal submissions',check:s=>s.goalStreak>=4},
+  {id:'train_self_assess',cat:'training',emoji:'🔍',name:'Self-Aware',desc:'Identified a weakness and improved it the next week',req:'Submitted goal + improved that metric',check:s=>s.improvedWeakness===true},
+  // MINDSET / CULTURE BADGES
+  {id:'culture_early',cat:'streaks',emoji:'⏰',name:'Early Bird',desc:'Logged field day before 10am 5 times',req:'5 early starts',check:s=>s.earlyStarts>=5},
+  {id:'culture_suited',cat:'streaks',emoji:'👔',name:'Dressed for Success',desc:'Logged dressed/suited 30 days in a row',req:'30 day dress streak',check:s=>s.dressStreak>=30},
+  {id:'culture_announce',cat:'streaks',emoji:'📢',name:'Team Player',desc:'Posted in team announcements',req:'Post an announcement',check:s=>s.announcementsPosted>=1},
+  {id:'culture_shoutout',cat:'streaks',emoji:'📣',name:'Hype Person',desc:'Gave 5 shoutouts to your team',req:'5 shoutouts posted',check:s=>s.shoutoutsGiven>=5},
+  // HIGH ROLLER EXCLUSIVE
+  {id:'hr_top3',cat:'elite',emoji:'🥉',name:'Top 3 This Week',desc:'Finished top 3 on the board',req:'Top 3 this week',check:s=>s.weeklyRank<=3},
+  {id:'hr_top1',cat:'elite',emoji:'🥇',name:'High Roller',desc:'#1 on the board this week',req:'#1 this week',check:s=>s.weeklyRank===1},
+  {id:'hr_top1_month',cat:'elite',emoji:'👑',name:'Month Dominator',desc:'#1 on the board for a full month',req:'#1 all month',check:s=>s.monthlyTopWire===true},
+  {id:'hr_top1_3months',cat:'elite',emoji:'💎',name:'Untouchable',desc:'#1 ranking 3 months running',req:'#1 for 3 months',check:s=>s.top1months>=3},
+  {id:'elite_10k_week',cat:'elite',emoji:'🔥',name:'$10K Week',desc:'Your team hit $10K in one week',req:'$10K team wire week',check:s=>s.teamWireWeek>=10000},
+  {id:'elite_no_miss',cat:'elite',emoji:'🎯',name:'Never Miss',desc:'Hit daily target every day for a month',req:'20 days at target',check:s=>s.targetDaysHit>=20},
+  {id:'elite_all_paths',cat:'elite',emoji:'🛤',name:'Triple Threat',desc:'Met all 3 LT paths in the same week',req:'Path A + B + C same week',check:s=>s.allPathsWeek===true},
+  {id:'elite_atmosphere',cat:'elite',emoji:'🎤',name:'Led the Room',desc:'Led Atmosphere session as LT+',req:'Lead Atmosphere once',check:s=>s.atmosphereLed>=1},
+  {id:'elite_pm_deal',cat:'elite',emoji:'📋',name:'Independence',desc:'Incorporated and signed legal contracts',req:'PM status + C-Corp',check:s=>s.role==='pm'},
+  {id:'elite_100k_org',cat:'elite',emoji:'🌐',name:'$100K Org',desc:'Your organization hit $100K cumulative wire',req:'$100K org wire',check:s=>s.orgWire>=100000},
+  // SURPRISE / SECRET
+  {id:'secret_comeback',cat:'elite',emoji:'💪',name:'Comeback Kid',desc:'Bounced back from a 0-close day with 5+ the next day',req:'Secret criteria',check:s=>s.comebackKid===true,secret:true},
+  {id:'secret_underdog',cat:'elite',emoji:'🐉',name:'Underdog',desc:'Went from unranked to top 3 in one week',req:'Secret criteria',check:s=>s.weeklyRank<=3&&s.prevWeekCloses===0,secret:true},
+  {id:'secret_silent',cat:'elite',emoji:'🤫',name:'Silent Assassin',desc:'Top wire for the week without anyone seeing it coming',req:'Secret criteria',check:s=>s.weeklyTopWire&&s.prevWeekRank>5,secret:true},
+  {id:'secret_grinder',cat:'streaks',emoji:'🌑',name:'Night Grinder',desc:'Submitted a goal after 10pm on Sunday',req:'Secret criteria',check:s=>s.lateGoalSubmit===true,secret:true},
+  {id:'secret_100stops',cat:'sales',emoji:'👟',name:'Legs of Steel',desc:'Hit 100 stops in a single day',req:'Secret criteria',check:s=>s.bestDayStops>=100,secret:true},
+  {id:'secret_bundle',cat:'bells',emoji:'🎁',name:'Bundle King/Queen',desc:'Sold 4+ services to one customer',req:'Secret criteria',check:s=>s.maxServicesOneSale>=4,secret:true},
+];
+
+function initHighRoller(){
+  try{const s=localStorage.getItem('fpa_shoutouts');if(s)SHOUTOUTS=JSON.parse(s);}catch(e){}
+  const role=P?.role||'ae';
+  const isOwner=['owner','pm'].includes(role);
+  const isLeader=['lt','jpm','pm','owner'].includes(role);
+  // Show/hide owner tools
+  const ownerTools=document.getElementById('owner-lb-tools');
+  if(ownerTools)ownerTools.style.display=isOwner?'flex':'none';
+  // Show/hide shoutout form
+  const sf=document.getElementById('shoutout-form-card');
+  if(sf)sf.style.display=isOwner?'block':'none';
+  // Show crew filter for leaders with actual crew names
+  const cf=document.getElementById('hr-crew-filter');
+  if(cf){
+    cf.style.display=isLeader?'block':'none';
+    const crewNames=[...new Set(Object.values(CREWS))];
+    if(crewNames.length>0){
+      cf.innerHTML='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'
+        +'<span style="font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;">Crews</span>'
+        +'<button class="btn btn-g" style="font-size:10px;padding:3px 10px;background:var(--y);color:var(--k);" onclick="filterByCrew(null,this)">All</button>'
+        +crewNames.map(c=>'<button class="btn btn-g" style="font-size:10px;padding:3px 10px;" onclick="filterByCrew(\''+c+'\',this)">'+c+'</button>').join('')
+        +'</div>';
+    } else {
+      cf.innerHTML='<span style="font-size:11px;color:var(--t3);">Assign crew names in Settings → Crews to see crew filters here.</span>';
+    }
+  }
+  renderHRLeaderboard();
+  renderShoutoutWall();
+  renderChallenges();
+}
+
+function renderHRLeaderboard(){
+  const role=P?.role||'ae';
+  const isLeader=['lt','jpm','pm','owner'].includes(role);
+  const lbData=buildLBData();
+  // AE notice
+  const aeNotice=document.getElementById('hr-ae-notice');
+  if(aeNotice)aeNotice.style.display=isLeader?'none':'block';
+  // Top stats
+  const totalWire=lbData.reduce((a,r)=>a+(r.wire||0),0);
+  const totalSales=lbData.reduce((a,r)=>a+(r.closes||0),0);
+  const totalPSUs=totalSales; // PSUs = closes in our context
+  const twEl=document.getElementById('hr-total-wire');if(twEl)twEl.textContent='$'+totalWire.toLocaleString();
+  const tsEl=document.getElementById('hr-total-sales');if(tsEl)tsEl.textContent=totalSales;
+  const tpEl=document.getElementById('hr-total-psus');if(tpEl)tpEl.textContent=totalPSUs;
+  const arEl=document.getElementById('hr-active-reps');if(arEl)arEl.textContent=Math.max(1,lbData.length);
+  // Table label
+  const tl=document.getElementById('hr-table-label');
+  if(tl)tl.textContent=(HR_DATE==='daily'?'TODAY':HR_DATE==='weekly'?'WEEKLY':'LIFETIME')+' — SORTED BY '+(HR_SORT==='wire'?'WIRE':HR_SORT==='closes'?'SALES':HR_SORT==='bells'?'BELLS':'CREW');
+  // Podium
+  renderPodium(lbData,'podium-wrap');
+  // Full table
+  const visible=isLeader?lbData:lbData.slice(0,3);
+  renderLBTableFull(visible,isLeader);
+}
+
+function buildLBData(){
+  const weekData=JSON.parse(localStorage.getItem('fpa_week_'+weekKey())||'{}');
+  if(P&&todayCloses>0){
+    const uid=P.full_name||P.email;
+    if(!weekData[uid])weekData[uid]={name:P.full_name||'You',role:P.role||'ae',wire:0,closes:0,bells:0,crew:CREWS[P.full_name]||P.office||'FPA DFW'};
+    weekData[uid].wire=Math.max(weekData[uid].wire,todayWire);
+    weekData[uid].closes=Math.max(weekData[uid].closes,todayCloses);
+    weekData[uid].bells=Math.max(weekData[uid].bells,todayBells);
+    weekData[uid].crew=CREWS[P.full_name]||P.office||'FPA DFW';
+    localStorage.setItem('fpa_week_'+weekKey(),JSON.stringify(weekData));
+  }
+  let arr=Object.values(weekData);
+  if(HR_SORT==='closes')arr.sort((a,b)=>b.closes-a.closes);
+  else if(HR_SORT==='bells')arr.sort((a,b)=>b.bells-a.bells);
+  else if(HR_SORT==='crew')arr.sort((a,b)=>(a.crew||'').localeCompare(b.crew||''));
+  else arr.sort((a,b)=>b.wire-a.wire);
+  return arr.map((r,i)=>({...r,rank:i+1}));
+}
+
+function weekKey(){const d=new Date();const day=d.getDay();const diff=d.getDate()-day+(day===0?-6:1);const mon=new Date(d.setDate(diff));return mon.toISOString().slice(0,10);}
+
+// RANK TIERS — fully configurable
+var RANK_TIERS=[
+  {id:'legend',emoji:'👑',name:'FPA Legend',desc:'You are the standard everyone chases',threshold:100,color:'#FFD700'},
+  {id:'assassin',emoji:'⚡',name:'Assassin',desc:'Consistent, dangerous, impossible to stop',threshold:50,color:'#60A5FA'},
+  {id:'closer',emoji:'🔥',name:'Closer',desc:'Sales is your identity now',threshold:25,color:'#F97316'},
+  {id:'grinder',emoji:'💪',name:'Grinder',desc:'You show up every day',threshold:10,color:'#4ADE80'},
+  {id:'rookie',emoji:'🌱',name:'Rookie',desc:'Welcome to the game',threshold:1,color:'#00C9A7'},
+  {id:'unranked',emoji:'—',name:'Unranked',desc:'Your first sale changes everything',threshold:0,color:'#48485A'},
+];
+
+// CREWS
+var CREWS={}; // {repName: crewName}
+
+function loadRankTiers(){
+  try{const t=localStorage.getItem('fpa_rank_tiers');if(t)RANK_TIERS=JSON.parse(t);}catch(e){}
+  try{const c=localStorage.getItem('fpa_crews');if(c)CREWS=JSON.parse(c);}catch(e){}
+}
+function saveRankTiers(){localStorage.setItem('fpa_rank_tiers',JSON.stringify(RANK_TIERS));}
+function saveCrews(){localStorage.setItem('fpa_crews',JSON.stringify(CREWS));}
+
+function getRankTier(closes){
+  // Sort by threshold descending, return first match
+  const sorted=[...RANK_TIERS].sort((a,b)=>b.threshold-a.threshold);
+  for(const t of sorted){if(closes>=t.threshold)return t;}
+  return RANK_TIERS.find(t=>t.threshold===0)||{emoji:'—',name:'Unranked',color:'var(--t3)',desc:'',threshold:0};
+}
+
+function renderRankTiersList(){
+  const el=document.getElementById('rank-tiers-list');if(!el)return;
+  const sorted=[...RANK_TIERS].sort((a,b)=>b.threshold-a.threshold);
+  el.innerHTML=sorted.map((t,i)=>`
+    <div style="display:grid;grid-template-columns:40px 1fr 1fr 80px 36px;gap:9px;align-items:center;padding:10px 0;border-bottom:1px solid var(--b1);">
+      <div style="font-size:22px;text-align:center;">${t.emoji}</div>
+      <div>
+        <input type="text" value="${t.name}" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:5px 8px;font-size:12px;font-weight:600;color:var(--t1);outline:none;font-family:'Inter',sans-serif;" onchange="updateTier(${RANK_TIERS.indexOf(t)},'name',this.value)" placeholder="Tier name"/>
+        <input type="text" value="${t.desc}" style="width:100%;background:transparent;border:none;font-size:10px;color:var(--t3);outline:none;font-family:'Inter',sans-serif;margin-top:2px;padding:2px 0;" onchange="updateTier(${RANK_TIERS.indexOf(t)},'desc',this.value)" placeholder="Description"/>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <input type="text" value="${t.emoji}" maxlength="2" style="width:40px;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:5px;font-size:18px;color:var(--t1);outline:none;text-align:center;" onchange="updateTier(${RANK_TIERS.indexOf(t)},'emoji',this.value)"/>
+        <input type="color" value="${t.color.startsWith('#')?t.color:'#FFD700'}" style="width:32px;height:32px;border:none;border-radius:var(--r1);background:none;cursor:pointer;padding:0;" onchange="updateTier(${RANK_TIERS.indexOf(t)},'color',this.value)"/>
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <input type="number" value="${t.threshold}" style="width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:5px 7px;font-size:12px;color:var(--y);outline:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-align:right;" onchange="updateTier(${RANK_TIERS.indexOf(t)},'threshold',parseInt(this.value)||0)"/>
+      </div>
+      <button onclick="deleteRankTier(${RANK_TIERS.indexOf(t)})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;" title="Remove tier">✕</button>
+    </div>`).join('')
+  +'<div style="font-size:10px;color:var(--t3);margin-top:8px;">Edit inline · changes save automatically · PSU = closes in your system</div>';
+
+  // Also update rank key on leaderboard
+  updateRankKeyDisplay();
+}
+
+function updateTier(idx,field,val){
+  if(idx<0||idx>=RANK_TIERS.length)return;
+  RANK_TIERS[idx][field]=val;
+  saveRankTiers();
+  updateRankKeyDisplay();
+}
+
+function deleteRankTier(idx){
+  if(RANK_TIERS.length<=2){alert('Keep at least 2 rank tiers.');return;}
+  RANK_TIERS.splice(idx,1);
+  saveRankTiers();
+  renderRankTiersList();
+}
+
+function addRankTier(){
+  const emoji=document.getElementById('new-tier-emoji')?.value.trim()||'⭐';
+  const name=document.getElementById('new-tier-name')?.value.trim();
+  const desc=document.getElementById('new-tier-desc')?.value.trim()||'';
+  const threshold=parseInt(document.getElementById('new-tier-threshold')?.value)||0;
+  const msg=document.getElementById('rank-tiers-msg');
+  if(!name){if(msg){msg.style.display='block';msg.style.color='#FCA5A5';msg.textContent='Enter a tier name.';return;}}
+  RANK_TIERS.push({id:'custom_'+Date.now(),emoji,name,desc,threshold,color:'#8B5CF6'});
+  saveRankTiers();
+  renderRankTiersList();
+  ['new-tier-emoji','new-tier-name','new-tier-desc','new-tier-threshold'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  if(msg){msg.style.display='block';msg.style.color='#86EFAC';msg.textContent='✓ Tier added — shows on leaderboard immediately.';setTimeout(()=>msg.style.display='none',3000);}
+}
+
+function updateRankKeyDisplay(){
+  const el=document.getElementById('rank-key-grid');if(!el)return;
+  const sorted=[...RANK_TIERS].sort((a,b)=>b.threshold-a.threshold);
+  el.innerHTML=sorted.map(t=>`
+    <div style="display:flex;align-items:center;gap:7px;">
+      <span style="font-size:18px;">${t.emoji}</span>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:${t.color.startsWith('#')?t.color:'var(--y)'};">${t.name}</div>
+        <div style="font-size:9px;color:var(--t3);">${t.threshold}+ PSUs</div>
+      </div>
+    </div>`).join('');
+}
+
+// CREWS
+function renderCrewSettings(){
+  // Populate rep selector from profiles or candidates
+  const sel=document.getElementById('crew-rep-sel');
+  if(sel){
+    const names=Object.keys(CREWS);
+    // Also add current user
+    const allNames=[P?.full_name||'You',...Object.keys(CREWS)].filter((v,i,a)=>a.indexOf(v)===i);
+    sel.innerHTML='<option value="">Select rep...</option>'+allNames.map(n=>'<option value="'+n+'">'+n+'</option>').join('');
+  }
+  // Populate datalist with existing crew names
+  const dl=document.getElementById('crew-datalist');
+  if(dl){
+    const existing=[...new Set(Object.values(CREWS))];
+    dl.innerHTML=existing.map(c=>'<option value="'+c+'">').join('');
+  }
+  renderCrewAssignments();
+  renderCrewStandingsPreview();
+}
+
+function assignCrew(){
+  const rep=document.getElementById('crew-rep-sel')?.value;
+  const crew=document.getElementById('crew-name-inp')?.value.trim();
+  if(!rep||!crew){alert('Select a rep and enter a crew name.');return;}
+  CREWS[rep]=crew;
+  saveCrews();
+  renderCrewAssignments();
+  renderCrewStandingsPreview();
+  renderCrewsLB();
+  // Update datalist
+  const dl=document.getElementById('crew-datalist');
+  if(dl){const existing=[...new Set(Object.values(CREWS))];dl.innerHTML=existing.map(c=>'<option value="'+c+'">').join('');}
+}
+
+function removeCrew(rep){delete CREWS[rep];saveCrews();renderCrewAssignments();renderCrewStandingsPreview();renderCrewsLB();}
+
+function renderCrewAssignments(){
+  const el=document.getElementById('crew-assignments-list');if(!el)return;
+  const entries=Object.entries(CREWS);
+  if(entries.length===0){el.innerHTML='<div style="font-size:12px;color:var(--t3);">No crew assignments yet.</div>';return;}
+  // Group by crew
+  const byCrewMap={};
+  entries.forEach(([rep,crew])=>{if(!byCrewMap[crew])byCrewMap[crew]=[];byCrewMap[crew].push(rep);});
+  el.innerHTML=Object.entries(byCrewMap).map(([crew,reps])=>`
+    <div style="background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:10px 13px;margin-bottom:8px;">
+      <div style="font-size:13px;font-weight:600;color:var(--y);margin-bottom:7px;">🏴 ${crew} <span style="font-size:10px;color:var(--t3);font-weight:400;">(${reps.length} rep${reps.length>1?'s':''})</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        ${reps.map(r=>`<div style="display:flex;align-items:center;gap:5px;background:var(--s4);border-radius:var(--r1);padding:4px 8px;font-size:12px;">
+          ${r}
+          <button onclick="removeCrew('${r}')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:11px;padding:0 0 0 3px;">✕</button>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+function renderCrewStandingsPreview(){
+  const el=document.getElementById('crew-standings-preview');if(!el)return;
+  renderCrewsLB(el);
+}
+
+function renderCrewsLB(targetEl){
+  const el=targetEl||document.getElementById('crews-lb');if(!el)return;
+  const lbData=buildLBData();
+  if(Object.keys(CREWS).length===0||lbData.length===0){
+    el.innerHTML='<div style="font-size:12px;color:var(--t3);text-align:center;padding:20px;">Assign reps to crews in Settings → Crews to see standings.</div>';
+    return;
+  }
+  // Aggregate by crew
+  const crewTotals={};
+  lbData.forEach(r=>{
+    const crew=CREWS[r.name]||r.crew||'Unassigned';
+    if(!crewTotals[crew])crewTotals[crew]={name:crew,wire:0,closes:0,bells:0,reps:0};
+    crewTotals[crew].wire+=r.wire||0;
+    crewTotals[crew].closes+=r.closes||0;
+    crewTotals[crew].bells+=r.bells||0;
+    crewTotals[crew].reps++;
+  });
+  const sorted=Object.values(crewTotals).sort((a,b)=>b.wire-a.wire);
+  const maxW=Math.max(...sorted.map(c=>c.wire),1);
+  const crewColors=['#FFE033','#4F8EF7','#00C9A7','#F59E0B','#EF4444','#8B5CF6'];
+  el.innerHTML='<div style="display:grid;grid-template-columns:24px 1fr 70px 50px 40px;gap:8px;padding:0 8px 8px;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1);margin-bottom:4px;"><span>#</span><span>Crew</span><span style="text-align:right;">Wire</span><span style="text-align:right;">Sales</span><span style="text-align:right;">Reps</span></div>'
+  +sorted.map((c,i)=>{
+    const col=crewColors[i%crewColors.length];
+    const volPct=Math.round(c.wire/maxW*100);
+    return '<div style="display:grid;grid-template-columns:24px 1fr 70px 50px 40px;gap:8px;align-items:center;padding:9px 8px;border-bottom:1px solid var(--b1);">'
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:16px;color:'+(i===0?'#FFD700':i===1?'#A0A0B8':i===2?'#CD7F32':'var(--t3)')+';">'+(i+1)+'</div>'
+      +'<div><div style="display:flex;align-items:center;gap:7px;"><div style="font-size:12px;font-weight:600;">'+c.name+'</div><div style="font-size:9px;color:var(--t3);">'+c.reps+' rep'+(c.reps>1?'s':'')+'</div></div>'
+      +'<div style="height:4px;background:var(--s4);border-radius:2px;margin-top:5px;overflow:hidden;"><div style="width:'+volPct+'%;height:100%;background:'+col+';border-radius:2px;"></div></div></div>'
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--y);text-align:right;">$'+c.wire.toLocaleString()+'</div>'
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;text-align:right;">'+c.closes+'</div>'
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--t3);text-align:right;">'+c.reps+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function renderPodium(data,cid){
+  const el=document.getElementById(cid);if(!el)return;
+  if(!data||data.length===0){el.innerHTML='<div style="padding:24px;text-align:center;color:var(--t3);font-size:12px;">Board empty — log a sale to claim the #1 spot 🏆</div>';return;}
+  const top=data.slice(0,3);
+  const order=top.length>=3?[1,0,2]:top.length===2?[1,0]:[0];
+  const heights={0:76,1:56,2:44};const sizes={0:68,1:56,2:46};
+  const cs={0:['#FFD700','rgba(255,215,0,.08)'],1:['#A0A0B8','rgba(160,160,184,.08)'],2:['#CD7F32','rgba(205,127,50,.08)']};
+  let html='<div style="display:flex;align-items:flex-end;justify-content:center;gap:9px;padding:20px 0 0;">';
+  order.forEach(pos=>{
+    const r=top[pos];if(!r)return;
+    const [c,bg]=cs[pos];const sz=sizes[pos];const h=heights[pos];
+    const ini=(r.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const tier=getRankTier(r.closes||0);
+    html+='<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;max-width:130px;">'
+      +(pos===0?'<div style="font-size:14px;">👑</div>':'')
+      +'<div style="width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:'+bg+';border:2px solid '+c+';display:flex;align-items:center;justify-content:center;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:'+(pos===0?18:14)+'px;color:'+c+';">'+ini+'</div>'
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:'+(pos===0?14:12)+'px;text-align:center;color:var(--t1);">'+(r.name||'Rep').split(' ')[0]+'</div>'
+      +'<div style="font-size:9px;background:'+tier.color+'22;color:'+tier.color+';border:1px solid '+tier.color+'44;border-radius:20px;padding:1px 6px;">'+tier.emoji+' '+tier.label+'</div>'
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:'+(pos===0?18:14)+'px;color:'+c+';">$'+(r.wire||0).toLocaleString()+'</div>'
+      +'<div style="border-radius:var(--r1) var(--r1) 0 0;width:100%;height:'+h+'px;background:'+bg+';display:flex;align-items:flex-start;justify-content:center;padding-top:6px;font-family:\'Barlow Condensed\',sans-serif;font-weight:900;font-size:20px;color:'+c+'44;">'+(pos+1)+'</div>'
+      +'</div>';
+  });
+  el.innerHTML=html+'</div>';
+}
+
+function renderLBTableFull(data,showFull){
+  const el=document.getElementById('lb-rows');if(!el)return;
+  if(!data||data.length===0){
+    el.innerHTML='<div class="empty"><div class="icon">🏆</div><div class="title">No sales yet</div><div class="sub">Log a sale to appear on the board.</div></div>';
+    return;
+  }
+  const maxWire=Math.max(...data.map(r=>r.wire||0),1);
+  el.innerHTML=data.map((r,i)=>{
+    const isMe=r.name===P?.full_name;
+    const tier=getRankTier(r.closes||0);
+    const volPct=Math.round((r.wire||0)/maxWire*100);
+    const rowBg=isMe?'background:rgba(255,224,51,.04);border-radius:var(--r1);':'';
+    return '<div style="display:grid;grid-template-columns:28px 1fr 110px 80px 60px 70px 60px 80px;gap:7px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--b1);'+rowBg+'">'
+      // Rank
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:800;font-size:15px;color:'+(i===0?'#FFD700':i===1?'#A0A0B8':i===2?'#CD7F32':'var(--t3)')+';">'+(i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1)+'</div>'
+      // Name
+      +'<div style="display:flex;align-items:center;gap:8px;">'
+        +'<div style="width:26px;height:26px;border-radius:50%;background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--t2);flex-shrink:0;">'+(r.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)+'</div>'
+        +'<div><div style="font-size:12px;font-weight:500;">'+(r.name||'Rep')+(isMe?' <span style="font-size:8px;color:var(--y);background:rgba(255,224,51,.1);padding:1px 4px;border-radius:4px;font-weight:700;">YOU</span>':'')+'</div>'
+        +'<div style="font-size:9px;color:var(--t3);">'+(r.crew||r.role||'FPA DFW')+'</div></div>'
+      +'</div>'
+      // Tier badge
+      +'<div><span style="font-size:10px;background:'+tier.color+'22;color:'+tier.color+';border:1px solid '+tier.color+'44;border-radius:20px;padding:2px 7px;white-space:nowrap;">'+tier.emoji+' '+tier.label+'</span></div>'
+      // Crew
+      +'<div style="font-size:11px;color:var(--t2);">'+(r.crew||'FPA DFW')+'</div>'
+      // Sales
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;text-align:right;color:var(--t1);">'+(r.closes||0)+'</div>'
+      // PSUs (same as closes in our model)
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;text-align:right;color:var(--blue);">'+(r.closes||0)+'</div>'
+      // Wire
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;text-align:right;color:var(--y);">$'+(r.wire||0).toLocaleString()+'</div>'
+      // Volume bar
+      +'<div style="background:var(--s4);border-radius:2px;height:6px;overflow:hidden;"><div style="width:'+volPct+'%;height:100%;background:var(--blue);border-radius:2px;"></div></div>'
+      +'</div>';
+  }).join('')
+  +(!showFull?'<div style="text-align:center;padding:12px;font-size:11px;color:var(--t3);">Full leaderboard unlocks at Lead Trainer rank.</div>':'');
+}
+
+function setHRDate(d,btn){
+  HR_DATE=d;
+  document.querySelectorAll('#hr-date-btns .stab-btn').forEach(b=>{b.classList.remove('active-tab');b.style.background='var(--s3)';b.style.color='var(--t2)';});
   btn.classList.add('active-tab');btn.style.background='var(--y)';btn.style.color='var(--k)';
+  renderHRLeaderboard();
+}
+function setHRSort(s,btn){
+  HR_SORT=s;
+  document.querySelectorAll('#hr-sort-btns .stab-btn').forEach(b=>{b.classList.remove('active-tab');b.style.background='var(--s3)';b.style.color='var(--t2)';});
+  btn.classList.add('active-tab');btn.style.background='var(--y)';btn.style.color='var(--k)';
+  renderHRLeaderboard();
+}
+function setHRView(t,btn){setHRDate(t==='week'?'weekly':t==='alltime'?'lifetime':'weekly',btn);}
+function setHRTab(tab,btn){
+  HR_TAB=tab;
+  document.querySelectorAll('.hr-tab').forEach(b=>{b.style.borderBottomColor='transparent';b.style.color='var(--t3)';});
+  btn.style.borderBottomColor='var(--y)';btn.style.color='var(--y)';
+  ['lb','crews','ranks','challenges'].forEach(t=>{const el=document.getElementById('hr-tab-'+t);if(el)el.style.display=t===tab?'block':'none';});
+}
+
+function renderChallenges(){
+  const el=document.getElementById('challenges-list');if(!el)return;
+  const challenges=[
+    {emoji:'🔔',name:'Bell Day',desc:'Ring a bell today',reward:'Bell Day badge',progress:todayBells,target:1},
+    {emoji:'💰',name:'$500 Day',desc:'Generate $500+ wire in one shift',reward:'+XP boost',progress:todayWire,target:500},
+    {emoji:'🎯',name:'5 Closes Today',desc:'Close 5 sales before end of shift',reward:'5-a-Day badge',progress:todayCloses,target:5},
+    {emoji:'📝',name:'Submit Sunday',desc:'Submit your weekly goals before midnight Sunday',reward:'Committed badge',progress:0,target:1},
+    {emoji:'👥',name:'Interview Week',desc:'Interview 3+ candidates this week',reward:'Recruiter badge',progress:CANDIDATES.filter(c=>c.steps.interviewed).length,target:3},
+  ];
+  el.innerHTML=challenges.map(c=>{
+    const pct=Math.min(100,Math.round(c.progress/c.target*100));
+    const done=c.progress>=c.target;
+    return '<div style="background:var(--s3);border:1px solid '+(done?'rgba(34,197,94,.3)':'var(--b2)')+';border-radius:var(--r2);padding:12px 14px;">'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:7px;">'
+      +'<div style="font-size:22px;">'+c.emoji+'</div>'
+      +'<div style="flex:1;"><div style="font-size:13px;font-weight:600;'+(done?'color:var(--green)':'')+'">'+c.name+(done?' ✓':'')+'</div><div style="font-size:11px;color:var(--t2);">'+c.desc+'</div></div>'
+      +'<div style="font-size:10px;color:var(--y);background:rgba(255,224,51,.08);border-radius:var(--r1);padding:3px 8px;">'+c.reward+'</div>'
+      +'</div>'
+      +'<div class="prog-tr"><div class="prog-f" style="width:'+pct+'%;background:'+(done?'var(--green)':'var(--amber)')+'"></div></div>'
+      +'<div style="font-size:10px;color:var(--t3);margin-top:3px;">'+c.progress+' / '+c.target+' · '+pct+'%</div>'
+      +'</div>';
+  }).join('');
+}
+
+function postShoutout(){
+  const name=document.getElementById('shout-name')?.value.trim();
+  const type=document.getElementById('shout-type')?.value;
+  const msg=document.getElementById('shout-msg')?.value.trim();
+  if(!name){alert('Enter a rep name.');return;}
+  SHOUTOUTS.unshift({id:Date.now(),name,type,msg,date:new Date().toLocaleDateString(),by:P?.full_name||'Owner'});
+  if(SHOUTOUTS.length>20)SHOUTOUTS.pop();
+  localStorage.setItem('fpa_shoutouts',JSON.stringify(SHOUTOUTS));
+  renderShoutoutWall();
+  const conf=document.getElementById('shout-confirm');
+  if(conf){conf.style.display='block';conf.textContent='✓ Shoutout posted!';setTimeout(()=>conf.style.display='none',3000);}
+  ['shout-name','shout-msg'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderShoutoutWall(){
+  const el=document.getElementById('shoutout-wall');if(!el)return;
+  if(SHOUTOUTS.length===0){el.innerHTML='<div style="font-size:12px;color:var(--t3);padding:8px 0;">No shoutouts yet.</div>';return;}
+  el.innerHTML=SHOUTOUTS.slice(0,5).map(s=>'<div style="background:rgba(255,224,51,.04);border:1px solid rgba(255,224,51,.12);border-radius:var(--r2);padding:10px 13px;margin-bottom:7px;">'
+    +'<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">'
+    +'<div><div style="font-size:12px;font-weight:700;color:var(--y);">'+s.type+' → '+s.name+'</div>'
+    +(s.msg?'<div style="font-size:12px;color:var(--t2);margin-top:3px;">'+s.msg+'</div>':'')
+    +'<div style="font-size:10px;color:var(--t3);margin-top:4px;">'+s.date+' · '+s.by+'</div></div>'
+    +(['owner','pm'].includes(P?.role||'')?'<button onclick="deleteShoutout('+s.id+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;">✕</button>':'')
+    +'</div></div>').join('');
+}
+function deleteShoutout(id){SHOUTOUTS=SHOUTOUTS.filter(s=>s.id!==id);localStorage.setItem('fpa_shoutouts',JSON.stringify(SHOUTOUTS));renderShoutoutWall();}
+
+// ── ACHIEVEMENTS ──
+function getRepStats(){
+  // Pull everything we know about this rep from localStorage + current session
+  const goals=JSON.parse(localStorage.getItem('fpa_goals')||'[]');
+  const role=P?.role||'ae';
+  return {
+    closes:todayCloses,wire:todayWire,bells:todayBells,
+    bestDay:todayCloses,bestWeek:todayCloses,bestWireWeek:todayWire,
+    bestPIAWeek:0,bestDayStops:tc.s,bestInterviewWeek:0,
+    bellStreak:todayBells>0?1:0,saleStreak:todayCloses>0?1:0,
+    logStreak:todayCloses>0?1:0,goalStreak:goals.length,
+    candidatesAdded:CANDIDATES.length,
+    candidatesInterviewed:CANDIDATES.filter(c=>c.steps.interviewed).length,
+    started:CANDIDATES.filter(c=>c.started||c.steps.account).length,
+    denied:CANDIDATES.filter(c=>c.denied).length,
+    firstGenLeaders:0,secondGenLeaders:0,
+    trainingOpened:TRAINING_ITEMS.length,
+    earlyStarts:0,dressStreak:0,announcementsPosted:ANNOUNCEMENTS.length,
+    shoutoutsGiven:SHOUTOUTS.filter(s=>s.by===P?.full_name).length,
+    weeklyRank:buildLBData().findIndex(r=>r.name===P?.full_name)+1||99,
+    prevWeekRank:99,prevWeekCloses:0,
+    monthlyTopWire:false,weeklyTopWire:todayWire>0&&buildLBData()[0]?.name===P?.full_name,
+    top1months:0,teamWireWeek:todayWire,orgWire:todayWire,
+    targetDaysHit:0,allPathsWeek:todayWire>=CFG.wireTgt,
+    atmosphereLed:0,comebackKid:false,improvedWeakness:false,
+    lateGoalSubmit:false,maxServicesOneSale:Math.max(...todaySales.map(s=>s.services?.length||0),0),
+    mostBellsDay:todayBells,role
+  };
+}
+
+function renderAchievements(filter){
+  ACH_FILTER=filter||ACH_FILTER;
+  const stats=getRepStats();
+  const badges=ALL_BADGES.filter(b=>ACH_FILTER==='all'||b.cat===ACH_FILTER);
+
+  const earned=badges.filter(b=>b.check(stats));
+  const locked=badges.filter(b=>!b.check(stats));
+
+  // Count overall
+  const totalEarned=ALL_BADGES.filter(b=>b.check(stats)).length;
+  const totalLocked=ALL_BADGES.length-totalEarned;
+  const close=locked.filter(b=>isClose(b,stats)).length;
+
+  const ecEl=document.getElementById('ach-earned-count');if(ecEl)ecEl.textContent=totalEarned;
+  const lcEl=document.getElementById('ach-locked-count');if(lcEl)lcEl.textContent=totalLocked;
+  const ccEl=document.getElementById('ach-close-count');if(ccEl)ccEl.textContent=close;
+
+  // Render earned
+  const eg=document.getElementById('ach-earned-grid');
+  const ee=document.getElementById('ach-earned-empty');
+  if(earned.length===0){
+    if(eg)eg.innerHTML='';if(ee)ee.style.display='block';
+  } else {
+    if(ee)ee.style.display='none';
+    if(eg)eg.innerHTML=earned.map(b=>badgeCard(b,true,stats)).join('');
+  }
+
+  // In-progress (close to unlocking)
+  const inProg=locked.filter(b=>isClose(b,stats)).slice(0,5);
+  const pl=document.getElementById('ach-progress-list');
+  if(pl){
+    if(inProg.length===0){pl.innerHTML='<div style="font-size:12px;color:var(--t3);">Keep going — in-progress badges appear here as you get close.</div>';}
+    else pl.innerHTML=inProg.map(b=>progressRow(b,stats)).join('');
+  }
+
+  // Locked grid
+  const lg=document.getElementById('ach-locked-grid');
+  if(lg)lg.innerHTML=locked.filter(b=>!b.secret||isClose(b,stats)).slice(0,30).map(b=>badgeCard(b,false,stats)).join('');
+}
+
+function isClose(b,s){
+  // Determine if rep is within ~60% of earning this badge
+  try{
+    if(b.id.includes('sales_')&&!b.id.includes('week')){const n=parseInt(b.id.split('_')[1]);return s.closes>=n*0.5&&s.closes<n;}
+    if(b.id.includes('wire_')&&!b.id.includes('week')){const n=parseInt(b.id.split('_')[1]);return !isNaN(n)&&s.wire>=n*0.5&&s.wire<n;}
+    if(b.id.includes('bell_')&&!b.id.includes('streak')){const n=parseInt(b.id.split('_')[1]);return !isNaN(n)&&s.bells>=n*0.5&&s.bells<n;}
+    if(b.id.includes('rec_')&&!b.id.includes('start')){const n=parseInt(b.id.split('_')[1]);return !isNaN(n)&&s.candidatesAdded>=n*0.5&&s.candidatesAdded<n;}
+  }catch(e){}
+  return false;
+}
+
+function badgeCard(b,earned,stats){
+  const bg=earned?'rgba(255,224,51,.06)':'var(--s3)';
+  const border=earned?'rgba(255,224,51,.2)':'var(--b2)';
+  const opacity=earned?'1':b.secret&&!isClose(b,stats)?'0.4':'0.7';
+  return '<div style="background:'+bg+';border:1px solid '+border+';border-radius:var(--r2);padding:12px;text-align:center;opacity:'+opacity+';">'
+    +'<div style="font-size:28px;margin-bottom:6px;">'+(b.secret&&!earned?'🔒':b.emoji)+'</div>'
+    +'<div style="font-size:11px;font-weight:700;color:'+(earned?'var(--y)':'var(--t2)')+';">'+(b.secret&&!earned?'???':b.name)+'</div>'
+    +'<div style="font-size:10px;color:var(--t3);margin-top:3px;line-height:1.4;">'+(b.secret&&!earned?'Secret badge — keep going':'')+((!b.secret||earned)?b.desc:'')+'</div>'
+    +(earned?'<div style="font-size:9px;color:var(--green);margin-top:5px;font-weight:600;">✓ EARNED</div>':'')
+    +'</div>';
+}
+
+function progressRow(b,stats){
+  let current=0,target=1;
+  try{
+    if(b.id.includes('sales_')&&!b.id.includes('week')){target=parseInt(b.id.split('_')[1]);current=stats.closes;}
+    else if(b.id.includes('wire_')&&!b.id.includes('week')){target=parseInt(b.id.split('_')[1]);current=stats.wire;if(isNaN(target))target=2100;}
+    else if(b.id.includes('bell_')&&!b.id.includes('streak')){target=parseInt(b.id.split('_')[1]);current=stats.bells;}
+    else if(b.id.includes('rec_')){const n=parseInt(b.id.split('_')[1]);if(!isNaN(n)){target=n;current=stats.candidatesAdded;}}
+  }catch(e){}
+  const pct=target>0?Math.min(100,Math.round(current/target*100)):0;
+  return '<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:var(--r2);padding:11px 13px;">'
+    +'<div style="display:flex;align-items:center;gap:9px;margin-bottom:7px;">'
+    +'<span style="font-size:20px;">'+b.emoji+'</span>'
+    +'<div style="flex:1;"><div style="font-size:12px;font-weight:600;">'+b.name+'</div><div style="font-size:11px;color:var(--t2);">'+b.desc+'</div></div>'
+    +'<span style="font-size:11px;color:var(--amber);">'+pct+'%</span>'
+    +'</div>'
+    +'<div class="prog-tr"><div class="prog-f" style="width:'+pct+'%;background:var(--amber);"></div></div>'
+    +'<div style="font-size:10px;color:var(--t3);margin-top:3px;">'+current+(b.id.includes('wire')?'':'')+' / '+target+' needed</div>'
+    +'</div>';
+}
+
+function filterAch(cat,btn){
+  ACH_FILTER=cat;
+  document.querySelectorAll('#ach-cat-btns .stab-btn').forEach(b=>{b.classList.remove('active-tab');b.style.background='var(--s3)';b.style.color='var(--t2)';});
+  if(btn){btn.classList.add('active-tab');btn.style.background='var(--y)';btn.style.color='var(--k)';}
+  renderAchievements(cat);
 }
 
 // NAV
@@ -1634,10 +3158,22 @@ function nav(id,btn){
   if(btn&&!btn.classList.contains('lk'))btn.classList.add('active');
   else document.querySelectorAll('.sbi').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');});
   if(id==='admin')loadRepsTable();
-  if(id==='settings'){const firstBtn=document.querySelector('#stab-criteria')?.previousElementSibling;setStab('criteria',document.querySelector('.stab-btn'));}
+  if(id==='field'){renderFieldStoreSelect();}
+  if(id==='goals'){loadGoalsPage();}
+  if(id==='settings'){
+    setStab('criteria',document.querySelector('.stab-btn'));
+    renderRankTiersList();
+    renderCrewSettings();
+  }
   if(id==='training')renderTrainingVault();
+  initHighRoller();
+  renderScorecard();
+  if(id==='highroller'){initHighRoller();}
+  if(id==='achievements'){renderAchievements();}
+  if(id==='scorecard'){renderScorecard();}
   if(id==='training-mgr')renderTrainingMgrList();
-  if(id==='recruit')renderCandidates();
+  if(id==='recruit'){renderCandidates();updateDropoffIntel();}
+  if(id==='org'){buildOrgChart();}
 }
 
 // AUTH
@@ -1692,6 +3228,59 @@ document.addEventListener('click',e=>{
   const m=document.getElementById('ctx-menu');
   if(m&&!m.contains(e.target))m.classList.remove('show');
 });
+
+// ROADMAP MODAL
+function openRoadmapModal(){
+  const role=P?.role||'ae';
+  const day=P?.day_number||1;
+
+  const aeItems=[
+    {l:'Complete your first full field day',done:day>=1},
+    {l:'Hit your first bell ('+CFG.bellCust+' customers + '+CFG.bellSvc+' services)',done:false},
+    {l:'Learn Spectrum internet tiers & wire values',done:day>=7},
+    {l:'30 tabs in a single day',done:false},
+    {l:'15 presentations in a single day',done:false},
+    {l:'Log sales for 5 consecutive days',done:false},
+    {l:'Hit Path A ($'+CFG.wireTgt.toLocaleString()+' wire in one week)',done:false},
+    {l:'Demonstrate COD knowledge to leader',done:false},
+    {l:'Consistently dressed/suited every shift',done:false},
+  ];
+  const ltItems=[
+    {l:'Path A: $'+CFG.wireTgt.toLocaleString()+'/wk wire OR Path B: '+CFG.piaTgt+' PIA/wk OR Path C: '+CFG.custTgt+' customers/wk',done:['lt','jpm','pm'].includes(role)},
+    {l:'Bell 3 of 6 working days in a week',done:['lt','jpm','pm'].includes(role)},
+    {l:'Lead your first Atmosphere session',done:['lt','jpm','pm'].includes(role)},
+    {l:'Recruit first candidate to orientation',done:['lt','jpm','pm'].includes(role)},
+    {l:'First-gen leader producing independently',done:['jpm','pm'].includes(role)},
+  ];
+  const jpmItems=[
+    {l:'4 first-gen leaders on your team',done:['pm'].includes(role)},
+    {l:'1 second-gen leader producing',done:['pm'].includes(role)},
+    {l:'Team hits $10K paid wire 2 consecutive weeks',done:['pm'].includes(role)},
+    {l:'60% quality rate sustained by team',done:['pm'].includes(role)},
+    {l:'Lead full Atmosphere independently',done:['pm'].includes(role)},
+  ];
+  const pmItems=[
+    {l:'10+ person team consistently performing',done:role==='pm'},
+    {l:'$10K+ weekly wire sustained',done:role==='pm'},
+    {l:'Incorporate C-Corp entity',done:role==='pm'},
+    {l:'Legal contracts between entities signed',done:role==='pm'},
+    {l:'Owner approval — full independence',done:role==='pm'},
+  ];
+
+  function buildChecks(items){
+    return items.map(item=>`
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid var(--b1);">
+        <div style="width:16px;height:16px;border-radius:4px;border:1.5px solid ${item.done?'var(--green)':'var(--b3)'};background:${item.done?'var(--green)':'var(--s3)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:#fff;">${item.done?'✓':''}</div>
+        <div style="font-size:12px;color:${item.done?'var(--t1)':'var(--t2)'};">${item.l}</div>
+      </div>`).join('');
+  }
+
+  document.getElementById('roadmap-ae-checks').innerHTML=buildChecks(aeItems);
+  document.getElementById('roadmap-lt-checks').innerHTML=buildChecks(ltItems);
+  document.getElementById('roadmap-jpm-checks').innerHTML=buildChecks(jpmItems);
+  document.getElementById('roadmap-pm-checks').innerHTML=buildChecks(pmItems);
+  document.getElementById('roadmap-modal').classList.add('show');
+}
 
 // TRAINING VAULT
 var TRAINING_ITEMS=[];
@@ -1800,6 +3389,8 @@ function deleteTrainingItem(i){
     TRAINING_ITEMS.splice(i,1);
     saveTraining();
     renderTrainingVault();
+  initHighRoller();
+  renderScorecard();
     renderTrainingMgrList();
   }
 }
@@ -1845,6 +3436,62 @@ function renderTrainingMgrList(){
       </div>
     </div>`;
   }).join('');
+}
+
+// SCORECARD
+function renderScorecard(){
+  const wt=document.getElementById('sc-wire-target');if(wt)wt.textContent=CFG.wireTgt.toLocaleString();
+  const wTd=document.getElementById('sc-wire-today');if(wTd)wTd.textContent='$'+todayWire.toLocaleString();
+  const cTd=document.getElementById('sc-closes-today');if(cTd)cTd.textContent=todayCloses;
+  const bTd=document.getElementById('sc-bells-today');if(bTd)bTd.textContent=todayBells;
+  const dfwEl=document.getElementById('sc-dfw');if(dfwEl)dfwEl.textContent='$'+todayWire.toLocaleString();
+  const dfwBar=document.getElementById('sc-dfw-bar');if(dfwBar)dfwBar.style.width=(CFG.wireTgt>0?Math.min(100,Math.round(todayWire/CFG.wireTgt*100)):0)+'%';
+  const ints=CANDIDATES.filter(c=>c.steps&&c.steps.interviewed).length;
+  const starts=CANDIDATES.filter(c=>c.started||c.steps?.account).length;
+  const pipeline=CANDIDATES.filter(c=>!c.denied&&!c.started&&!c.steps?.account).length;
+  const denied=CANDIDATES.filter(c=>c.denied).length;
+  const sci=document.getElementById('sc-interviews');if(sci)sci.textContent=ints;
+  const scs=document.getElementById('sc-starts');if(scs)scs.textContent=starts;
+  const scp=document.getElementById('sc-pipeline');if(scp)scp.textContent=pipeline;
+  const scd=document.getElementById('sc-denied-ct');if(scd)scd.textContent=denied;
+  const wd=new Date().getDay();const dayN=wd===0?5:wd;
+  const wdEl=document.getElementById('sc-weekday');if(wdEl)wdEl.textContent=dayN;
+  const lbData=buildLBData();
+  const totalBells=lbData.reduce((a,r)=>a+(r.bells||0),0);
+  const totalCloses=lbData.reduce((a,r)=>a+(r.closes||0),0);
+  const totalWire=lbData.reduce((a,r)=>a+(r.wire||0),0);
+  const scWire=document.getElementById('sc-wire');if(scWire)scWire.textContent='$'+totalWire.toLocaleString();
+  const scCloses=document.getElementById('sc-closes');if(scCloses)scCloses.textContent=totalCloses;
+  const scBells=document.getElementById('sc-bells');if(scBells)scBells.textContent=totalBells;
+  const scReps=document.getElementById('sc-reps');if(scReps)scReps.textContent=Math.max(1,lbData.length);
+  const scReps2=document.getElementById('sc-reps2');if(scReps2)scReps2.textContent=Math.max(1,lbData.length);
+  const bellRate=totalCloses>0?Math.round(totalBells/totalCloses*100)+'%':'—';
+  const brEl=document.getElementById('sc-bell-rate');if(brEl)brEl.textContent=bellRate;
+  const avgC=document.getElementById('sc-avg-closes');if(avgC)avgC.textContent=lbData.length>0?(totalCloses/lbData.length).toFixed(1):'—';
+  // Rep rows today
+  if(todayCloses>0){
+    const name=P?.full_name||'You';const role=P?.role||'ae';
+    const avC={ae:'#4F8EF7',lt:'#00C9A7',jpm:'#F59E0B',pm:'#EF4444',owner:'#FFE033'}[role]||'#4F8EF7';
+    const initials=name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const rows=document.getElementById('sc-rep-rows');
+    if(rows)rows.innerHTML='<div style="display:grid;grid-template-columns:1fr 60px 60px 50px;gap:6px;padding:6px 0;border-bottom:1px solid var(--b1);align-items:center;">'
+      +'<div style="display:flex;align-items:center;gap:8px;"><div style="width:24px;height:24px;border-radius:50%;background:'+avC+'22;color:'+avC+';display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;">'+initials+'</div>'
+      +'<div><div style="font-size:12px;font-weight:500;">'+name.split(' ')[0]+'</div><div style="font-size:10px;color:var(--t3);">'+role.toUpperCase()+'</div></div></div>'
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--y);text-align:right;">$'+todayWire.toLocaleString()+'</div>'
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--green);text-align:right;">'+todayCloses+'</div>'
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--amber);text-align:right;">'+(todayBells>0?'🔔'+todayBells:'—')+'</div>'
+      +'</div>';
+  }
+  // Wire pace
+  const paceEl=document.getElementById('sc-pace-rows');
+  if(paceEl&&todayWire>0){
+    const pace=dayN>0?Math.round(todayWire/dayN):todayWire;const projected=pace*5;
+    const pct=Math.min(100,Math.round(projected/CFG.wireTgt*100));
+    const color=pct>=100?'var(--green)':pct>=70?'var(--amber)':'var(--red)';
+    paceEl.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:12px;"><span style="color:var(--t2);">Your pace → projected</span><span style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:15px;color:'+color+';">$'+projected.toLocaleString()+' projected</span></div>'
+      +'<div class="prog-tr" style="height:10px;"><div class="prog-f" style="width:'+pct+'%;background:'+color+';"></div></div>'
+      +'<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:4px;"><span>Target: $'+CFG.wireTgt.toLocaleString()+'</span><span>'+pct+'% of weekly target</span></div>';
+  }
 }
 
 // BOOT

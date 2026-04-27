@@ -1608,14 +1608,11 @@ function showApp(){
   renderServicesList();
   renderTerritoryList();
   renderTerminologyList();
-  renderAnnouncementSettings();
   renderRecipients();
   renderFieldStoreSelect();
   renderBulletin('office');
   if(['owner','pm'].includes(role)){loadRepsTable();buildOrgChart();renderActiveAnnouncements();}
   renderTrainingVault();
-  initHighRoller();
-  renderScorecard();
   if(todayCloses>0)renderTodaySales();
   // Show announcement
   if(ANNOUNCEMENTS.length>0){
@@ -3153,27 +3150,31 @@ function filterAch(cat,btn){
 // NAV
 function nav(id,btn){
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
-  const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');
+  const pg=document.getElementById('page-'+id);
+  if(pg)pg.classList.add('active');
+  else{
+    // Handle aliases
+    if(id==='highroller-shoutout'){
+      const hrPg=document.getElementById('page-highroller');
+      if(hrPg)hrPg.classList.add('active');
+    }
+  }
   document.querySelectorAll('.sbi').forEach(b=>b.classList.remove('active'));
   if(btn&&!btn.classList.contains('lk'))btn.classList.add('active');
   else document.querySelectorAll('.sbi').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');});
+  // Per-page init — only run what's needed for that page
   if(id==='admin')loadRepsTable();
-  if(id==='field'){renderFieldStoreSelect();}
-  if(id==='goals'){loadGoalsPage();}
-  if(id==='settings'){
-    setStab('criteria',document.querySelector('.stab-btn'));
-    renderRankTiersList();
-    renderCrewSettings();
-  }
+  if(id==='field')renderFieldStoreSelect();
+  if(id==='goals')loadGoalsPage();
+  if(id==='settings'){setStab('criteria',document.querySelector('.stab-btn'));renderRankTiersList();renderCrewSettings();}
   if(id==='training')renderTrainingVault();
-  initHighRoller();
-  renderScorecard();
-  if(id==='highroller'){initHighRoller();}
-  if(id==='achievements'){renderAchievements();}
-  if(id==='scorecard'){renderScorecard();}
   if(id==='training-mgr')renderTrainingMgrList();
+  if(id==='highroller'||id==='highroller-shoutout')initHighRoller();
+  if(id==='achievements')renderAchievements();
+  if(id==='scorecard')renderScorecard();
   if(id==='recruit'){renderCandidates();updateDropoffIntel();}
-  if(id==='org'){buildOrgChart();}
+  if(id==='org')buildOrgChart();
+  if(id==='bulletin')renderBulletin('office');
 }
 
 // AUTH

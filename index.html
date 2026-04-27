@@ -1625,6 +1625,7 @@ function showAuth(){
 }
 
 function showApp(){
+  const _safe=(n,f)=>{try{f();}catch(e){console.error('[FPI OS] showApp '+n+' error:',e.message);}};
   document.getElementById('loading').style.display='none';
   document.getElementById('auth-wrap').style.display='none';
   document.getElementById('app').style.display='grid';
@@ -3188,32 +3189,33 @@ function filterAch(cat,btn){
 
 // NAV
 function nav(id,btn){
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
-  const pg=document.getElementById('page-'+id);
-  if(pg)pg.classList.add('active');
-  else{
-    // Handle aliases
-    if(id==='highroller-shoutout'){
+  try{
+    document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+    const pg=document.getElementById('page-'+id);
+    if(pg)pg.classList.add('active');
+    else if(id==='highroller-shoutout'){
       const hrPg=document.getElementById('page-highroller');
       if(hrPg)hrPg.classList.add('active');
     }
-  }
-  document.querySelectorAll('.sbi').forEach(b=>b.classList.remove('active'));
-  if(btn&&!btn.classList.contains('lk'))btn.classList.add('active');
-  else document.querySelectorAll('.sbi').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');});
-  // Per-page init — only run what's needed for that page
-  if(id==='admin')loadRepsTable();
-  if(id==='field')renderFieldStoreSelect();
-  if(id==='goals')loadGoalsPage();
-  if(id==='settings'){setStab('criteria',document.querySelector('.stab-btn'));renderRankTiersList();renderCrewSettings();}
-  if(id==='training')renderTrainingVault();
-  if(id==='training-mgr')renderTrainingMgrList();
-  if(id==='highroller'||id==='highroller-shoutout')initHighRoller();
-  if(id==='achievements')renderAchievements();
-  if(id==='scorecard')renderScorecard();
-  if(id==='recruit'){renderCandidates();updateDropoffIntel();}
-  if(id==='org')buildOrgChart();
-  if(id==='bulletin')renderBulletin('office');
+    document.querySelectorAll('.sbi').forEach(b=>b.classList.remove('active'));
+    if(btn&&!btn.classList.contains('lk'))btn.classList.add('active');
+    else document.querySelectorAll('.sbi').forEach(b=>{if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))b.classList.add('active');});
+  }catch(e){console.error('nav DOM error:',e.message);}
+  // Per-page init — wrapped individually so one crash doesn't block the page
+  const _safe=(name,fn)=>{try{fn();}catch(e){console.error('nav '+name+' error:',e.message,e.stack);}};
+  if(id==='admin')_safe('loadRepsTable',()=>loadRepsTable());
+  if(id==='field')_safe('renderFieldStoreSelect',()=>renderFieldStoreSelect());
+  if(id==='goals')_safe('loadGoalsPage',()=>loadGoalsPage());
+  if(id==='settings'){_safe('setStab',()=>setStab('criteria',document.querySelector('.stab-btn')));_safe('renderRankTiersList',renderRankTiersList);_safe('renderCrewSettings',renderCrewSettings);}
+  if(id==='training')_safe('renderTrainingVault',renderTrainingVault);
+  if(id==='training-mgr')_safe('renderTrainingMgrList',renderTrainingMgrList);
+  if(id==='highroller'||id==='highroller-shoutout')_safe('initHighRoller',initHighRoller);
+  if(id==='achievements')_safe('renderAchievements',renderAchievements);
+  if(id==='scorecard')_safe('renderScorecard',renderScorecard);
+  if(id==='recruit'){_safe('renderCandidates',renderCandidates);_safe('updateDropoffIntel',updateDropoffIntel);}
+  if(id==='org')_safe('buildOrgChart',buildOrgChart);
+  if(id==='bulletin')_safe('renderBulletin',()=>renderBulletin('office'));
+  console.log('[FPI OS] nav:',id,'complete');
 }
 
 // AUTH
@@ -3580,6 +3582,31 @@ function renderScorecard(){
 
 // BOOT
 boot();
+</script>
+
+<!-- ERROR OVERLAY for debugging -->
+<div id="err-overlay" style="display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(239,68,68,.95);color:#fff;padding:12px 16px;font-family:monospace;font-size:12px;z-index:9999;max-height:200px;overflow-y:auto;">
+  <div style="display:flex;justify-content:space-between;margin-bottom:4px;"><strong>JS ERROR</strong><button onclick="document.getElementById('err-overlay').style.display='none'" style="background:none;border:none;color:#fff;cursor:pointer;font-size:16px;">✕</button></div>
+  <div id="err-msg"></div>
+</div>
+<script>
+window.onerror = function(msg, src, line, col, err) {
+  const o = document.getElementById('err-overlay');
+  const m = document.getElementById('err-msg');
+  if(o && m) {
+    m.innerHTML = '<div>'+msg+'</div><div style="opacity:.7;font-size:10px;">'+src+' line:'+line+' col:'+col+'</div>'+(err&&err.stack?'<div style="opacity:.7;font-size:10px;margin-top:4px;">'+err.stack.split('\n').slice(0,3).join('<br>')+'</div>':'');
+    o.style.display = 'block';
+  }
+  return false;
+};
+window.addEventListener('unhandledrejection', function(e) {
+  const o = document.getElementById('err-overlay');
+  const m = document.getElementById('err-msg');
+  if(o && m) {
+    m.innerHTML = '<div>Unhandled Promise: '+e.reason+'</div>';
+    o.style.display = 'block';
+  }
+});
 </script>
 </body>
 </html>

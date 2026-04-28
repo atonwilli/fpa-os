@@ -595,8 +595,50 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 
 <!-- GOALS -->
 <div id="page-goals" class="pg">
-  <div class="pgt">Submit Sunday</div>
-  <div class="pgs">Every Sunday · AI reads your week and builds your goal · your leader sees every submission</div>
+  <div class="pgt" id="goals-page-title">Submit Sunday goals</div>
+  <div class="pgs" id="goals-page-sub">Every Sunday · AI reads your week and builds your goal · your leader sees every submission</div>
+
+  <!-- LEADER VIEW: goals reporting -->
+  <div id="goals-leader-view" style="display:none;">
+
+    <!-- Week selector + filter -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="font-size:11px;color:var(--t3);">Week of</div>
+        <input type="date" id="goals-report-week" style="background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:6px 10px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;"/>
+        <button class="btn btn-g" onclick="loadGoalsReport()">Load</button>
+      </div>
+      <div id="goals-report-summary" style="font-size:11px;color:var(--t3);"></div>
+    </div>
+
+    <!-- Submission status -->
+    <div class="card" style="margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <div class="slbl" style="margin-bottom:0;">Submissions this week</div>
+        <div id="goals-submitted-count" style="font-size:11px;color:var(--t3);">Loading...</div>
+      </div>
+      <!-- Submitted reps -->
+      <div style="margin-bottom:10px;">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--green);margin-bottom:6px;">✓ Submitted</div>
+        <div id="goals-submitted-list" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+      </div>
+      <!-- Not submitted reps -->
+      <div>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--red);margin-bottom:6px;">✗ Not submitted</div>
+        <div id="goals-missing-list" style="display:flex;flex-wrap:wrap;gap:5px;font-size:11px;color:var(--t3);">Loading...</div>
+      </div>
+    </div>
+
+    <!-- Goals detail table -->
+    <div class="card">
+      <div class="slbl" style="margin-bottom:12px;">Goal details — click to expand</div>
+      <div id="goals-report-table"></div>
+    </div>
+
+  </div>
+
+  <!-- REP VIEW: submit goals (AE + LT submit their own) -->
+  <div id="goals-rep-view">
 
   <!-- LAST WEEK AUTO-PULLED -->
   <div class="card" style="background:var(--s3);border:1px solid var(--b1);margin-bottom:12px;">
@@ -723,6 +765,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
     </div>
     <div id="goal-submitted-msg" style="display:none;font-size:11px;color:#86EFAC;margin-top:8px;">✓ Submitted. Your leader can see this now.</div>
   </div>
+  </div><!-- end goals-rep-view -->
 </div>
 
 <!-- HIGH ROLLER BOARD -->
@@ -968,20 +1011,37 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 
   <!-- LT view: crew stats + top 3 -->
   <div id="sc-lt-section" style="display:none;">
+    <!-- Crew summary cards -->
+    <div class="g4" style="margin-bottom:14px;">
+      <div class="stat"><div class="sacc" style="background:var(--y);"></div><div class="sv" style="color:var(--y);" id="sc-lt-crew-wire">$0</div><div class="sl">Crew wire</div><div class="sd" style="color:var(--t3);" id="sc-lt-crew-name">This week</div></div>
+      <div class="stat"><div class="sacc" style="background:var(--green);"></div><div class="sv" style="color:var(--green);" id="sc-lt-crew-closes">0</div><div class="sl">Crew closes</div><div class="sd" style="color:var(--t3);">This week</div></div>
+      <div class="stat"><div class="sacc" style="background:var(--amber);"></div><div class="sv" style="color:var(--amber);" id="sc-lt-crew-bells">0</div><div class="sl">Crew bells</div><div class="sd" style="color:var(--t3);">This week</div></div>
+      <div class="stat"><div class="sacc" style="background:var(--blue);"></div><div class="sv" style="color:var(--blue);" id="sc-lt-crew-reps">0</div><div class="sl">Active reps</div><div class="sd" style="color:var(--t3);">In crew</div></div>
+    </div>
     <div class="g2">
+      <!-- My own stats -->
       <div class="card">
-        <div class="slbl" style="margin-bottom:10px;">Your crew this week</div>
-        <div id="sc-crew-stats">
-          <div class="sc-row"><span class="sc-lbl">Your wire</span><span class="sc-v" style="color:var(--y);" id="sc-lt-wire">$0</span></div>
-          <div class="sc-row"><span class="sc-lbl">Your closes</span><span class="sc-v" style="color:var(--green);" id="sc-lt-closes">0</span></div>
-          <div class="sc-row"><span class="sc-lbl">Your bells</span><span class="sc-v" style="color:var(--amber);" id="sc-lt-bells">0</span></div>
-          <div class="sc-row" style="border:none;"><span class="sc-lbl">Crew name</span><span class="sc-v" style="color:var(--blue);font-size:12px;" id="sc-lt-crew">—</span></div>
+        <div class="slbl" style="margin-bottom:10px;">My stats this week</div>
+        <div>
+          <div class="sc-row"><span class="sc-lbl">My wire</span><span class="sc-v" style="color:var(--y);" id="sc-lt-wire">$0</span></div>
+          <div class="sc-row"><span class="sc-lbl">My closes</span><span class="sc-v" style="color:var(--green);" id="sc-lt-closes">0</span></div>
+          <div class="sc-row"><span class="sc-lbl">My bells</span><span class="sc-v" style="color:var(--amber);" id="sc-lt-bells">0</span></div>
+          <div class="sc-row" style="border:none;"><span class="sc-lbl">Crew</span><span class="sc-v" style="color:var(--blue);font-size:12px;" id="sc-lt-crew">—</span></div>
         </div>
       </div>
+      <!-- Top 3 -->
       <div class="card">
         <div class="slbl" style="margin-bottom:10px;">Top 3 reps this week</div>
         <div id="sc-top3-lt"></div>
       </div>
+    </div>
+    <!-- Crew rep breakdown -->
+    <div class="card" style="margin-top:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="slbl" style="margin-bottom:0;">Crew rep breakdown</div>
+        <button class="btn btn-g" style="font-size:10px;padding:3px 10px;" onclick="loadLTCrewStats()">Refresh</button>
+      </div>
+      <div id="sc-lt-crew-table"><div style="font-size:12px;color:var(--t3);">Loading crew data...</div></div>
     </div>
   </div>
 
@@ -2641,7 +2701,34 @@ function setEnergy(level,btn){
 }
 
 function loadGoalsPage(){
-  // Pull last week data from localStorage
+  const role=P?.role||'ae';
+  const isLeader=['owner','pm','jpm','lt'].includes(role);
+
+  // Update page title
+  const title=document.getElementById('goals-page-title');
+  const sub=document.getElementById('goals-page-sub');
+  if(isLeader){
+    if(title) title.textContent='Goals reporting';
+    if(sub) sub.textContent='Weekly goal submissions from your team · track targets vs actuals';
+  } else {
+    if(title) title.textContent='Submit Sunday goals';
+    if(sub) sub.textContent='Every Sunday · AI reads your week and builds your goal · your leader sees every submission';
+  }
+
+  // Show correct view
+  const leaderView=document.getElementById('goals-leader-view');
+  const repView=document.getElementById('goals-rep-view');
+  if(leaderView) leaderView.style.display=isLeader?'block':'none';
+  if(repView) repView.style.display='block'; // always show rep view so leaders can also submit their own
+
+  // Set default week for report
+  if(isLeader){
+    const wkEl=document.getElementById('goals-report-week');
+    if(wkEl&&!wkEl.value) wkEl.value=weekKey();
+    loadGoalsReport();
+  }
+
+  // Pull last week data from localStorage for rep view
   const lw=localStorage.getItem('fpa_lastweek');
   if(lw){try{goalsLastWeek=JSON.parse(lw);}catch(e){}}
   else{
@@ -2828,11 +2915,34 @@ function generateGoalFallback(name,closes,wire,stops,weakness,action,wk){
 
 function saveGoalFinal(){
   const text=document.getElementById('goal-text').textContent;
-  // Save to localStorage with timestamp
+  const wk=weekKey();
+
+  // Parse targets from the form
+  const wireTarget=parseInt(document.getElementById('goal-wire-inp')?.value||document.getElementById('goal-wire')?.value||CFG.wireTgt)||CFG.wireTgt;
+  const closesTarget=parseInt(document.getElementById('goal-closes-inp')?.value||document.getElementById('goal-closes')?.value||CFG.custTgt)||3;
+
+  // Save to localStorage
   const goals=JSON.parse(localStorage.getItem('fpa_goals')||'[]');
-  goals.unshift({text,date:new Date().toLocaleDateString(),week:new Date().toISOString().slice(0,10),name:P?.full_name});
+  goals.unshift({text,date:new Date().toLocaleDateString(),week:wk,name:P?.full_name,wire_target:wireTarget,closes_target:closesTarget});
   if(goals.length>12)goals.pop();
   localStorage.setItem('fpa_goals',JSON.stringify(goals));
+
+  // Sync to Supabase
+  if(U){
+    sb.from('weekly_goals').upsert({
+      user_id: U.id,
+      profile_name: P?.full_name||U.email||'Rep',
+      week_start: wk,
+      wire_target: wireTarget,
+      closes_target: closesTarget,
+      goal_statement: text,
+      submitted_at: new Date().toISOString()
+    },{onConflict:'user_id,week_start'}).then(function(r){
+      if(r.error) console.warn('[FPI OS] goals sync error:',r.error.message);
+      else console.log('[FPI OS] goal synced to Supabase');
+    });
+  }
+
   document.getElementById('goal-submitted-msg').style.display='block';
 }
 
@@ -3939,13 +4049,14 @@ function _renderScorecardUI(role,isAE,isLT,isFullAccess){
   if(top3ae)top3ae.innerHTML=buildTop3HTML(top3);
   if(top3lt)top3lt.innerHTML=buildTop3HTML(top3);
 
-  // LT crew stats
+  // LT crew stats — load from Supabase
   if(isLT){
     const crewName=CREWS[P?.full_name]||'—';
     const ltWire=document.getElementById('sc-lt-wire');if(ltWire)ltWire.textContent='$'+todayWire.toLocaleString();
     const ltCloses=document.getElementById('sc-lt-closes');if(ltCloses)ltCloses.textContent=todayCloses;
     const ltBells=document.getElementById('sc-lt-bells');if(ltBells)ltBells.textContent=todayBells;
     const ltCrew=document.getElementById('sc-lt-crew');if(ltCrew)ltCrew.textContent=crewName;
+    loadLTCrewStats();
   }
 
   const wt=document.getElementById('sc-wire-target');if(wt)wt.textContent=CFG.wireTgt.toLocaleString();
@@ -4594,6 +4705,212 @@ function demoReset(){
     msg.style.display='block';
     msg.style.color='#86EFAC';
     msg.textContent='✓ Demo reset complete — localStorage and Supabase cleared. Fresh start!';
+  }
+}
+
+// GOALS REPORTING
+// GOALS REPORTING
+async function loadLTCrewStats(){
+  if(!P) return;
+  const crewName=CREWS[P.full_name]||'';
+  const crewNameEl=document.getElementById('sc-lt-crew-name');
+  if(crewNameEl) crewNameEl.textContent=crewName||'No crew assigned';
+
+  // Find crew members
+  const crewMembers=crewName?Object.entries(CREWS).filter(function(e){return e[1]===crewName;}).map(function(e){return e[0];}):[];
+  const crewRepsEl=document.getElementById('sc-lt-crew-reps');
+  if(crewRepsEl) crewRepsEl.textContent=crewMembers.length;
+
+  if(crewMembers.length===0){
+    const tableEl=document.getElementById('sc-lt-crew-table');
+    if(tableEl) tableEl.innerHTML='<div style="font-size:12px;color:var(--t3);">No crew members assigned yet. Go to Settings → Crews to assign reps.</div>';
+    return;
+  }
+
+  try {
+    // Get weekly tally for crew members
+    const {data:tallies,error}=await sb.from('daily_tally')
+      .select('*')
+      .gte('date',weekKey())
+      .in('profile_name',crewMembers);
+    if(error) throw error;
+
+    // Aggregate by rep
+    const byRep={};
+    crewMembers.forEach(function(name){byRep[name]={name,wire:0,closes:0,bells:0,stops:0,lastActive:null};});
+    (tallies||[]).forEach(function(t){
+      if(byRep[t.profile_name]){
+        byRep[t.profile_name].wire+=t.wire||0;
+        byRep[t.profile_name].closes+=t.closes||0;
+        byRep[t.profile_name].bells+=t.bells||0;
+        byRep[t.profile_name].stops+=t.stops||0;
+        if(!byRep[t.profile_name].lastActive||t.last_updated>byRep[t.profile_name].lastActive)
+          byRep[t.profile_name].lastActive=t.last_updated;
+      }
+    });
+
+    const reps=Object.values(byRep).sort(function(a,b){return b.wire-a.wire;});
+
+    // Update crew totals
+    const totalWire=reps.reduce(function(s,r){return s+r.wire;},0);
+    const totalCloses=reps.reduce(function(s,r){return s+r.closes;},0);
+    const totalBells=reps.reduce(function(s,r){return s+r.bells;},0);
+    const cwEl=document.getElementById('sc-lt-crew-wire');if(cwEl)cwEl.textContent='$'+totalWire.toLocaleString();
+    const ccEl=document.getElementById('sc-lt-crew-closes');if(ccEl)ccEl.textContent=totalCloses;
+    const cbEl=document.getElementById('sc-lt-crew-bells');if(cbEl)cbEl.textContent=totalBells;
+
+    // Build rep table
+    const tableEl=document.getElementById('sc-lt-crew-table');
+    if(tableEl){
+      tableEl.innerHTML='<div style="display:grid;grid-template-columns:1fr 70px 50px 40px 90px;gap:6px;padding:0 4px 8px;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);border-bottom:1px solid var(--b1);margin-bottom:4px;"><span>Rep</span><span style="text-align:right;">Wire</span><span style="text-align:right;">Closes</span><span style="text-align:right;">Bells</span><span style="text-align:right;">Last active</span></div>'
+      +reps.map(function(r){
+        const ini=r.name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+        const lastSeen=r.lastActive?new Date(r.lastActive).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'No activity';
+        const isMe=r.name===P?.full_name;
+        return '<div onclick="openRepDrilldown(\''+r.name+'\')" style="display:grid;grid-template-columns:1fr 70px 50px 40px 90px;gap:6px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--b1);cursor:pointer;border-radius:var(--r1);" onmouseover="this.style.background=\'var(--s3)\'" onmouseout="this.style.background=\'\';">'
+          +'<div style="display:flex;align-items:center;gap:7px;"><div style="width:22px;height:22px;border-radius:50%;background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:var(--t2);">'+ini+'</div>'
+          +'<div style="font-size:12px;font-weight:500;">'+r.name.split(' ')[0]+(isMe?' <span style="font-size:9px;color:var(--t3);">(you)</span>':'')+'</div></div>'
+          +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--y);text-align:right;">$'+r.wire.toLocaleString()+'</div>'
+          +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--green);text-align:right;">'+r.closes+'</div>'
+          +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:var(--amber);text-align:right;">'+(r.bells>0?r.bells:'—')+'</div>'
+          +'<div style="font-size:10px;color:var(--t3);text-align:right;">'+lastSeen+'</div>'
+          +'</div>';
+      }).join('');
+    }
+  } catch(e){
+    const tableEl=document.getElementById('sc-lt-crew-table');
+    if(tableEl) tableEl.innerHTML='<div style="font-size:12px;color:#FCA5A5;">Error loading crew data: '+e.message+'</div>';
+  }
+}
+
+async function loadGoalsReport(){
+  const wkEl=document.getElementById('goals-report-week');
+  const weekStart=wkEl?.value||weekKey();
+  const role=P?.role||'ae';
+  const isOwner=['owner','pm'].includes(role);
+
+  const summaryEl=document.getElementById('goals-report-summary');
+  const submittedEl=document.getElementById('goals-submitted-list');
+  const missingEl=document.getElementById('goals-missing-list');
+  const tableEl=document.getElementById('goals-report-table');
+  const countEl=document.getElementById('goals-submitted-count');
+
+  if(summaryEl) summaryEl.textContent='Loading...';
+
+  try {
+    // Fetch submitted goals from Supabase
+    const {data:goals, error}=await sb.from('weekly_goals')
+      .select('*')
+      .eq('week_start', weekStart)
+      .order('submitted_at',{ascending:false});
+    if(error) throw error;
+
+    // Fetch all profiles to know who SHOULD have submitted
+    const {data:allProfiles}=await sb.from('profiles')
+      .select('id,full_name,role,office')
+      .in('role',['ae','lt','jpm','pm']);
+
+    const submitted=goals||[];
+    const submittedNames=submitted.map(function(g){return g.profile_name;});
+
+    // For LT: filter to their crew only
+    let relevantProfiles=allProfiles||[];
+    if(role==='lt'){
+      const myCrew=CREWS[P?.full_name]||'';
+      if(myCrew){
+        const crewMembers=Object.entries(CREWS).filter(function(e){return e[1]===myCrew;}).map(function(e){return e[0];});
+        relevantProfiles=relevantProfiles.filter(function(p){return crewMembers.includes(p.full_name)||p.full_name===P?.full_name;});
+      }
+    }
+
+    const shouldSubmit=relevantProfiles.filter(function(p){return p.full_name!==P?.full_name||role==='ae';});
+    const missing=shouldSubmit.filter(function(p){return !submittedNames.includes(p.full_name);});
+
+    // Summary
+    if(summaryEl) summaryEl.textContent=submitted.length+' submitted · '+missing.length+' missing';
+    if(countEl) countEl.textContent=submitted.length+' of '+(submitted.length+missing.length)+' reps';
+
+    // Submitted chips
+    if(submittedEl){
+      if(submitted.length===0){
+        submittedEl.innerHTML='<span style="font-size:11px;color:var(--t3);">None yet this week</span>';
+      } else {
+        submittedEl.innerHTML=submitted.map(function(g){
+          const time=new Date(g.submitted_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',weekday:'short'});
+          return '<span style="font-size:11px;padding:3px 9px;border-radius:20px;background:rgba(34,197,94,.1);color:var(--green);font-weight:500;" title="Submitted '+time+'">'+g.profile_name+'</span>';
+        }).join('');
+      }
+    }
+
+    // Missing chips
+    if(missingEl){
+      if(missing.length===0){
+        missingEl.innerHTML='<span style="font-size:11px;color:var(--green);">Everyone submitted! 🎉</span>';
+      } else {
+        missingEl.innerHTML=missing.map(function(p){
+          return '<span style="font-size:11px;padding:3px 9px;border-radius:20px;background:rgba(239,68,68,.1);color:#FCA5A5;font-weight:500;">'+p.full_name+'</span>';
+        }).join('');
+      }
+    }
+
+    // Goals detail table
+    if(tableEl){
+      if(submitted.length===0){
+        tableEl.innerHTML='<div style="font-size:12px;color:var(--t3);text-align:center;padding:16px 0;">No goals submitted for week of '+weekStart+' yet.</div>';
+      } else {
+        // Get actual performance for this week from daily_tally
+        const {data:tallies}=await sb.from('daily_tally')
+          .select('profile_name,wire,closes,bells')
+          .gte('date',weekStart);
+
+        const actualByRep={};
+        (tallies||[]).forEach(function(t){
+          if(!actualByRep[t.profile_name]) actualByRep[t.profile_name]={wire:0,closes:0,bells:0};
+          actualByRep[t.profile_name].wire+=t.wire||0;
+          actualByRep[t.profile_name].closes+=t.closes||0;
+          actualByRep[t.profile_name].bells+=t.bells||0;
+        });
+
+        tableEl.innerHTML=submitted.map(function(g){
+          const actual=actualByRep[g.profile_name]||{wire:0,closes:0,bells:0};
+          const wireHit=actual.wire>=g.wire_target;
+          const closesHit=actual.closes>=g.closes_target;
+          const wirePct=g.wire_target>0?Math.min(100,Math.round(actual.wire/g.wire_target*100)):0;
+          const closesPct=g.closes_target>0?Math.min(100,Math.round(actual.closes/g.closes_target*100)):0;
+          const initials=(g.profile_name||'?').split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+
+          return '<div style="background:var(--s3);border-radius:var(--r2);padding:12px 14px;margin-bottom:8px;">'
+            // Header row
+            +'<div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display===\'none\'?\'block\':\'none\'">'
+            +'<div style="width:28px;height:28px;border-radius:50%;background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--t2);flex-shrink:0;">'+initials+'</div>'
+            +'<div style="flex:1;"><div style="font-size:13px;font-weight:600;">'+g.profile_name+'</div>'
+            +'<div style="font-size:10px;color:var(--t3);">Submitted '+new Date(g.submitted_at).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})+'</div></div>'
+            // Wire progress
+            +'<div style="text-align:right;">'
+            +'<div style="font-size:11px;color:var(--t3);">Wire</div>'
+            +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:'+(wireHit?'var(--green)':'var(--y)')+';">$'+actual.wire.toLocaleString()+' / $'+g.wire_target.toLocaleString()+'</div>'
+            +'<div style="width:80px;height:4px;background:var(--s4);border-radius:2px;margin-top:3px;overflow:hidden;"><div style="width:'+wirePct+'%;height:100%;background:'+(wireHit?'var(--green)':'var(--y)')+';" ></div></div>'
+            +'</div>'
+            // Closes progress
+            +'<div style="text-align:right;">'
+            +'<div style="font-size:11px;color:var(--t3);">Closes</div>'
+            +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:14px;color:'+(closesHit?'var(--green)':'var(--blue)')+';">'+actual.closes+' / '+g.closes_target+'</div>'
+            +'<div style="width:60px;height:4px;background:var(--s4);border-radius:2px;margin-top:3px;overflow:hidden;"><div style="width:'+closesPct+'%;height:100%;background:'+(closesHit?'var(--green)':'var(--blue)')+';" ></div></div>'
+            +'</div>'
+            +'<span style="font-size:14px;color:var(--t3);">›</span>'
+            +'</div>'
+            // Expandable goal statement
+            +'<div style="display:none;border-top:1px solid var(--b1);padding-top:10px;margin-top:2px;">'
+            +'<div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:6px;">Goal statement</div>'
+            +'<div style="font-size:12px;color:var(--t2);line-height:1.7;white-space:pre-line;">'+g.goal_statement+'</div>'
+            +'</div>'
+            +'</div>';
+        }).join('');
+      }
+    }
+  } catch(e){
+    if(summaryEl) summaryEl.textContent='Error loading goals: '+e.message;
+    console.warn('[FPI OS] goals report error:',e.message);
   }
 }
 

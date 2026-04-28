@@ -2335,9 +2335,7 @@ async function loadTeamTallyFromSupabase(){
   const role = P.role||'ae';
   const isLeader = ['owner','pm','jpm','lt'].includes(role);
   if(!isLeader)return null;
-  const todayStr = new Date().toISOString().slice(0,10);
-  // Use cache if fresh (within 30 seconds)
-  if(_sbTallyCache && _sbTallyCacheDate && (Date.now()-_sbTallyCacheDate)<10000) return _sbTallyCache;
+  // Always fetch fresh - no cache
   try {
     const weekStart = weekKey();
     const {data, error} = await sb.from('daily_tally')
@@ -4212,10 +4210,35 @@ function renderScorecard(){
   const isLT=role==='lt';
   const isFullAccess=['jpm','pm','owner'].includes(role);
 
-  // Load fresh Supabase data for leaders, then re-render
   if(isFullAccess||isLT){
-    _sbTallyCache=null;_sbTallyCacheDate=null; // always fetch fresh on scorecard open
-    loadTeamTallyFromSupabase().then(function(){
+    _sbTallyCache=null;_sbTallyCacheDate=null;
+    Promise.all([
+      loadTeamTallyFromSupabase(),
+      sb.from('sales_log').select('user_id,profile_name,wire,bell,date').gte('date',weekKey())
+    ]).then(function(results){
+      var salesData=results[1].data||[];
+      // Build wire/closes totals from sales_log (source of truth for wire)
+      var salesByUser={};
+      salesData.forEach(function(s){
+        if(!salesByUser[s.user_id]) salesByUser[s.user_id]={wire:0,closes:0,bells:0,name:s.profile_name};
+        salesByUser[s.user_id].wire+=s.wire||0;
+        salesByUser[s.user_id].closes+=1;
+        if(s.bell) salesByUser[s.user_id].bells+=1;
+      });
+      // Inject sales_log wire into tally cache rows
+      if(_sbTallyCache){
+        _sbTallyCache.forEach(function(row){
+          var sd=salesByUser[row.user_id];
+          if(sd){row.wire=sd.wire;row.closes=sd.closes;row.bells=sd.bells;}
+        });
+        // Add reps with sales but no tally row
+        Object.keys(salesByUser).forEach(function(uid){
+          if(!_sbTallyCache.find(function(r){return r.user_id===uid;})){
+            var sd=salesByUser[uid];
+            _sbTallyCache.push({user_id:uid,profile_name:sd.name,wire:sd.wire,closes:sd.closes,bells:sd.bells,stops:0,tabs:0,presentations:0,date:new Date().toISOString().slice(0,10)});
+          }
+        });
+      }
       _renderScorecardUI(role,isAE,isLT,isFullAccess);
     });
   } else {

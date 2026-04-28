@@ -2528,18 +2528,64 @@ function submitSale(){
 function renderTodaySales(){
   const el=document.getElementById('sales-today-list');if(!el)return;
   if(todaySales.length===0){el.innerHTML='';return;}
-  el.innerHTML='<div class="slbl" style="margin-bottom:8px;">Today\'s sales ('+todaySales.length+')</div>'+todaySales.map((s,i)=>`
-    <div style="background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:10px;">
-      <div style="flex:1;">
-        <div style="font-size:12px;font-weight:500;">${s.customer}${s.address?' · '+s.address:''}</div>
-        <div style="font-size:11px;color:var(--t2);margin-top:2px;">${s.services.join(', ')}</div>
-        <div style="font-size:10px;color:var(--t3);margin-top:2px;">${s.time}</div>
-      </div>
-      <div style="text-align:right;">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;color:var(--y);">$${s.wire.toLocaleString()}</div>
-        ${s.bell?'<div style="font-size:10px;color:var(--y);">🔔 Bell</div>':''}
-      </div>
-    </div>`).join('');
+  el.innerHTML='<div class="slbl" style="margin-bottom:8px;">Today\'s sales ('+todaySales.length+')</div>'+todaySales.map(function(s,i){
+    return '<div style="background:var(--s3);border:1px solid var(--b1);border-radius:var(--r2);padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:10px;">'
+      +'<div style="flex:1;">'
+      +'<div style="font-size:12px;font-weight:500;">'+s.customer+(s.address?' · '+s.address:'')+'</div>'
+      +'<div style="font-size:11px;color:var(--t2);margin-top:2px;">'+(s.services||[]).join(', ')+'</div>'
+      +'<div style="font-size:10px;color:var(--t3);margin-top:2px;">'+s.time+'</div>'
+      +'</div>'
+      +'<div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px;">'
+      +'<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:16px;color:var(--y);">$'+s.wire.toLocaleString()+'</div>'
+      +(s.bell?'<div style="font-size:10px;color:var(--y);">🔔 Bell</div>':'')
+      +'<button onclick="deleteSale('+i+')" style="background:none;border:none;font-size:10px;color:#FCA5A5;cursor:pointer;padding:2px 0;">✕ Remove</button>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function deleteSale(idx){
+  if(!confirm('Remove this sale? This cannot be undone.')) return;
+  var sale = todaySales[idx];
+  if(!sale) return;
+
+  // Reverse the totals
+  todayWire -= sale.wire||0;
+  todayCloses--;
+  if(sale.bell) todayBells--;
+  if(todayWire<0) todayWire=0;
+  if(todayCloses<0) todayCloses=0;
+  if(todayBells<0) todayBells=0;
+
+  // Remove from array
+  todaySales.splice(idx,1);
+  saveLocal();
+
+  // Sync updated tally to Supabase
+  syncTallyToSupabase();
+
+  // Delete from sales_log in Supabase by matching customer+time
+  if(U && sale.id){
+    sb.from('sales_log').delete().eq('user_id',U.id).eq('created_at',sale.supabaseCreatedAt||'').then(function(){});
+  }
+  // Fallback: delete by customer name and time_logged
+  if(U){
+    sb.from('sales_log').delete()
+      .eq('user_id',U.id)
+      .eq('customer',sale.customer||'')
+      .eq('time_logged',sale.time||'')
+      .then(function(){});
+  }
+
+  // Update UI
+  document.getElementById('f-cl').textContent=todayCloses;
+  document.getElementById('f-w').textContent='$'+todayWire.toLocaleString();
+  document.getElementById('h-closes').textContent=todayCloses;
+  document.getElementById('h-wire').textContent='$'+todayWire.toLocaleString();
+  document.getElementById('h-bells').textContent=todayBells;
+  var fb=document.getElementById('f-bell-stat');
+  if(fb) fb.textContent=todayBells>0?'🔔 '+todayBells+' bell'+(todayBells>1?'s':''):'No bell yet';
+  renderTodaySales();
 }
 
 // REP MANAGEMENT

@@ -1913,6 +1913,7 @@ var HR_DATE='weekly';
 var HR_SORT='wire';
 var HR_TAB='lb';
 var ACH_FILTER='all';
+var TEAM_PROFILES=[]; // loaded from Supabase profiles on login
 
 // DEFAULT CONFIG — owner can override in Settings
 var CFG={
@@ -2063,6 +2064,10 @@ async function loadProfile(user){
     p=c||np;
   }
   P=p;
+  // Load team profiles so rep lists are always current
+  sb.from('profiles').select('id,full_name,email,role,office').order('full_name',{ascending:true}).then(function(r){
+    if(r.data) TEAM_PROFILES=r.data;
+  });
   // Load org-wide settings from Supabase so ALL devices get same config
   await loadOrgSettings();
   // Load attendance from Supabase (async, updates after app shows)
@@ -2539,6 +2544,8 @@ function renderTodaySales(){
 async function loadRepsTable(){
   const tbody=document.getElementById('reps-tbody');if(!tbody)return;
   const{data}=await sb.from('profiles').select('*').order('created_at',{ascending:true});
+  // Keep TEAM_PROFILES in sync
+  if(data) TEAM_PROFILES=data;
   const sc=document.getElementById('sc-reps');const sc2=document.getElementById('sc-reps2');
   if(!data||data.length===0){
     tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--t3);padding:24px;">No reps yet. Add your first rep above or share invite code FPA2025.</td></tr>';
@@ -2763,25 +2770,37 @@ function updateDropoffIntel(){
 }
 
 function buildOrgChart(){
-  const canvas=document.getElementById('org-canvas');
-  const nodesDiv=document.getElementById('org-nodes');
-  const svgEl=document.getElementById('org-svg');
+  var canvas=document.getElementById('org-canvas');
+  var nodesDiv=document.getElementById('org-nodes');
+  var svgEl=document.getElementById('org-svg');
   if(!canvas||!nodesDiv||!svgEl)return;
   nodesDiv.innerHTML='';svgEl.innerHTML='';
-  const w=canvas.offsetWidth||580;
-  orgNodes=[{id:'owner',name:P?.full_name||'You (Owner)',role:P?.role||'owner',x:w/2,y:70,color:'#FFE033',initials:(P?.full_name||'AW').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}];
-  const started=CANDIDATES.filter(c=>c.started||c.steps.account);
-  const uaEl=document.getElementById('ua-chips');
+  var w=canvas.offsetWidth||580;
+  var roleColors={owner:'#FFE033',pm:'#EF4444',jpm:'#F59E0B',lt:'#00C9A7',ae:'#4F8EF7'};
+  orgNodes=[{id:'owner',name:P&&P.full_name?P.full_name:'You',role:P&&P.role?P.role:'owner',x:w/2,y:70,color:roleColors[P&&P.role?P.role:'owner']||'#FFE033',initials:(P&&P.full_name?P.full_name:'AW').split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2)}];
+  var teamReps=TEAM_PROFILES.filter(function(p){return p.id!==P.id;});
+  var roleOrder={jpm:0,lt:1,ae:2};
+  teamReps.sort(function(a,b){return (roleOrder[a.role]||3)-(roleOrder[b.role]||3);});
+  var perRow=Math.min(4,Math.max(1,Math.ceil(Math.sqrt(teamReps.length))));
+  teamReps.forEach(function(rep,i){
+    var col=i%perRow;
+    var row=Math.floor(i/perRow);
+    var spacing=Math.min(160,(w-40)/Math.max(1,perRow));
+    var startX=(w-(Math.min(teamReps.length,perRow)-1)*spacing)/2;
+    orgNodes.push({id:rep.id,name:rep.full_name||rep.email||'Rep',role:rep.role||'ae',x:startX+col*spacing,y:180+row*130,color:roleColors[rep.role]||'#4F8EF7',initials:(rep.full_name||'?').split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2)});
+  });
+  var started=CANDIDATES.filter(function(c){return c.started||c.steps&&c.steps.account;});
+  var uaEl=document.getElementById('ua-chips');
   if(uaEl){
-    if(started.length===0)uaEl.innerHTML='<span style="font-size:11px;color:var(--t3);">No unassigned starts. Move candidates from Recruitment after account is created.</span>';
-    else uaEl.innerHTML=started.map(c=>'<div style="background:var(--s4);border:1px solid var(--b2);border-radius:var(--r2);padding:6px 10px;font-size:12px;display:flex;align-items:center;gap:7px;cursor:pointer;"><div style="width:22px;height:22px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;">'+c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)+'</div><span>'+c.name.split(' ')[0]+'</span></div>').join('');
+    if(started.length===0)uaEl.innerHTML='<span style="font-size:11px;color:var(--t3);">No unassigned starts.</span>';
+    else uaEl.innerHTML=started.map(function(c){return '<div style="background:var(--s4);border:1px solid var(--b2);border-radius:var(--r2);padding:6px 10px;font-size:12px;display:flex;align-items:center;gap:7px;cursor:pointer;"><div style="width:22px;height:22px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;">'+c.name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2)+'</div><span>'+c.name.split(' ')[0]+'</span></div>';}).join('');
   }
-  const alumni=CANDIDATES.filter(c=>c.alumni);
-  const alumniEl=document.getElementById('alumni-list');
-  const alumniCnt=document.getElementById('alumni-count');
+  var alumni=CANDIDATES.filter(function(c){return c.alumni;});
+  var alumniEl=document.getElementById('alumni-list');
+  var alumniCnt=document.getElementById('alumni-count');
   if(alumniCnt)alumniCnt.textContent=alumni.length;
-  if(alumniEl)alumniEl.innerHTML=alumni.length===0?'<div style="font-size:12px;color:var(--t3);padding:10px 0;">No alumni yet.</div>':alumni.map(c=>'<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b1);"><div style="width:28px;height:28px;border-radius:50%;background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--t3);">'+c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)+'</div><div style="flex:1;"><div style="font-size:12px;color:var(--t2);">'+c.name+'</div><div style="font-size:10px;color:var(--t3);">'+(c.deniedReason||'')+'</div></div><button onclick="reinstateCandidate(\''+c.id+'\')" style="background:none;border:none;font-size:11px;color:var(--teal);cursor:pointer;">Reinstate</button></div>').join('');
-  orgNodes.forEach(n=>createOrgNode(n));
+  if(alumniEl)alumniEl.innerHTML=alumni.length===0?'<div style="font-size:12px;color:var(--t3);padding:10px 0;">No alumni yet.</div>':alumni.map(function(c){return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--b1);"><div style="width:28px;height:28px;border-radius:50%;background:var(--s4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--t3);">'+c.name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2)+'</div><div style="flex:1;"><div style="font-size:12px;color:var(--t2);">'+c.name+'</div><div style="font-size:10px;color:var(--t3);">'+(c.deniedReason||'')+'</div></div><button onclick="reinstateCandidate(\''+c.id+'\')" style="background:none;border:none;font-size:11px;color:var(--teal);cursor:pointer;">Reinstate</button></div>';}).join('');
+  orgNodes.forEach(function(n){createOrgNode(n);});
   drawOrgLines();
 }
 
@@ -3458,19 +3477,18 @@ function updateRankKeyDisplay(){
 
 // CREWS
 function renderCrewSettings(){
-  // Populate rep selector from profiles or candidates
   const sel=document.getElementById('crew-rep-sel');
   if(sel){
-    const names=Object.keys(CREWS);
-    // Also add current user
-    const allNames=[P?.full_name||'You',...Object.keys(CREWS)].filter((v,i,a)=>a.indexOf(v)===i);
-    sel.innerHTML='<option value="">Select rep...</option>'+allNames.map(n=>'<option value="'+n+'">'+n+'</option>').join('');
+    // Use TEAM_PROFILES (from Supabase) for the full rep list
+    const allNames=TEAM_PROFILES.length>0
+      ? TEAM_PROFILES.map(function(p){return p.full_name;}).filter(Boolean)
+      : [P?.full_name||'You',...Object.keys(CREWS)].filter(function(v,i,a){return a.indexOf(v)===i;});
+    sel.innerHTML='<option value="">Select rep...</option>'+allNames.map(function(n){return '<option value="'+n+'">'+n+'</option>';}).join('');
   }
-  // Populate datalist with existing crew names
   const dl=document.getElementById('crew-datalist');
   if(dl){
     const existing=[...new Set(Object.values(CREWS))];
-    dl.innerHTML=existing.map(c=>'<option value="'+c+'">').join('');
+    dl.innerHTML=existing.map(function(c){return '<option value="'+c+'">';}).join('');
   }
   renderCrewAssignments();
   renderCrewStandingsPreview();
@@ -5148,14 +5166,19 @@ function openAddRideModal(editIdx){
   const present=getPresentRepsForDate(CR_DATE);
   const repList=document.getElementById('arm-rep-list');
   if(repList){
-    if(present.length===0){
-      repList.innerHTML='<div style="font-size:11px;color:var(--t3);">No check-ins yet. You can still assign reps manually.</div>'
-        +'<input type="text" id="arm-manual-rep" placeholder="Type rep name and press Enter" style="width:100%;margin-top:6px;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:7px 9px;font-size:12px;color:var(--t1);outline:none;" onkeydown="if(event.key===\'Enter\')addManualRep()"/>'
-        +'<div id="arm-manual-chips" style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;"></div>';
+    // Use TEAM_PROFILES for full list, highlight who's checked in today
+    const allReps=TEAM_PROFILES.length>0
+      ? TEAM_PROFILES.map(function(p){return p.full_name;}).filter(Boolean)
+      : present.length>0 ? present : [];
+
+    if(allReps.length===0){
+      repList.innerHTML='<div style="font-size:11px;color:var(--t3);">No reps found. Add reps in Rep Management first.</div>';
     } else {
-      repList.innerHTML=present.map(function(name){
+      repList.innerHTML=allReps.map(function(name){
+        const isPresent=present.includes(name);
+        const badge=isPresent?'<span style="font-size:9px;color:var(--green);margin-left:4px;">● Present</span>':'';
         return '<label style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:var(--r1);cursor:pointer;" onmouseover="this.style.background=\'var(--s3)\'" onmouseout="this.style.background=\'\'">'
-          +'<input type="checkbox" value="'+name+'" style="width:14px;height:14px;accent-color:var(--y);"><span style="font-size:12px;">'+name+'</span></label>';
+          +'<input type="checkbox" value="'+name+'" style="width:14px;height:14px;accent-color:var(--y);"><span style="font-size:12px;">'+name+badge+'</span></label>';
       }).join('');
     }
   }

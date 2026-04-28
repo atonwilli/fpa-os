@@ -457,6 +457,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
     <div class="tb" style="border-color:rgba(245,158,11,.25);" onclick="tap('p')"><button class="tundo" onclick="event.stopPropagation();undo('p')">undo</button><div class="tlbl" style="color:var(--amber);">Presentations</div><div class="tcnt" id="tc-p" style="color:var(--amber);">0</div><div class="tsub">of <span id="tgt-p">15</span></div><div class="tpbar"><div class="tpfill" id="tf-p" style="width:0%;background:var(--amber);"></div></div></div>
     <div class="tb" style="border-color:rgba(72,72,90,.4);" onclick="tap('c')"><button class="tundo" onclick="event.stopPropagation();undo('c')">undo</button><div class="tlbl" style="color:var(--t2);">Credit checks</div><div class="tcnt" id="tc-c" style="color:var(--t2);">0</div><div class="tsub">of <span id="tgt-c">7</span></div><div class="tpbar"><div class="tpfill" id="tf-c" style="width:0%;background:var(--t3);"></div></div></div>
   </div>
+  <button class="btn btn-p" style="width:100%;justify-content:center;padding:13px;font-size:14px;font-weight:700;margin-bottom:14px;letter-spacing:.3px;" onclick="openSaleModal()">🏆 Log a sale</button>
   <div class="card" style="margin-bottom:10px;">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;">
       <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--green);" id="f-cl">0</div><div style="font-size:10px;color:var(--t3);">Sales</div></div>
@@ -465,7 +466,6 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
       <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;color:var(--amber);" id="f-bell-stat">No bell yet</div><div style="font-size:10px;color:var(--t3);">Bell</div></div>
     </div>
   </div>
-  <button class="btn btn-p" style="width:100%;justify-content:center;padding:11px;" onclick="openSaleModal()">+ Log a sale</button>
   <div id="sales-today-list" style="margin-top:14px;"></div>
 </div>
 
@@ -2128,6 +2128,8 @@ function showApp(){
   renderTrainingVault();
   if(todayCloses>0)renderTodaySales();
   initCheckInBar();
+  // Load weekly totals from Supabase for accurate home stats
+  loadMyWeeklyStats();
   // Show announcement
   if(ANNOUNCEMENTS.length>0){
     const a=ANNOUNCEMENTS[0];
@@ -3839,6 +3841,7 @@ function nav(id,btn){
   // Per-page init — wrapped individually so one crash doesn't block the page
   const _safe=(name,fn)=>{try{fn();}catch(e){console.error('nav '+name+' error:',e.message,e.stack);}};
   if(id==='admin')_safe('loadRepsTable',()=>loadRepsTable());
+  if(id==='home')_safe('loadMyWeeklyStats',loadMyWeeklyStats);
   if(id==='field'){_safe('renderFieldStoreSelect',()=>renderFieldStoreSelect());_safe('initCheckInBar',initCheckInBar);}
   if(id==='attendance')_safe('renderAttendancePage',renderAttendancePage);
   if(id==='goals')_safe('loadGoalsPage',()=>loadGoalsPage());
@@ -4764,6 +4767,83 @@ function applyAttFilter(){
         +'<div style="font-size:11px;color:var(--t3);">'+l.dist+'m</div>'
         +'</div>';
     }).join('');
+  }
+}
+
+// MY WEEKLY STATS — load rep's own data from Supabase for home page
+async function loadMyWeeklyStats(){
+  if(!U||!P) return;
+  try {
+    // Get all daily_tally rows for this rep this week
+    const {data:tallies} = await sb.from('daily_tally')
+      .select('wire,closes,bells,stops,tabs,presentations,date')
+      .eq('user_id', U.id)
+      .gte('date', weekKey());
+
+    if(!tallies||tallies.length===0) return;
+
+    // Sum up the week
+    var weekWire=0, weekCloses=0, weekBells=0;
+    tallies.forEach(function(t){
+      weekWire += t.wire||0;
+      weekCloses += t.closes||0;
+      weekBells += t.bells||0;
+    });
+
+    // Update today's in-memory totals from today's row
+    var todayStr=new Date().toISOString().slice(0,10);
+    var todayRow=tallies.find(function(t){return t.date===todayStr;});
+    if(todayRow){
+      todayWire=todayRow.wire||0;
+      todayCloses=todayRow.closes||0;
+      todayBells=todayRow.bells||0;
+      tc.s=todayRow.stops||tc.s;
+      tc.t=todayRow.tabs||tc.t;
+      tc.p=todayRow.presentations||tc.p;
+    }
+
+    // Update home page stats
+    var hc=document.getElementById('h-closes');if(hc)hc.textContent=weekCloses;
+    var hw=document.getElementById('h-wire');if(hw)hw.textContent='$'+weekWire.toLocaleString();
+    var hb=document.getElementById('h-bells');if(hb)hb.textContent=weekBells;
+
+    // Update field page stats
+    var fc=document.getElementById('f-cl');if(fc)fc.textContent=todayCloses;
+    var fw=document.getElementById('f-w');if(fw)fw.textContent='$'+todayWire.toLocaleString();
+
+    // Update tally counters display
+    ['s','t','p','c'].forEach(function(k){
+      var el=document.getElementById('tc-'+k);
+      if(el)el.textContent=tc[k]||0;
+    });
+    updateTallyBars();
+
+    // Update promo path progress bars
+    updatePromoProgress(weekWire, weekCloses);
+
+  } catch(e){
+    console.warn('[FPI OS] weekly stats load error:', e.message);
+  }
+}
+
+function updatePromoProgress(weekWire, weekCloses){
+  // Path A — Wire target
+  var pathABar=document.querySelector('.path-a-bar');
+  var pathAPct=document.querySelector('.path-a-pct');
+  var pathAVal=document.querySelector('.path-a-val');
+  if(pathABar){
+    var pct=Math.min(100,Math.round(weekWire/CFG.wireTgt*100));
+    pathABar.style.width=pct+'%';
+    if(pathAPct)pathAPct.textContent=pct+'%';
+    if(pathAVal)pathAVal.textContent='$'+weekWire.toLocaleString()+' this week';
+  }
+  // Path B — PIA sales (closes)
+  var pathBBar=document.querySelector('.path-b-bar');
+  var pathBPct=document.querySelector('.path-b-pct');
+  if(pathBBar){
+    var bpct=Math.min(100,Math.round(weekCloses/CFG.piaTgt*100));
+    pathBBar.style.width=bpct+'%';
+    if(pathBPct)pathBPct.textContent=weekCloses+'/'+CFG.piaTgt;
   }
 }
 

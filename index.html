@@ -2057,11 +2057,18 @@ async function loadProfile(user){
   U=user;
   let{data:p}=await sb.from('profiles').select('*').eq('id',user.id).single();
   if(!p){
+    // Profile doesn't exist yet — create it
     const role=user.user_metadata?.role||'ae';
-    const name=user.user_metadata?.full_name||user.email.split('@')[0];
+    // Use full_name from metadata, or clean up email to make a readable name
+    const rawName=user.user_metadata?.full_name||user.user_metadata?.name||'';
+    const name=rawName||user.email.split('@')[0].replace(/[0-9]/g,'').replace(/\./g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}).trim()||user.email;
     const np={id:user.id,email:user.email,full_name:name,role,office:'FPA DFW',day_number:1};
     const{data:c}=await sb.from('profiles').insert(np).select().single();
     p=c||np;
+  }
+  // If full_name is just an email prefix (no space = likely auto-generated), flag it
+  if(p && p.full_name && !p.full_name.includes(' ') && p.full_name.includes('@')){
+    p.full_name = p.full_name.split('@')[0];
   }
   P=p;
   // Load team profiles so rep lists are always current

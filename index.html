@@ -240,6 +240,101 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
 .obub{border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid;user-select:none;}
 .oi{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:11px;pointer-events:none;}
 .on2{font-size:8px;pointer-events:none;}
+/* ── MOBILE RESPONSIVE ── */
+@media(max-width:768px){
+  /* App layout: stack sidebar on top, content below */
+  .app{grid-template-columns:1fr!important;grid-template-rows:52px 1fr 56px!important;}
+
+  /* Sidebar becomes bottom tab bar */
+  .sidebar{
+    grid-row:3;grid-column:1;
+    display:flex!important;flex-direction:row!important;
+    overflow-x:auto;overflow-y:hidden;
+    padding:0!important;
+    border-right:none!important;border-top:1px solid var(--b1);
+    background:var(--s1);
+    align-items:stretch;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .sidebar::-webkit-scrollbar{display:none;}
+  .sbg{display:contents;}
+  .sbg-lbl{display:none;}
+  .sbi{
+    display:flex!important;flex-direction:column!important;align-items:center!important;
+    justify-content:center!important;gap:3px!important;
+    min-width:64px;flex-shrink:0;
+    padding:6px 8px!important;border-radius:0!important;
+    font-size:9px!important;color:var(--t3)!important;
+    border-bottom:none!important;white-space:nowrap;
+    height:56px;
+  }
+  .sbi.active{color:var(--y)!important;background:rgba(255,224,51,.06)!important;}
+  .sbi svg{width:18px!important;height:18px!important;margin-bottom:2px;}
+  .sbt{display:none!important;}
+  .sbfoot{display:none!important;}
+
+  /* Main content area */
+  .main{grid-row:2;grid-column:1;padding-bottom:0;}
+
+  /* Pages */
+  .pg{padding:14px!important;}
+  .pgt{font-size:20px!important;}
+
+  /* Grids collapse to 1 column */
+  .g2{grid-template-columns:1fr!important;}
+  .g4{grid-template-columns:1fr 1fr!important;}
+
+  /* Cards */
+  .card{padding:12px!important;}
+
+  /* Topbar */
+  .topbar{padding:0 12px!important;gap:8px!important;}
+  .topbar .pgt{font-size:13px!important;}
+
+  /* Tally buttons — make them huge for thumbs */
+  .tally-btn{min-height:72px!important;font-size:28px!important;}
+  #tally-grid{grid-template-columns:1fr 1fr!important;gap:8px!important;}
+
+  /* Modals — full screen on mobile */
+  .modal-bg{align-items:flex-end!important;padding:0!important;}
+  .modal{
+    max-width:100%!important;width:100%!important;
+    border-radius:16px 16px 0 0!important;
+    max-height:92vh!important;overflow-y:auto!important;
+    padding:20px 16px 32px!important;
+  }
+
+  /* Buttons */
+  .btn{min-height:38px;font-size:12px!important;}
+  .btn-p{min-height:44px!important;}
+
+  /* Stat cards — 2 per row */
+  .stat{padding:10px!important;}
+  .sv{font-size:22px!important;}
+
+  /* Settings tabs wrap */
+  .stab-btn{font-size:10px!important;padding:5px 8px!important;}
+
+  /* Hide non-essential topbar items on mobile */
+  .topbar-dark-toggle{display:none!important;}
+
+  /* Scorecard tables scroll horizontally */
+  #sc-rep-rows,#att-owner-log,#goals-report-table{overflow-x:auto;}
+
+  /* Car rides board — single column */
+  #cr-board{grid-template-columns:1fr!important;}
+
+  /* Attendance calendar — smaller cells */
+  #att-calendar{gap:2px!important;}
+  #att-calendar>div{font-size:9px!important;}
+}
+
+@media(max-width:400px){
+  .g4{grid-template-columns:1fr 1fr!important;}
+  .pgt{font-size:18px!important;}
+  .sbi{min-width:54px;font-size:8px!important;}
+}
 </style>
 </head>
 <body>
@@ -280,7 +375,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
     <div class="logo"><div class="logo-pip"></div>FPI <span>OS</span></div>
     <div class="tsep"></div><div class="tctx" id="tctx">Loading...</div>
     <div class="tright">
-      <div class="thm"><span class="thm-lbl">Dark</span><div class="tt" id="thm-tt" onclick="toggleTheme()"><div class="tt-t"></div></div><span class="thm-lbl">Light</span></div>
+      <div class="topbar-dark-toggle thm"><span class="thm-lbl">Dark</span><div class="tt" id="thm-tt" onclick="toggleTheme()"><div class="tt-t"></div></div><span class="thm-lbl">Light</span></div>
       <div class="uchip"><div class="uav" id="u-av">?</div><span class="uname" id="u-name">...</span><span class="rb" id="u-role">...</span></div>
       <button class="logout-btn" onclick="doLogout()">Sign out</button>
     </div>

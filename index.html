@@ -2295,7 +2295,7 @@ async function loadTeamTallyFromSupabase(){
   if(!isLeader)return null;
   const todayStr = new Date().toISOString().slice(0,10);
   // Use cache if fresh (within 30 seconds)
-  if(_sbTallyCache && _sbTallyCacheDate && (Date.now()-_sbTallyCacheDate)<30000) return _sbTallyCache;
+  if(_sbTallyCache && _sbTallyCacheDate && (Date.now()-_sbTallyCacheDate)<10000) return _sbTallyCache;
   try {
     const weekStart = weekKey();
     const {data, error} = await sb.from('daily_tally')
@@ -3829,7 +3829,8 @@ function nav(id,btn){
   if(id==='training-mgr')_safe('renderTrainingMgrList',renderTrainingMgrList);
   if(id==='highroller'||id==='highroller-shoutout')_safe('initHighRoller',initHighRoller);
   if(id==='achievements')_safe('renderAchievements',renderAchievements);
-  if(id==='scorecard')_safe('renderScorecard',renderScorecard);
+  if(id==='scorecard'){_safe('renderScorecard',renderScorecard);startScorecardRefresh();}
+  else stopScorecardRefresh();
   if(id==='recruit'){_safe('renderCandidates',renderCandidates);_safe('updateDropoffIntel',updateDropoffIntel);}
   if(id==='org')_safe('buildOrgChart',buildOrgChart);
   if(id==='carrides')_safe('initCarRides',initCarRides);
@@ -4111,6 +4112,7 @@ function renderScorecard(){
 
   // Load fresh Supabase data for leaders, then re-render
   if(isFullAccess||isLT){
+    _sbTallyCache=null;_sbTallyCacheDate=null; // always fetch fresh on scorecard open
     loadTeamTallyFromSupabase().then(function(){
       _renderScorecardUI(role,isAE,isLT,isFullAccess);
     });
@@ -4184,10 +4186,17 @@ function _renderScorecardUI(role,isAE,isLT,isFullAccess){
   const scReps2=document.getElementById('sc-reps2');if(scReps2)scReps2.textContent=Math.max(1,lbData.length);
   const bellRate=totalCloses>0?Math.round(totalBells/totalCloses*100)+'%':'—';
   const brEl=document.getElementById('sc-bell-rate');if(brEl)brEl.textContent=bellRate;
-  // Field OS tally — live from today's counters
-  const scStops=document.getElementById('sc-team-stops');if(scStops)scStops.textContent=tc.s||0;
-  const scTabRate=document.getElementById('sc-team-tabrate');if(scTabRate)scTabRate.textContent=tc.s>0?Math.round(tc.t/tc.s*100)+'%':'—';
-  const scPres=document.getElementById('sc-team-pres');if(scPres)scPres.textContent=tc.p||0;
+  // Field OS tally — pull from Supabase team totals, not just owner's own tc
+  const todayStr2=new Date().toISOString().slice(0,10);
+  sb.from('daily_tally').select('stops,tabs,presentations,closes').eq('date',todayStr2).then(function(r){
+    if(r.error||!r.data)return;
+    const totStops=r.data.reduce(function(s,row){return s+(row.stops||0);},0);
+    const totTabs=r.data.reduce(function(s,row){return s+(row.tabs||0);},0);
+    const totPres=r.data.reduce(function(s,row){return s+(row.presentations||0);},0);
+    const scStops=document.getElementById('sc-team-stops');if(scStops)scStops.textContent=totStops;
+    const scTabRate=document.getElementById('sc-team-tabrate');if(scTabRate)scTabRate.textContent=totStops>0?Math.round(totTabs/totStops*100)+'%':'—';
+    const scPres=document.getElementById('sc-team-pres');if(scPres)scPres.textContent=totPres;
+  });
   const avgClosesEl=document.getElementById('sc-avg-closes');if(avgClosesEl)avgClosesEl.textContent=lbData.length>0?(totalCloses/lbData.length).toFixed(1):'—';
   // Rep rows today
   if(todayCloses>0){
@@ -4737,6 +4746,28 @@ function applyAttFilter(){
         +'<div style="font-size:11px;color:var(--t3);">'+l.dist+'m</div>'
         +'</div>';
     }).join('');
+  }
+}
+
+// SCORECARD AUTO-REFRESH
+var _scorecardRefreshTimer = null;
+
+function startScorecardRefresh(){
+  stopScorecardRefresh();
+  _scorecardRefreshTimer = setInterval(function(){
+    const page = document.getElementById('page-scorecard');
+    if(page && page.classList.contains('active')){
+      _sbTallyCache = null; // force fresh fetch
+      _sbTallyCacheDate = null;
+      renderScorecard();
+    }
+  }, 20000); // refresh every 20 seconds
+}
+
+function stopScorecardRefresh(){
+  if(_scorecardRefreshTimer){
+    clearInterval(_scorecardRefreshTimer);
+    _scorecardRefreshTimer = null;
   }
 }
 

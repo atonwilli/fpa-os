@@ -1910,6 +1910,8 @@ async function loadProfile(user){
   P=p;
   // Load org-wide settings from Supabase so ALL devices get same config
   await loadOrgSettings();
+  // Load attendance from Supabase (async, updates after app shows)
+  loadAttendanceFromSupabase();
   showApp();
 }
 
@@ -4095,7 +4097,48 @@ function loadAttendance(){
     const a=localStorage.getItem('fpa_att_cfg');if(a)Object.assign(ATT_CFG,JSON.parse(a));
     const l=localStorage.getItem('fpa_att_log');if(l)ATT_LOG=JSON.parse(l);
   }catch(e){}
+  // Also fetch from Supabase async — populates ATT_LOG with other reps' check-ins
+  loadAttendanceFromSupabase();
 }
+
+async function loadAttendanceFromSupabase(){
+  if(!U) return;
+  try {
+    const role=P?.role||'ae';
+    const isLeader=['owner','pm','jpm','lt'].includes(role);
+    // Leaders load last 30 days for all reps; others load own last 30 days
+    const cutoff=new Date();cutoff.setDate(cutoff.getDate()-30);
+    const cutoffStr=cutoff.toISOString().slice(0,10);
+    let query=sb.from('attendance_log').select('*').gte('date',cutoffStr).order('date',{ascending:false});
+    if(!isLeader) query=query.eq('user_id',U.id);
+    const {data,error}=await query;
+    if(error) throw error;
+    if(!data||data.length===0) return;
+    // Merge Supabase records into ATT_LOG (Supabase is source of truth)
+    const sbEntries=data.map(function(r){
+      return {name:r.profile_name,email:'',role:'ae',date:r.date,time:r.time_logged||'',late:r.late||false,dist:r.dist_meters||0,type:r.type||'in',ts:new Date(r.created_at).getTime()};
+    });
+    // Merge: keep unique date+name+type combos, prefer Supabase version
+    const keyMap={};
+    sbEntries.forEach(function(e){keyMap[e.date+'|'+e.name+'|'+e.type]=e;});
+    ATT_LOG.forEach(function(e){
+      const k=e.date+'|'+e.name+'|'+e.type;
+      if(!keyMap[k]) keyMap[k]=e;
+    });
+    ATT_LOG=Object.values(keyMap).sort(function(a,b){return b.ts-a.ts;});
+    // Cache locally
+    localStorage.setItem('fpa_att_log',JSON.stringify(ATT_LOG.slice(0,500)));
+    // Refresh any open attendance views
+    const page=document.getElementById('page-attendance');
+    if(page&&page.classList.contains('active')) renderAttendancePage();
+    // Refresh car rides present bar if open
+    const crPage=document.getElementById('page-carrides');
+    if(crPage&&crPage.classList.contains('active')&&CR_DATE) renderPresentReps(CR_DATE);
+  } catch(e){
+    console.warn('[FPI OS] attendance load error:',e.message);
+  }
+}
+
 function saveAttendanceCfg(){localStorage.setItem('fpa_att_cfg',JSON.stringify(ATT_CFG));saveOrgSettings();}
 function saveAttendanceLog(){localStorage.setItem('fpa_att_log',JSON.stringify(ATT_LOG));}
 
@@ -4206,11 +4249,25 @@ function doCheckIn(ctx){
         return;
       }
 
-      // Log it
+      // Log it locally
       var entry={name:name,email:U?.email||'',role:P?.role||'ae',date:todayStr,time:timeStr,late:isLate,dist:Math.round(dist),type:'in',ts:Date.now()};
       ATT_LOG.unshift(entry);
       if(ATT_LOG.length>1000)ATT_LOG=ATT_LOG.slice(0,1000);
       saveAttendanceLog();
+
+      // Sync to Supabase
+      sb.from('attendance_log').upsert({
+        user_id: U.id,
+        profile_name: name,
+        org_owner_id: null,
+        date: todayStr,
+        time_logged: timeStr,
+        late: isLate,
+        dist_meters: Math.round(dist),
+        type: 'in'
+      },{onConflict:'user_id,date,type'}).then(function(r){
+        if(r.error) console.warn('[FPI OS] attendance sync error:',r.error.message);
+      });
 
       var col=isLate?'var(--amber)':'#86EFAC';
       setUI((isLate?'⚠ Checked in late — ':'✓ Checked in — ')+timeStr, isLate?'Required time was '+ATT_CFG.startTime+'. See your leader.':'You\'re on time. Have a great day!', '✓ Checked in', true, col);
@@ -4500,6 +4557,7 @@ function demoReset(){
   if(U){
     sb.from('daily_tally').delete().eq('user_id',U.id).then(function(){});
     sb.from('sales_log').delete().eq('user_id',U.id).then(function(){});
+    sb.from('attendance_log').delete().eq('user_id',U.id).then(function(){});
   }
 
   // Reset UI elements

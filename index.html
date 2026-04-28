@@ -458,6 +458,7 @@ html,body{height:100%;font-family:'Inter',sans-serif;background:var(--s0);color:
     <div class="tb" style="border-color:rgba(72,72,90,.4);" onclick="tap('c')"><button class="tundo" onclick="event.stopPropagation();undo('c')">undo</button><div class="tlbl" style="color:var(--t2);">Credit checks</div><div class="tcnt" id="tc-c" style="color:var(--t2);">0</div><div class="tsub">of <span id="tgt-c">7</span></div><div class="tpbar"><div class="tpfill" id="tf-c" style="width:0%;background:var(--t3);"></div></div></div>
   </div>
   <button class="btn btn-p" style="width:100%;justify-content:center;padding:13px;font-size:14px;font-weight:700;margin-bottom:14px;letter-spacing:.3px;" onclick="openSaleModal()">🏆 Log a sale</button>
+  <div id="f-sync-status" style="display:none;font-size:11px;text-align:center;margin-bottom:8px;"></div>
   <div class="card" style="margin-bottom:10px;">
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;">
       <div style="text-align:center;"><div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;color:var(--green);" id="f-cl">0</div><div style="font-size:10px;color:var(--t3);">Sales</div></div>
@@ -2258,44 +2259,71 @@ var tallyCols={s:'var(--blue)',t:'var(--teal)',p:'var(--amber)',c:'var(--t3)'};
 var _tallyDebounce = null;
 
 function syncTallyToSupabase(){
-  if(!U||!P)return;
+  if(!U||!P){console.warn('[FPI OS] sync skipped - no user');return;}
   clearTimeout(_tallyDebounce);
   _tallyDebounce = setTimeout(async function(){
     const todayStr = new Date().toISOString().slice(0,10);
-    try {
-      await sb.from('daily_tally').upsert({
-        user_id: U.id,
-        profile_name: P.full_name||P.email||'Rep',
-        date: todayStr,
-        stops: tc.s||0,
-        tabs: tc.t||0,
-        presentations: tc.p||0,
-        credit_checks: tc.c||0,
-        closes: todayCloses||0,
-        wire: todayWire||0,
-        bells: todayBells||0,
-        last_updated: new Date().toISOString()
-      }, { onConflict: 'user_id,date' });
-    } catch(e) { console.warn('[FPI OS] tally sync error:', e.message); }
+    const payload = {
+      user_id: U.id,
+      profile_name: P.full_name||U.email||'Rep',
+      date: todayStr,
+      stops: tc.s||0,
+      tabs: tc.t||0,
+      presentations: tc.p||0,
+      credit_checks: tc.c||0,
+      closes: todayCloses||0,
+      wire: todayWire||0,
+      bells: todayBells||0,
+      last_updated: new Date().toISOString()
+    };
+    // Try upsert first
+    const {error} = await sb.from('daily_tally').upsert(payload, {onConflict:'user_id,date'});
+    if(error){
+      console.warn('[FPI OS] upsert failed, trying update then insert:', error.message);
+      // Try update existing row
+      const {error:updateErr} = await sb.from('daily_tally')
+        .update(payload)
+        .eq('user_id', U.id)
+        .eq('date', todayStr);
+      if(updateErr){
+        // Row doesn't exist yet, insert fresh
+        const {error:insertErr} = await sb.from('daily_tally').insert(payload);
+        if(insertErr) console.warn('[FPI OS] tally insert failed:', insertErr.message);
+        else console.log('[FPI OS] tally inserted');
+      } else {
+        console.log('[FPI OS] tally updated');
+      }
+    } else {
+      console.log('[FPI OS] tally upserted OK - wire:'+payload.wire+' closes:'+payload.closes);
+    }
   }, 1500);
 }
 
 async function syncSaleToSupabase(sale){
-  if(!U||!P)return;
+  if(!U||!P){console.warn('[FPI OS] sale sync skipped - no user');return;}
   const todayStr = new Date().toISOString().slice(0,10);
-  try {
-    await sb.from('sales_log').insert({
-      user_id: U.id,
-      profile_name: P.full_name||P.email||'Rep',
-      date: todayStr,
-      customer: sale.customer||'',
-      services: sale.services||[],
-      wire: sale.wire||0,
-      pia: sale.pia||0,
-      bell: sale.bell||false,
-      time_logged: sale.time||''
-    });
-  } catch(e) { console.warn('[FPI OS] sale sync error:', e.message); }
+  const payload = {
+    user_id: U.id,
+    profile_name: P.full_name||U.email||'Rep',
+    date: todayStr,
+    customer: sale.customer||'',
+    services: sale.services||[],
+    wire: sale.wire||0,
+    pia: sale.pia||0,
+    bell: sale.bell||false,
+    time_logged: sale.time||''
+  };
+  const {error} = await sb.from('sales_log').insert(payload);
+  if(error){
+    console.warn('[FPI OS] sale sync error:', error.message, '| code:', error.code);
+    // Show subtle error indicator on field page
+    var fb=document.getElementById('f-sync-status');
+    if(fb){fb.textContent='⚠ Sync error — check connection';fb.style.color='#FCA5A5';fb.style.display='block';}
+  } else {
+    console.log('[FPI OS] sale synced OK - wire:'+payload.wire+' customer:'+payload.customer);
+    var fb=document.getElementById('f-sync-status');
+    if(fb){fb.textContent='✓ Synced';fb.style.color='#86EFAC';fb.style.display='block';setTimeout(function(){fb.style.display='none';},3000);}
+  }
 }
 
 // Load all reps' tally data from Supabase for leaderboard/scorecard

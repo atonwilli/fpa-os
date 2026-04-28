@@ -1829,6 +1829,60 @@ function saveLocal(){
   localStorage.setItem('fpa_ann',JSON.stringify(ANNOUNCEMENTS));
   localStorage.setItem('fpa_today_'+today(),JSON.stringify({sales:todaySales,wire:todayWire,closes:todayCloses,bells:todayBells}));
 }
+
+// ORG SETTINGS SYNC
+async function loadOrgSettings(){
+  try {
+    // Find the owner's settings row — any user can read it (RLS allows authenticated reads)
+    const {data, error} = await sb.from('org_settings').select('*').limit(1).single();
+    if(error || !data) return; // No settings yet — owner hasn't saved any
+    // Apply settings from Supabase, overriding localStorage defaults
+    if(data.cfg && Object.keys(data.cfg).length) Object.assign(CFG, data.cfg);
+    if(data.services && data.services.length) SERVICES = data.services;
+    if(data.territory && data.territory.length) TERRITORY = data.territory;
+    if(data.terms && Object.keys(data.terms).length) Object.assign(TERMS, data.terms);
+    if(data.rank_tiers && data.rank_tiers.length) RANK_TIERS = data.rank_tiers;
+    if(data.crews && Object.keys(data.crews).length) CREWS = data.crews;
+    if(data.att_cfg && Object.keys(data.att_cfg).length) Object.assign(ATT_CFG, data.att_cfg);
+    if(data.announcements && data.announcements.length) ANNOUNCEMENTS = data.announcements;
+    // Cache to localStorage for offline use
+    localStorage.setItem('fpa_cfg', JSON.stringify(CFG));
+    localStorage.setItem('fpa_svc', JSON.stringify(SERVICES));
+    localStorage.setItem('fpa_ter', JSON.stringify(TERRITORY));
+    localStorage.setItem('fpa_terms', JSON.stringify(TERMS));
+    localStorage.setItem('fpa_rank_tiers', JSON.stringify(RANK_TIERS));
+    localStorage.setItem('fpa_crews', JSON.stringify(CREWS));
+    localStorage.setItem('fpa_att_cfg', JSON.stringify(ATT_CFG));
+    localStorage.setItem('fpa_ann', JSON.stringify(ANNOUNCEMENTS));
+    console.log('[FPI OS] Org settings loaded from Supabase');
+  } catch(e) {
+    console.warn('[FPI OS] Org settings load error:', e.message);
+  }
+}
+
+async function saveOrgSettings(){
+  if(!U) return;
+  const role = P?.role||'ae';
+  if(!['owner','pm'].includes(role)) return; // Only owners save settings
+  try {
+    const {error} = await sb.from('org_settings').upsert({
+      owner_id: U.id,
+      cfg: CFG,
+      services: SERVICES,
+      territory: TERRITORY,
+      terms: TERMS,
+      rank_tiers: RANK_TIERS,
+      crews: CREWS,
+      att_cfg: ATT_CFG,
+      announcements: ANNOUNCEMENTS,
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'owner_id' });
+    if(error) throw error;
+    console.log('[FPI OS] Org settings saved to Supabase');
+  } catch(e) {
+    console.warn('[FPI OS] Org settings save error:', e.message);
+  }
+}
 function today(){return new Date().toISOString().slice(0,10);}
 
 // BOOT
@@ -1854,6 +1908,8 @@ async function loadProfile(user){
     p=c||np;
   }
   P=p;
+  // Load org-wide settings from Supabase so ALL devices get same config
+  await loadOrgSettings();
   showApp();
 }
 
@@ -2151,7 +2207,7 @@ function addTerritory(){
   const t=document.getElementById('new-ter-type').value;
   if(!n)return;
   TERRITORY.push({name:n,city:c,type:t});
-  saveLocal();renderTerritoryList();renderFieldStoreSelect();
+  saveLocal();saveOrgSettings();renderTerritoryList();renderFieldStoreSelect();
   document.getElementById('new-ter-name').value='';
   document.getElementById('new-ter-city').value='';
 }
@@ -2163,10 +2219,10 @@ function bulkAddTerritory(){
       TERRITORY.push({name:parts[0].trim(),city:(parts[1]||'').trim(),type:'Walmart'});
     }
   });
-  saveLocal();renderTerritoryList();renderFieldStoreSelect();
+  saveLocal();saveOrgSettings();renderTerritoryList();renderFieldStoreSelect();
   document.getElementById('bulk-ter').value='';
 }
-function removeTer(i){TERRITORY.splice(i,1);saveLocal();renderTerritoryList();renderFieldStoreSelect();}
+function removeTer(i){TERRITORY.splice(i,1);saveLocal();saveOrgSettings();renderTerritoryList();renderFieldStoreSelect();}
 function renderFieldStoreSelect(){
   const sel=document.getElementById('field-store-sel');if(!sel)return;
   sel.innerHTML='<option value="">Select store...</option>'+TERRITORY.map(t=>`<option value="${t.name}">${t.name}${t.city?', '+t.city:''}</option>`).join('');
@@ -2198,14 +2254,14 @@ function renderServicesList(){
     </div>`).join('');
 }
 function updateSvcWire(i,v){SERVICES[i].wire=parseInt(v)||0;saveLocal();}
-function removeService(i){SERVICES.splice(i,1);saveLocal();renderServicesList();buildSaleModal();}
+function removeService(i){SERVICES.splice(i,1);saveLocal();saveOrgSettings();renderServicesList();buildSaleModal();}
 function addService(){
   const n=document.getElementById('new-svc-name').value.trim();
   const c=document.getElementById('new-svc-cat').value.trim()||'Other';
   const w=parseInt(document.getElementById('new-svc-wire').value)||0;
   if(!n)return;
   SERVICES.push({id:'custom-'+Date.now(),name:n,cat:c,wire:w,pia:false});
-  saveLocal();renderServicesList();
+  saveLocal();saveOrgSettings();renderServicesList();
   document.getElementById('new-svc-name').value='';
   document.getElementById('new-svc-wire').value='';
 }
@@ -2808,6 +2864,7 @@ function saveAllSettings(){
   CFG.checks=parseInt(document.getElementById('cfg-checks')?.value)||7;
   CFG.closes=parseInt(document.getElementById('cfg-closes')?.value)||3;
   saveLocal();applyConfig();
+  saveOrgSettings();
   const msg=document.getElementById('settings-msg');
   if(msg){msg.style.display='block';msg.textContent='✓ Settings saved — reps see updated targets immediately.';setTimeout(()=>msg.style.display='none',3000);}
 }
@@ -2821,7 +2878,7 @@ function renderTerminologyList(){
       <input type="text" value="${v}" style="width:140px;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r1);padding:5px 8px;font-size:12px;color:var(--t1);outline:none;font-family:'Inter',sans-serif;" onchange="TERMS['${k}']=this.value"/>
     </div>`).join('');
 }
-function saveTerminology(){saveLocal();alert('Terminology saved ✓');}
+function saveTerminology(){saveLocal();saveOrgSettings();alert('Terminology saved ✓');}
 
 // ANNOUNCEMENTS
 function postAnnouncement(){
@@ -2830,7 +2887,7 @@ function postAnnouncement(){
   if(!t||!b){alert('Enter a title and message.');return;}
   ANNOUNCEMENTS.unshift({id:Date.now(),title:t,body:b,date:new Date().toLocaleDateString()});
   if(ANNOUNCEMENTS.length>5)ANNOUNCEMENTS.pop();
-  saveLocal();
+  saveLocal();saveOrgSettings();
   document.getElementById('ann-t').textContent=t;
   document.getElementById('ann-b').textContent=b;
   const msg=document.getElementById('ann-msg');
@@ -3116,8 +3173,8 @@ function loadRankTiers(){
   try{const t=localStorage.getItem('fpa_rank_tiers');if(t)RANK_TIERS=JSON.parse(t);}catch(e){}
   try{const c=localStorage.getItem('fpa_crews');if(c)CREWS=JSON.parse(c);}catch(e){}
 }
-function saveRankTiers(){localStorage.setItem('fpa_rank_tiers',JSON.stringify(RANK_TIERS));}
-function saveCrews(){localStorage.setItem('fpa_crews',JSON.stringify(CREWS));}
+function saveRankTiers(){localStorage.setItem('fpa_rank_tiers',JSON.stringify(RANK_TIERS));saveOrgSettings();}
+function saveCrews(){localStorage.setItem('fpa_crews',JSON.stringify(CREWS));saveOrgSettings();}
 
 function getRankTier(closes){
   // Sort by threshold descending, return first match
@@ -4039,7 +4096,7 @@ function loadAttendance(){
     const l=localStorage.getItem('fpa_att_log');if(l)ATT_LOG=JSON.parse(l);
   }catch(e){}
 }
-function saveAttendanceCfg(){localStorage.setItem('fpa_att_cfg',JSON.stringify(ATT_CFG));}
+function saveAttendanceCfg(){localStorage.setItem('fpa_att_cfg',JSON.stringify(ATT_CFG));saveOrgSettings();}
 function saveAttendanceLog(){localStorage.setItem('fpa_att_log',JSON.stringify(ATT_LOG));}
 
 function saveAttendanceSettings(){
